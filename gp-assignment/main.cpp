@@ -18,6 +18,50 @@ const char* BOX_TEXTURE_PATH = "box.bmp";
 #include <stdlib.h>
 #include <string>
 
+// 1. Includes
+// 2. Function headers
+// 2. Global constants and variables
+// 3. Utility methods
+// 4. projection();
+// 5. lighting();
+// 6. Drawing methods
+// 7. display();
+// 8. processNormalKeys();
+// 9. processSpecialKeys();
+// 10. Textures
+// -- Image struct
+// -- getint();
+// -- getshort();
+// -- imageLoad();
+// -- loadTextures();
+// 11. initGL();
+// 12. main();
+
+/*
+ * -----------------------------------------------
+ * FUNCTION HEADERS
+ * -----------------------------------------------
+ */
+void drawCube(float width, float height, float depth, float color[], float tx, float ty, float tz);
+void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw);
+void drawCylinder(GLfloat color[],
+                  GLdouble baseRadius,
+                  GLdouble topRadius,
+                  GLdouble height,
+                  GLint slices,
+                  GLint stacks,
+                  GLenum draw,
+                  float tx,
+                  float ty,
+                  float tz);
+void drawHead();
+void drawBody();
+void drawHands();
+void drawLegs();
+void projection();
+void lighting();
+void display();
+
 /*
  * -----------------------------------------------
  * GLOBAL CONSTANT AND VARIABLES
@@ -25,59 +69,71 @@ const char* BOX_TEXTURE_PATH = "box.bmp";
  */
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
+const int FRAME_RATE = 15; // Refresh interval in milliseconds (1000/15 = 66 frames per second)
+
+bool isOrtho = true; // Is ortho view
+const float O_NEAR = -10, O_FAR = 10; // Ortho near far
+const float P_NEAR = 0.1, P_FAR = 30; // Perspective near far
+float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
+float prSpeed = 2.0; // Rotate Y for projection
+
+float ry = 0; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!) and Model View
+
+float mTx = 0, mTy = 0, mTz = 0, mtSpeed = 2; // Translate for modelview
+float mRx = 0;
 
 // Texture
 GLuint textures[3]; /* storage for 3 textures. */
 
 /*
  * -----------------------------------------------
- * UTILITY AND DRAWING METHODS
+ * UTILITY METHODS
  * -----------------------------------------------
  */
-void drawCube(GLfloat size) {
+void drawCube(float width, float height, float depth, float color[], float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    
     glBegin(GL_QUADS);
+    glColor3fv(color);
     // Face 1, bottom
-//    glColor3f(1, 0, 0);
-    glTexCoord2f(0.0, 1.0);  glVertex3f(0.0f, 0.0f, size);
-    glTexCoord2f(1.0, 1.0);  glVertex3f(size, 0.0f, size);
-    glTexCoord2f(1.0, 0.0);  glVertex3f(size, 0.0f, 0.0f);
+    glTexCoord2f(0.0, 1.0);  glVertex3f(0.0f, 0.0f, -depth);
+    glTexCoord2f(1.0, 1.0);  glVertex3f(width, 0.0f, -depth);
+    glTexCoord2f(1.0, 0.0);  glVertex3f(width, 0.0f, 0.0f);
     glTexCoord2f(0.0, 0.0);  glVertex3f(0.0f, 0.0f, 0.0f);
 
-    // Face 2, back
-//    glColor3f(1, 1, 0);
+    // Face 2, front
     glTexCoord2f(0, 1); glVertex3f(0.0f, 0.0f, 0.0f);
-    glTexCoord2f(1, 1); glVertex3f(0.0f, size, 0.0f);
-    glTexCoord2f(1, 0); glVertex3f(size, size, 0.0f);
-    glTexCoord2f(0, 0); glVertex3f(size, 0.0f, 0.0f);
+    glTexCoord2f(1, 1); glVertex3f(0.0f, height, 0.0f);
+    glTexCoord2f(1, 0); glVertex3f(width, height, 0.0f);
+    glTexCoord2f(0, 0); glVertex3f(width, 0.0f, 0.0f);
 
     // Face 3, right
-//    glColor3f(1, 0, 1);
-    glTexCoord2f(0, 1); glVertex3f(size, 0.0f, 0.0f);
-    glTexCoord2f(1, 1); glVertex3f(size, 0.0f, size);
-    glTexCoord2f(1, 0); glVertex3f(size, size, size);
-    glTexCoord2f(0, 0); glVertex3f(size, size, 0.0f);
+    glTexCoord2f(0, 1); glVertex3f(width, 0.0f, 0.0f);
+    glTexCoord2f(1, 1); glVertex3f(width, 0.0f, -depth);
+    glTexCoord2f(1, 0); glVertex3f(width, height, -depth);
+    glTexCoord2f(0, 0); glVertex3f(width, height, 0.0f);
 
     // Face 4, top
-//    glColor3f(0, 0, 1);
-    glTexCoord2f(0, 1); glVertex3f(size, size, 0.0f);
-    glTexCoord2f(1, 1); glVertex3f(size, size, size);
-    glTexCoord2f(1, 0); glVertex3f(0.0f, size, size);
-    glTexCoord2f(0, 0); glVertex3f(0.0f, size, 0.0f);
+    glTexCoord2f(0, 1); glVertex3f(width, height, 0.0f);
+    glTexCoord2f(1, 1); glVertex3f(width, height, -depth);
+    glTexCoord2f(1, 0); glVertex3f(0.0f, height, -depth);
+    glTexCoord2f(0, 0); glVertex3f(0.0f, height, 0.0f);
 
     // Face 5, left
-//    glColor3f(0, 1, 0);
-    glTexCoord2f(0, 1); glVertex3f(0.0f, size, 0.0f);
+    glTexCoord2f(0, 1); glVertex3f(0.0f, height, 0.0f);
     glTexCoord2f(1, 1); glVertex3f(0.0f, 0.0f, 0.0f);
-    glTexCoord2f(1, 0); glVertex3f(0.0f, 0.0f, size);
-    glTexCoord2f(0, 0); glVertex3f(0.0f, size, size);
+    glTexCoord2f(1, 0); glVertex3f(0.0f, 0.0f, -depth);
+    glTexCoord2f(0, 0); glVertex3f(0.0f, height, -depth);
 
-    // Face 6, front
-//    glColor3f(0, 1, 1);
-    glTexCoord2f(0, 1); glVertex3f(0.0f, size, size);
-    glTexCoord2f(1, 1); glVertex3f(size, size, size);
-    glTexCoord2f(1, 0); glVertex3f(size, 0.0f, size);
-    glTexCoord2f(0, 0); glVertex3f(0.0f, 0.0f, size);
+    // Face 6, back
+    glTexCoord2f(0, 1); glVertex3f(0.0f, height, -depth);
+    glTexCoord2f(1, 1); glVertex3f(width, height, -depth);
+    glTexCoord2f(1, 0); glVertex3f(width, 0.0f, -depth);
+    glTexCoord2f(0, 0); glVertex3f(0.0f, 0.0f, -depth);
     glEnd();
+    
+    glPopMatrix();
 }
 
 void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw) {
@@ -88,10 +144,66 @@ void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw) {
     gluDeleteQuadric(sphere);
 }
 
+void drawCylinder(
+                  GLfloat color[],
+                  GLdouble baseRadius,
+                  GLdouble topRadius,
+                  GLdouble height,
+                  GLint slices,
+                  GLint stacks,
+                  GLenum draw,
+                  float tx,
+                  float ty,
+                  float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    glRotatef(90, 1, 0, 0);
+    glTranslatef(0, 0, -height);
+    glColor3fv(color);
+    GLUquadricObj *cylinder = NULL;
+    cylinder = gluNewQuadric();
+    gluQuadricDrawStyle(cylinder, draw);
+    gluCylinder(cylinder, baseRadius, topRadius, height, slices, stacks);
+    gluDeleteQuadric(cylinder);
+    glPopMatrix();
+}
+
+// Colors
+GLfloat cWhite[] = { 1, 1, 1 };
+
+/*
+ * -----------------------------------------------
+ * DRAWING METHODS
+ * -----------------------------------------------
+ */
+void drawHead() {
+    
+}
+
+void drawBody() {
+    
+}
+
+void drawHands() {
+    
+}
+
+void drawLegs() {
+    
+}
+
 void projection() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity(); // Reset projection matrix
 
+    glTranslatef(pTx, pTy, 0); // Translate X & Y for O and P projection
+        
+    if (isOrtho) {
+        glOrtho(-10, 10, -10, 10, O_NEAR, O_FAR);
+        glRotatef(ry, 0, 1, 0); // Rotate Y for ortho only!!!
+    } else {
+        gluPerspective(70, 1, P_NEAR, P_FAR);
+    }
 }
 
 void lighting() {
@@ -118,11 +230,13 @@ void display() {
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
-    if (key == 'O' || key == 'o') {
-
-    }
-    else if (key == 'P' || key == 'p') {
-
+    if (key == '1') {
+        isOrtho = !isOrtho;
+        if (isOrtho) {
+            mTz = 0;
+        } else {
+            mTz = -15;
+        }
     }
 
     glutPostRedisplay();
@@ -320,28 +434,18 @@ GLvoid initGL(GLsizei width, GLsizei height) {
     glEnable(GL_TEXTURE_2D);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // This Will Clear the background Color to black.
-    glClearDepth(1.0);        // Enables clearing of the depth buffer.
-    glDepthFunc(GL_LESS); // The type of depth test to do.
+    glClearDepth(1.0);    // Enables clearing of the depth buffer.
     glEnable(GL_DEPTH_TEST); // Enables depth testing.
     glShadeModel(GL_SMOOTH); // Enables smooth color shading.
 
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();  // Reset the projection matrix.
+    glLoadIdentity(); // Reset the projection matrix.
+}
 
-    // Calculate the aspect ratio of the window.
-    gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
-
-    glMatrixMode(GL_MODELVIEW);
-
-    // set up light number 1.
-  //  glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient); // add lighting. (ambient)
-  //  glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse); // add lighting. (diffuse)
-  //  glLightfv(GL_LIGHT1, GL_POSITION, lightPosition); // set light position.
-    glEnable(GL_LIGHT1);
-
-    /* setup blending */
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);     // Set the blending function for translucency.
-    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+/* Called back when timer expired */
+void timer(int value) {
+   glutPostRedisplay();      // Post re-paint request to activate display()
+   glutTimerFunc(FRAME_RATE, timer, 0); // next timer call milliseconds later
 }
 
 int main(int argc, char** argv) {
@@ -354,8 +458,6 @@ int main(int argc, char** argv) {
 
     /* Register the function to do all our OpenGL drawing. */
     glutDisplayFunc(display);
-    /* Event if there are no events, redraw our gl scene. */
-    glutIdleFunc(display);
 
     glutKeyboardFunc(processNormalKeys);
     glutSpecialFunc(processSpecialKeys);
@@ -363,26 +465,13 @@ int main(int argc, char** argv) {
     /* Initialize our window */
     initGL(WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    glutTimerFunc(0, timer, 0); // First timer call immediately
     glutMainLoop();
     return 0;
 }
 
-// Tx, Ty
-// Ry
 
-// Includes headers
-// Global constants and variables
-// Utility and drawing methods
-// projection();
-// lighting();
-// display();
-// processNormalKeys();
-// processSpecialKeys();
-// Textures
-// -- Image struct
-// -- getint();
-// -- getshort();
-// -- imageLoad();
-// -- loadTextures();
-// initGL();
-// main();
+// --------------------- Notes ---------------------
+// Projection transformation:
+// Tx, Ty
+// Ry (ortho only)
