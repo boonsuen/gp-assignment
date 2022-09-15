@@ -23,8 +23,8 @@ const char* BOX_TEXTURE_PATH = "box.bmp";
  * GLOBAL CONSTANT AND VARIABLES
  * -----------------------------------------------
  */
-const int WINDOW_WIDTH = 300;
-const int WINDOW_HEIGHT = 300;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 800;
 
 // Texture
 GLuint textures[3]; /* storage for 3 textures. */
