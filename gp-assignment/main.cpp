@@ -22,9 +22,9 @@ const char* BOX_TEXTURE_PATH = "box.bmp";
 // 2. Function headers
 // 2. Global constants and variables
 // 3. Utility methods
+// 6. Drawing classes
 // 4. projection();
 // 5. lighting();
-// 6. Drawing methods
 // 7. display();
 // 8. processNormalKeys();
 // 9. processSpecialKeys();
@@ -266,156 +266,168 @@ GLfloat cEyeYellow[] = { 249.0/255, 1, 102.0/255 };
 
 /*
  * -----------------------------------------------
- * DRAWING METHODS
+ * DRAWING CLASSES
  * -----------------------------------------------
  */
-void drawFace() {
-    glPushMatrix();
-    glColor3fv(cHeadRed);
-    glTranslatef(0.15, 0, 0);
-    glScalef(1.15, 1.15, 1);
-    glBegin(GL_POLYGON);
-    glVertex3f(-2, -0.1, 2.005);
-    glVertex3f(-2, -0.2, 2.005);
-    glVertex3f(-1.4, -0.5, 2.005);
-    glVertex3f(-0.15, -0.3, 2.005);
-    glVertex3f(-0.15, -0.2, 2.005);
-    glEnd();
-    glTranslatef(-0.3, 0, 0);
-    glBegin(GL_POLYGON);
-    glVertex3f(2, -0.1, 2.005);
-    glVertex3f(2, -0.2, 2.005);
-    glVertex3f(1.4, -0.5, 2.005);
-    glVertex3f(0.15, -0.3, 2.005);
-    glVertex3f(0.15, -0.2, 2.005);
-    glEnd();
-    glPopMatrix();
-    glColor3fv(cEyeYellow);
-    glBegin(GL_POLYGON);
-    glVertex3f(-2, -0.1, 2.01);
-    glVertex3f(-2, -0.2, 2.01);
-    glVertex3f(-1.4, -0.5, 2.01);
-    glVertex3f(-0.15, -0.3, 2.01);
-    glVertex3f(-0.15, -0.2, 2.01);
-    glEnd();
-    glBegin(GL_POLYGON);
-    glVertex3f(2, -0.1, 2.01);
-    glVertex3f(2, -0.2, 2.01);
-    glVertex3f(1.4, -0.5, 2.01);
-    glVertex3f(0.15, -0.3, 2.01);
-    glVertex3f(0.15, -0.2, 2.01);
-    glEnd();
-    
-    glColor3fv(cWhite);
-    glBegin(GL_POLYGON);
-    glVertex3f(-2.1, -0.34, 2.01);
-    glColor3fv(cLightGrey2);
-    glVertex3f(-2.1, -2.2, 2.01);
-    glColor3fv(cWhite);
-    glVertex3f(0, -2.7, 2.31);
-    glVertex3f(-1.4, -0.65, 2.31);
-    glEnd();
-    glBegin(GL_POLYGON);
-    glVertex3f(0, -2.7, 2.31);
-    glVertex3f(0, -0.45, 2.31);
-    glVertex3f(-1.4, -0.65, 2.31);
-    glEnd();
-    
-    glBegin(GL_POLYGON);
-    glVertex3f(2.1, -0.34, 2.01);
-    glColor3fv(cLightGrey2);
-    glVertex3f(2.1, -2.2, 2.01);
-    glColor3fv(cWhite);
-    glVertex3f(0, -2.7, 2.31);
-    glVertex3f(1.4, -0.65, 2.31);
-    glEnd();
-    glBegin(GL_POLYGON);
-    glVertex3f(0, -2.7, 2.31);
-    glVertex3f(0, -0.45, 2.31);
-    glVertex3f(1.4, -0.65, 2.31);
-    glEnd();
-    
-    glColor3fv(cGrey);
-    glBegin(GL_QUADS);
-    glVertex3f(-0.6, -0.9, 2.315);
-    glVertex3f(-0.6, -1.1, 2.315);
-    glVertex3f(0, -0.95, 2.315);
-    glVertex3f(0, -0.75, 2.315);
-    
-    glVertex3f(-0.6, -1.2, 2.315);
-    glVertex3f(-0.6, -1.4, 2.315);
-    glVertex3f(0, -1.25, 2.315);
-    glVertex3f(0, -1.05, 2.315);
-    
-    glVertex3f(0.6, -0.9, 2.315);
-    glVertex3f(0.6, -1.1, 2.315);
-    glVertex3f(0, -0.95, 2.315);
-    glVertex3f(0, -0.75, 2.315);
-    
-    glVertex3f(0.6, -1.2, 2.315);
-    glVertex3f(0.6, -1.4, 2.315);
-    glVertex3f(0, -1.25, 2.315);
-    glVertex3f(0, -1.05, 2.315);
-    glEnd();
-    
-    GLfloat lMouthV1[] = { -0.5, -2.65, 2.6 }; GLfloat lMouthV5[] = { -0.5, -2.65, 1.8 };
-    GLfloat lMouthV2[] = { 0, -3, 2.8 };       GLfloat lMouthV6[] = { 0, -2.7, 1.8 };
-    GLfloat lMouthV3[] = { 0, -2, 2.8 };       GLfloat lMouthV7[] = { 0, -2, 1.8 };
-    GLfloat lMouthV4[] = { -0.5, -2.2, 2.6 };  GLfloat lMouthV8[] = { -0.5, -2.2, 1.8 };
-    drawSixFacesPolygon(lMouthV1, lMouthV2, lMouthV3, lMouthV4,
-                        lMouthV5, lMouthV6, lMouthV7, lMouthV8, cHeadRed);
-    GLfloat rMouthV1[] = { 0, -3, 2.8 };      GLfloat rMouthV5[] = { 0, -2.7, 1.8 };
-    GLfloat rMouthV2[] = { 0.5, -2.65, 2.6 }; GLfloat rMouthV6[] = { 0.5, -2.65, 1.8 };
-    GLfloat rMouthV3[] = { 0.5, -2.2, 2.6 };  GLfloat rMouthV7[] = { 0.5, -2.2, 1.8 };
-    GLfloat rMouthV4[] = { 0, -2, 2.8 };      GLfloat rMouthV8[] = { 0, -2, 1.8 };
-    drawSixFacesPolygon(rMouthV1, rMouthV2, rMouthV3, rMouthV4,
-                        rMouthV5, rMouthV6, rMouthV7, rMouthV8, cHeadRed);
-}
-
-void drawHead() {
-    glPushMatrix();
-    glRotatef(90, 1, 0, 0);
-    drawHemisphere(3.0, 30, 30, cLightGrey);
-    glPopMatrix();
-    
-    glPushMatrix(); {
-        glTranslatef(0, 1.4, 2.13);
-        glRotatef(35, 1, 0, 0);
-        drawCube(1, 2, 3, cHeadRed, 0, 0, 0);
+class Head {
+public:
+    static void drawFace() {
+        glPushMatrix();
+        glColor3fv(cHeadRed);
+        glTranslatef(0.15, 0, 0);
+        glScalef(1.15, 1.15, 1);
+        glBegin(GL_POLYGON);
+        glVertex3f(-2, -0.1, 2.005);
+        glVertex3f(-2, -0.2, 2.005);
+        glVertex3f(-1.4, -0.5, 2.005);
+        glVertex3f(-0.15, -0.3, 2.005);
+        glVertex3f(-0.15, -0.2, 2.005);
+        glEnd();
+        glTranslatef(-0.3, 0, 0);
+        glBegin(GL_POLYGON);
+        glVertex3f(2, -0.1, 2.005);
+        glVertex3f(2, -0.2, 2.005);
+        glVertex3f(1.4, -0.5, 2.005);
+        glVertex3f(0.15, -0.3, 2.005);
+        glVertex3f(0.15, -0.2, 2.005);
+        glEnd();
         glPopMatrix();
+        glColor3fv(cEyeYellow);
+        glBegin(GL_POLYGON);
+        glVertex3f(-2, -0.1, 2.01);
+        glVertex3f(-2, -0.2, 2.01);
+        glVertex3f(-1.4, -0.5, 2.01);
+        glVertex3f(-0.15, -0.3, 2.01);
+        glVertex3f(-0.15, -0.2, 2.01);
+        glEnd();
+        glBegin(GL_POLYGON);
+        glVertex3f(2, -0.1, 2.01);
+        glVertex3f(2, -0.2, 2.01);
+        glVertex3f(1.4, -0.5, 2.01);
+        glVertex3f(0.15, -0.3, 2.01);
+        glVertex3f(0.15, -0.2, 2.01);
+        glEnd();
+        
+        glColor3fv(cWhite);
+        glBegin(GL_POLYGON);
+        glVertex3f(-2.1, -0.34, 2.01);
+        glColor3fv(cLightGrey2);
+        glVertex3f(-2.1, -2.2, 2.01);
+        glColor3fv(cWhite);
+        glVertex3f(0, -2.7, 2.31);
+        glVertex3f(-1.4, -0.65, 2.31);
+        glEnd();
+        glBegin(GL_POLYGON);
+        glVertex3f(0, -2.7, 2.31);
+        glVertex3f(0, -0.45, 2.31);
+        glVertex3f(-1.4, -0.65, 2.31);
+        glEnd();
+        
+        glBegin(GL_POLYGON);
+        glVertex3f(2.1, -0.34, 2.01);
+        glColor3fv(cLightGrey2);
+        glVertex3f(2.1, -2.2, 2.01);
+        glColor3fv(cWhite);
+        glVertex3f(0, -2.7, 2.31);
+        glVertex3f(1.4, -0.65, 2.31);
+        glEnd();
+        glBegin(GL_POLYGON);
+        glVertex3f(0, -2.7, 2.31);
+        glVertex3f(0, -0.45, 2.31);
+        glVertex3f(1.4, -0.65, 2.31);
+        glEnd();
+        
+        glColor3fv(cGrey);
+        glBegin(GL_QUADS);
+        glVertex3f(-0.6, -0.9, 2.315);
+        glVertex3f(-0.6, -1.1, 2.315);
+        glVertex3f(0, -0.95, 2.315);
+        glVertex3f(0, -0.75, 2.315);
+        
+        glVertex3f(-0.6, -1.2, 2.315);
+        glVertex3f(-0.6, -1.4, 2.315);
+        glVertex3f(0, -1.25, 2.315);
+        glVertex3f(0, -1.05, 2.315);
+        
+        glVertex3f(0.6, -0.9, 2.315);
+        glVertex3f(0.6, -1.1, 2.315);
+        glVertex3f(0, -0.95, 2.315);
+        glVertex3f(0, -0.75, 2.315);
+        
+        glVertex3f(0.6, -1.2, 2.315);
+        glVertex3f(0.6, -1.4, 2.315);
+        glVertex3f(0, -1.25, 2.315);
+        glVertex3f(0, -1.05, 2.315);
+        glEnd();
+        
+        GLfloat lMouthV1[] = { -0.5, -2.65, 2.6 }; GLfloat lMouthV5[] = { -0.5, -2.65, 1.8 };
+        GLfloat lMouthV2[] = { 0, -3, 2.8 };       GLfloat lMouthV6[] = { 0, -2.7, 1.8 };
+        GLfloat lMouthV3[] = { 0, -2, 2.8 };       GLfloat lMouthV7[] = { 0, -2, 1.8 };
+        GLfloat lMouthV4[] = { -0.5, -2.2, 2.6 };  GLfloat lMouthV8[] = { -0.5, -2.2, 1.8 };
+        drawSixFacesPolygon(lMouthV1, lMouthV2, lMouthV3, lMouthV4,
+                            lMouthV5, lMouthV6, lMouthV7, lMouthV8, cHeadRed);
+        GLfloat rMouthV1[] = { 0, -3, 2.8 };      GLfloat rMouthV5[] = { 0, -2.7, 1.8 };
+        GLfloat rMouthV2[] = { 0.5, -2.65, 2.6 }; GLfloat rMouthV6[] = { 0.5, -2.65, 1.8 };
+        GLfloat rMouthV3[] = { 0.5, -2.2, 2.6 };  GLfloat rMouthV7[] = { 0.5, -2.2, 1.8 };
+        GLfloat rMouthV4[] = { 0, -2, 2.8 };      GLfloat rMouthV8[] = { 0, -2, 1.8 };
+        drawSixFacesPolygon(rMouthV1, rMouthV2, rMouthV3, rMouthV4,
+                            rMouthV5, rMouthV6, rMouthV7, rMouthV8, cHeadRed);
     }
     
-    GLfloat whiteAntennaV1[] = { 0, 0.5, 3.3 }; GLfloat whiteAntennaV5[] = { 0, 0.4, 3.2 };
-    GLfloat whiteAntennaV2[] = { 6, 2.2, 2.7 }; GLfloat whiteAntennaV6[] = { 5.9, 2.2, 2.6 };
-    GLfloat whiteAntennaV3[] = { 6, 2.4, 2.7 }; GLfloat whiteAntennaV7[] = { 5.9, 2.4, 2.6 };
-    GLfloat whiteAntennaV4[] = { 0, 0.8, 3.4 }; GLfloat whiteAntennaV8[] = { 0, 1.2, 3.3 };
-    drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
-                        whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
-    whiteAntennaV2[0] = -6; whiteAntennaV6[0] = -5.9;
-    whiteAntennaV3[0] = -6; whiteAntennaV7[0] = -5.9;
-    drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
-                        whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
-    
-    
-    glPushMatrix();
-    drawCube(4.5, 2.5, 4, cBlack, 0, -2.5/2, 0);
-    drawFace();
-    glPopMatrix();
-    
-    drawSphere(1.4, 30, 30, GLU_FILL, cGrey, 0, -2.4, 0);
-}
+    static void drawHead() {
+        glPushMatrix();
+        glRotatef(90, 1, 0, 0);
+        drawHemisphere(3.0, 30, 30, cLightGrey);
+        glPopMatrix();
+        
+        glPushMatrix(); {
+            glTranslatef(0, 1.4, 2.13);
+            glRotatef(35, 1, 0, 0);
+            drawCube(1, 2, 3, cHeadRed, 0, 0, 0);
+            glPopMatrix();
+        }
+        
+        GLfloat whiteAntennaV1[] = { 0, 0.5, 3.3 }; GLfloat whiteAntennaV5[] = { 0, 0.4, 3.2 };
+        GLfloat whiteAntennaV2[] = { 6, 2.2, 2.7 }; GLfloat whiteAntennaV6[] = { 5.9, 2.2, 2.6 };
+        GLfloat whiteAntennaV3[] = { 6, 2.4, 2.7 }; GLfloat whiteAntennaV7[] = { 5.9, 2.4, 2.6 };
+        GLfloat whiteAntennaV4[] = { 0, 0.8, 3.4 }; GLfloat whiteAntennaV8[] = { 0, 1.2, 3.3 };
+        drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
+                            whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
+        whiteAntennaV2[0] = -6; whiteAntennaV6[0] = -5.9;
+        whiteAntennaV3[0] = -6; whiteAntennaV7[0] = -5.9;
+        drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
+                            whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
+        
+        
+        glPushMatrix();
+        drawCube(4.5, 2.5, 4, cBlack, 0, -2.5/2, 0);
+        drawFace();
+        glPopMatrix();
+        
+        drawSphere(1.4, 30, 30, GLU_FILL, cGrey, 0, -2.4, 0);
+    }
+};
 
-void drawBody() {
-    
-}
+class Body {
+public:
+    static void drawBody() {
+        
+    }
+};
 
-void drawHands() {
-    
-}
+class Hands {
+public:
+    static void drawHands() {
+        
+    }
+};
 
-void drawLegs() {
-    
-}
+class Legs {
+public:
+    static void drawLegs() {
+        
+    }
+};
 
 void projection() {
     glMatrixMode(GL_PROJECTION);
@@ -455,10 +467,10 @@ void display() {
     glBindTexture(GL_TEXTURE_2D, 0);
     
     glPushMatrix(); {
-        drawHead();
-        drawBody();
-        drawHands();
-        drawLegs();
+        Head::drawHead();
+        Body::drawBody();
+        Hands::drawHands();
+        Legs::drawLegs();
         glPopMatrix();
     }
 
