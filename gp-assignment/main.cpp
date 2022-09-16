@@ -70,6 +70,7 @@ void display();
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 const int FRAME_RATE = 15; // Refresh interval in milliseconds (1000/15 = 66 frames per second)
+const float PI = 3.1415926535;
 
 bool isOrtho = true; // Is ortho view
 const float O_NEAR = -10, O_FAR = 10; // Ortho near far
@@ -182,12 +183,17 @@ void drawSixFacesPolygon(float v1[], float v2[], float v3[], float v4[],
     glPopMatrix();
 }
 
-void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw) {
+void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw, float color[], float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    glColor3fv(color);
+    
     GLUquadricObj* sphere = NULL;
     sphere = gluNewQuadric();
     gluQuadricDrawStyle(sphere, draw);
     gluSphere(sphere, radius, slices, stacks);
     gluDeleteQuadric(sphere);
+    glPopMatrix();
 }
 
 void drawCylinder(
@@ -218,17 +224,17 @@ void drawHemisphere(double r, int lats, int longs, GLfloat color[]) {
     glColor3fv(color);
     int halfLats = lats / 2;
     for (int i = 0; i <= halfLats; i++) {
-        double lat0 = M_PI * (-0.5 + (double) (i - 1) / lats);
+        double lat0 = PI * (-0.5 + (double) (i - 1) / lats);
         double z0 = r * sin(lat0);
         double zr0 = cos(lat0);
 
-        double lat1 = M_PI * (-0.5 + (double) i / lats);
+        double lat1 = PI * (-0.5 + (double) i / lats);
         double z1 = r * sin(lat1);
         double zr1 = cos(lat1);
 
         glBegin(GL_QUAD_STRIP);
         for (int j = 0; j <= longs; j++) {
-            double lng = 2 * M_PI * (double) (j - 1) / longs;
+            double lng = 2 * PI * (double) (j - 1) / longs;
             double x = r * cos(lng);
             double y = r * sin(lng);
 
@@ -254,6 +260,7 @@ GLfloat cWhite[] = { 1, 1, 1 };
 GLfloat cBlack[] = { 0.2, 0.2, 0.2 };
 GLfloat cGrey[] = { 71.0/255, 68.0/255, 68.0/255 };
 GLfloat cLightGrey[] = { 224.0/255, 227.0/255, 229.0/255 };
+GLfloat cLightGrey2[] = { 190.0/255, 203.0/255, 215.0/255 };
 GLfloat cHeadRed[] = { 1, 63.0/255, 57.0/255 };
 GLfloat cEyeYellow[] = { 249.0/255, 1, 102.0/255 };
 
@@ -302,56 +309,67 @@ void drawFace() {
     glColor3fv(cWhite);
     glBegin(GL_POLYGON);
     glVertex3f(-2.1, -0.34, 2.01);
+    glColor3fv(cLightGrey2);
     glVertex3f(-2.1, -2.2, 2.01);
-    glVertex3f(0, -2.7, 2.01);
-    glVertex3f(-1.4, -0.65, 2.01);
+    glColor3fv(cWhite);
+    glVertex3f(0, -2.7, 2.31);
+    glVertex3f(-1.4, -0.65, 2.31);
     glEnd();
     glBegin(GL_POLYGON);
-    glVertex3f(0, -2.7, 2.01);
-    glVertex3f(0, -0.45, 2.01);
-    glVertex3f(-1.4, -0.65, 2.01);
+    glVertex3f(0, -2.7, 2.31);
+    glVertex3f(0, -0.45, 2.31);
+    glVertex3f(-1.4, -0.65, 2.31);
     glEnd();
+    
     glBegin(GL_POLYGON);
     glVertex3f(2.1, -0.34, 2.01);
+    glColor3fv(cLightGrey2);
     glVertex3f(2.1, -2.2, 2.01);
-    glVertex3f(0, -2.7, 2.01);
-    glVertex3f(1.4, -0.65, 2.01);
+    glColor3fv(cWhite);
+    glVertex3f(0, -2.7, 2.31);
+    glVertex3f(1.4, -0.65, 2.31);
     glEnd();
     glBegin(GL_POLYGON);
-    glVertex3f(0, -2.7, 2.01);
-    glVertex3f(0, -0.45, 2.01);
-    glVertex3f(1.4, -0.65, 2.01);
+    glVertex3f(0, -2.7, 2.31);
+    glVertex3f(0, -0.45, 2.31);
+    glVertex3f(1.4, -0.65, 2.31);
     glEnd();
     
     glColor3fv(cGrey);
     glBegin(GL_QUADS);
-    glVertex3f(-0.6, -0.9, 2.015);
-    glVertex3f(-0.6, -1.1, 2.015);
-    glVertex3f(0, -0.95, 2.015);
-    glVertex3f(0, -0.75, 2.015);
+    glVertex3f(-0.6, -0.9, 2.315);
+    glVertex3f(-0.6, -1.1, 2.315);
+    glVertex3f(0, -0.95, 2.315);
+    glVertex3f(0, -0.75, 2.315);
     
-    glVertex3f(-0.6, -1.2, 2.015);
-    glVertex3f(-0.6, -1.4, 2.015);
-    glVertex3f(0, -1.25, 2.015);
-    glVertex3f(0, -1.05, 2.015);
+    glVertex3f(-0.6, -1.2, 2.315);
+    glVertex3f(-0.6, -1.4, 2.315);
+    glVertex3f(0, -1.25, 2.315);
+    glVertex3f(0, -1.05, 2.315);
     
-    glVertex3f(0.6, -0.9, 2.015);
-    glVertex3f(0.6, -1.1, 2.015);
-    glVertex3f(0, -0.95, 2.015);
-    glVertex3f(0, -0.75, 2.015);
+    glVertex3f(0.6, -0.9, 2.315);
+    glVertex3f(0.6, -1.1, 2.315);
+    glVertex3f(0, -0.95, 2.315);
+    glVertex3f(0, -0.75, 2.315);
     
-    glVertex3f(0.6, -1.2, 2.015);
-    glVertex3f(0.6, -1.4, 2.015);
-    glVertex3f(0, -1.25, 2.015);
-    glVertex3f(0, -1.05, 2.015);
+    glVertex3f(0.6, -1.2, 2.315);
+    glVertex3f(0.6, -1.4, 2.315);
+    glVertex3f(0, -1.25, 2.315);
+    glVertex3f(0, -1.05, 2.315);
     glEnd();
     
-    GLfloat mouthV1[] = { -0.5, -2.65, 2.6 }; GLfloat mouthV5[] = { -0.5, -2.65, 2 };
-    GLfloat mouthV2[] = { 0, -3, 2.6 }; GLfloat mouthV6[] = { 0, -3, 2 };
-    GLfloat mouthV3[] = { 0, -2, 2.6 }; GLfloat mouthV7[] = { 0, -2, 2 };
-    GLfloat mouthV4[] = { -0.5, -2.2, 2.6 }; GLfloat mouthV8[] = { -0.5, -2.2, 2 };
-    drawSixFacesPolygon(mouthV1, mouthV2, mouthV3, mouthV4,
-                        mouthV5, mouthV6, mouthV7, mouthV8, cHeadRed);
+    GLfloat lMouthV1[] = { -0.5, -2.65, 2.6 }; GLfloat lMouthV5[] = { -0.5, -2.65, 1.8 };
+    GLfloat lMouthV2[] = { 0, -3, 2.8 };       GLfloat lMouthV6[] = { 0, -2.7, 1.8 };
+    GLfloat lMouthV3[] = { 0, -2, 2.8 };       GLfloat lMouthV7[] = { 0, -2, 1.8 };
+    GLfloat lMouthV4[] = { -0.5, -2.2, 2.6 };  GLfloat lMouthV8[] = { -0.5, -2.2, 1.8 };
+    drawSixFacesPolygon(lMouthV1, lMouthV2, lMouthV3, lMouthV4,
+                        lMouthV5, lMouthV6, lMouthV7, lMouthV8, cHeadRed);
+    GLfloat rMouthV1[] = { 0, -3, 2.8 };      GLfloat rMouthV5[] = { 0, -2.7, 1.8 };
+    GLfloat rMouthV2[] = { 0.5, -2.65, 2.6 }; GLfloat rMouthV6[] = { 0.5, -2.65, 1.8 };
+    GLfloat rMouthV3[] = { 0.5, -2.2, 2.6 };  GLfloat rMouthV7[] = { 0.5, -2.2, 1.8 };
+    GLfloat rMouthV4[] = { 0, -2, 2.8 };      GLfloat rMouthV8[] = { 0, -2, 1.8 };
+    drawSixFacesPolygon(rMouthV1, rMouthV2, rMouthV3, rMouthV4,
+                        rMouthV5, rMouthV6, rMouthV7, rMouthV8, cHeadRed);
 }
 
 void drawHead() {
@@ -383,6 +401,8 @@ void drawHead() {
     drawCube(4.5, 2.5, 4, cBlack, 0, -2.5/2, 0);
     drawFace();
     glPopMatrix();
+    
+    drawSphere(1.4, 30, 30, GLU_FILL, cGrey, 0, -2.4, 0);
 }
 
 void drawBody() {
@@ -478,7 +498,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
         ry = 0;
         mTx = 0;
         mTy = 0;
-//        mTz = 0;
+        mTz = isOrtho ? 0 : -15;
         mRx = 0;
     }
 }
