@@ -42,22 +42,16 @@ const char* BOX_TEXTURE_PATH = "box.bmp";
  * FUNCTION HEADERS
  * -----------------------------------------------
  */
+void drawCircle(GLfloat color[],
+                float radiusX, float radiusY,
+                float startingAngle, GLboolean isAntiClockWise, GLboolean isHalfCircle,
+                float tx, float ty, float tz);
 void drawCube(float width, float height, float depth, float color[], float tx, float ty, float tz);
 void drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum draw);
 void drawCylinder(GLfloat color[],
-                  GLdouble baseRadius,
-                  GLdouble topRadius,
-                  GLdouble height,
-                  GLint slices,
-                  GLint stacks,
-                  GLenum draw,
-                  float tx,
-                  float ty,
-                  float tz);
-void drawHead();
-void drawBody();
-void drawHands();
-void drawLegs();
+                  GLdouble baseRadius, GLdouble topRadius, GLdouble height,
+                  GLint slices, GLint stacks, GLenum draw,
+                  float tx, float ty, float tz);
 void projection();
 void lighting();
 void display();
@@ -78,7 +72,7 @@ const float P_NEAR = 0.1, P_FAR = 30; // Perspective near far
 float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
 float prSpeed = 2.0; // Rotate Y for projection
 
-float ry = 90; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!) and Model View
+float ry = 90; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!!!) and Model View
 
 float mTx = 0, mTy = 0, mTz = 0, mtSpeed = 2; // Translate for modelview
 float mRx = 0;
@@ -91,6 +85,63 @@ GLuint textures[3]; /* storage for 3 textures. */
  * UTILITY METHODS
  * -----------------------------------------------
  */
+void drawQuad(float width, float height, float color[], float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    glColor3fv(color);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 1); glVertex3f(-(width/2), height/2, 0);
+    glTexCoord2f(1, 1); glVertex3f(width/2, height / 2, 0);
+    glTexCoord2f(1, 0); glVertex3f(width/2, -(height/2), 0);
+    glTexCoord2f(0, 0); glVertex3f(-(width/2), -(height/2), 0);
+    glEnd();
+    glPopMatrix();
+}
+
+void drawCircle(GLfloat color[],
+                            float radiusX,
+                            float radiusY,
+                            float startingAngle,
+                            GLboolean isAntiClockWise,
+                            GLboolean isHalfCircle,
+                            float tx,
+                            float ty,
+                            float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    glColor3fv(color);
+    glBegin(GL_TRIANGLE_FAN);
+       if (isAntiClockWise) {
+           for (float angle = startingAngle * PI / 180; angle <= (isHalfCircle ? (PI + startingAngle * PI / 180) : 2 * PI); angle += 2 * PI / 360) {
+               float x = radiusX * cos(angle);
+               float y = radiusY * sin(angle);
+               glVertex2f(x, y);
+           }
+       } else {
+           for (float angle = startingAngle * PI / 180; angle >= (isHalfCircle ? -PI : -2 * PI); angle -= 2 * PI / 360) {
+               float x = radiusX * cos(angle);
+               float y = radiusY * sin(angle);
+               glVertex2f(x, y);
+           }
+       }
+    glEnd();
+    glPopMatrix();
+}
+
+void drawRightTriangle(float width, float height, float color[], float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    glColor3fv(color);
+    
+    glBegin(GL_TRIANGLES);
+    glTexCoord2f(1, 1); glVertex3f(-(width/2), -(height/2), 0);
+    glTexCoord2f(1, 0); glVertex3f(width/2, -(height/2), 0);
+    glTexCoord2f(0, 0); glVertex3f(-(width/2), height/2, 0);
+    glEnd();
+    
+    glPopMatrix();
+}
+
 void drawCube(float width, float height, float depth, float color[], float tx, float ty, float tz) {
     glPushMatrix();
     glTranslatef(tx, ty, tz);
@@ -220,7 +271,9 @@ void drawCylinder(
     glPopMatrix();
 }
 
-void drawHemisphere(double r, int lats, int longs, GLfloat color[]) {
+void drawHemisphere(double r, int lats, int longs, GLfloat color[], float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
     glColor3fv(color);
     int halfLats = lats / 2;
     for (int i = 0; i <= halfLats; i++) {
@@ -253,6 +306,7 @@ void drawHemisphere(double r, int lats, int longs, GLfloat color[]) {
         }
         glEnd();
     }
+    glPopMatrix();
 }
 
 // Colors
@@ -263,6 +317,8 @@ GLfloat cLightGrey[] = { 224.0/255, 227.0/255, 229.0/255 };
 GLfloat cLightGrey2[] = { 190.0/255, 203.0/255, 215.0/255 };
 GLfloat cHeadRed[] = { 1, 63.0/255, 57.0/255 };
 GLfloat cEyeYellow[] = { 249.0/255, 1, 102.0/255 };
+GLfloat cEarGrey[] = { 132.0/255, 134.0/255, 137.0/255 };
+GLfloat cAntennaYellow[] = { 254.0/255, 223.0/255, 0 };
 
 /*
  * -----------------------------------------------
@@ -374,10 +430,10 @@ public:
                             rMouthV5, rMouthV6, rMouthV7, rMouthV8, cHeadRed);
     }
     
-    static void drawHead() {
+    static void drawToppings() {
         glPushMatrix();
         glRotatef(90, 1, 0, 0);
-        drawHemisphere(3.0, 30, 30, cLightGrey);
+        drawHemisphere(3.0, 30, 30, cLightGrey, 0, 0, 0);
         glPopMatrix();
         
         glPushMatrix(); {
@@ -386,6 +442,19 @@ public:
             drawCube(1, 2, 3, cHeadRed, 0, 0, 0);
             glPopMatrix();
         }
+        
+        GLfloat yellowAntennaV1[] = { 1, 0.8, 3.1 }; GLfloat yellowAntennaV5[] = { 1, 0.7, 3.0 };
+        GLfloat yellowAntennaV2[] = { 2.5, 5.2, 2.5 }; GLfloat yellowAntennaV6[] = { 2.4, 5.2, 2.4 };
+        GLfloat yellowAntennaV3[] = { 2.5, 5.4, 2.5 }; GLfloat yellowAntennaV7[] = { 2.4, 5.4, 2.4 };
+        GLfloat yellowAntennaV4[] = { 1, 0.8, 3.2 }; GLfloat yellowAntennaV8[] = { 1, 1.3, 3.1 };
+        drawSixFacesPolygon(yellowAntennaV1, yellowAntennaV2, yellowAntennaV3, yellowAntennaV4,
+                            yellowAntennaV5, yellowAntennaV6, yellowAntennaV7, yellowAntennaV8, cAntennaYellow);
+        yellowAntennaV1[0] = -1.0; yellowAntennaV5[0] = -1.0;
+        yellowAntennaV2[0] = -2.5; yellowAntennaV6[0] = -2.4;
+        yellowAntennaV3[0] = -2.5; yellowAntennaV7[0] = -2.4;
+        yellowAntennaV4[0] = -1.0; yellowAntennaV8[0] = -1.0;
+        drawSixFacesPolygon(yellowAntennaV1, yellowAntennaV2, yellowAntennaV3, yellowAntennaV4,
+                            yellowAntennaV5, yellowAntennaV6, yellowAntennaV7, yellowAntennaV8, cAntennaYellow);
         
         GLfloat whiteAntennaV1[] = { 0, 0.5, 3.3 }; GLfloat whiteAntennaV5[] = { 0, 0.4, 3.2 };
         GLfloat whiteAntennaV2[] = { 6, 2.2, 2.7 }; GLfloat whiteAntennaV6[] = { 5.9, 2.2, 2.6 };
@@ -398,12 +467,57 @@ public:
         drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
                             whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
         
+        // Ears
+        glPushMatrix(); {
+            glScalef(1, 1, 4.5);
+            drawHemisphere(0.4, 20, 20, cEarGrey, 2.6, 2, 0.2);
+            drawCircle(cGrey, 0.4, 0.4, 0, true, false, 2.6, 2, 0.2);
+            drawCircle(cBlack, 0.3, 0.3, 0, true, false, 2.6, 2, 0.201);
+            
+            drawHemisphere(0.4, 20, 20, cEarGrey, -2.6, 2, 0.2);
+            drawCircle(cGrey, 0.4, 0.4, 0, true, false, -2.6, 2, 0.2);
+            drawCircle(cBlack, 0.3, 0.3, 0, true, false, -2.6, 2, 0.201);
+        }
+        glPopMatrix();
+    }
+    
+    static void drawCheek() {
+        drawCube(4.5, 2.5, 0.5, cWhite, 0, -2.5/2, -2 - 0.5/2);
+        
+        GLfloat whiteSideV1[] = { 2.25, -2.5, 2.5 }; GLfloat whiteSideV5[] = { 2.25, -2.5, -2.5 };
+        GLfloat whiteSideV2[] = { 2.75, -2.0, 2.5 }; GLfloat whiteSideV6[] = { 2.75, -2.0, -2.5 };
+        GLfloat whiteSideV3[] = { 2.75, 0, 2.5 }; GLfloat whiteSideV7[] = { 2.75, 0, -2.5 };
+        GLfloat whiteSideV4[] = { 2.25, 0, 2.5 }; GLfloat whiteSideV8[] = { 2.25, 0, -2.5 };
+        drawSixFacesPolygon(whiteSideV1, whiteSideV2, whiteSideV3, whiteSideV4,
+                            whiteSideV5, whiteSideV6, whiteSideV7, whiteSideV8, cWhite);
+        whiteSideV1[0] = -2.25; whiteSideV5[0] = -2.25;
+        whiteSideV2[0] = -2.75; whiteSideV6[0] = -2.75;
+        whiteSideV3[0] = -2.75; whiteSideV7[0] = -2.75;
+        whiteSideV4[0] = -2.25; whiteSideV8[0] = -2.25;
+        drawSixFacesPolygon(whiteSideV1, whiteSideV2, whiteSideV3, whiteSideV4,
+                            whiteSideV5, whiteSideV6, whiteSideV7, whiteSideV8, cWhite);
+        
+        glPushMatrix();
+        glRotatef(180, 0, 0, 1);
+        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, 2.501);
+        glRotatef(180, 0, 1, 0);
+        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, -2.501);
+        glPopMatrix();
+        drawQuad(0.3, 0.7, cGrey, 2.5, -0.7, 2.501);
+        drawQuad(0.3, 0.6, cGrey, 2.5, -1.63, 2.501);
+        drawQuad(0.3, 0.7, cGrey, -2.5, -0.7, 2.501);
+        drawQuad(0.3, 0.6, cGrey, -2.5, -1.63, 2.501);
+    }
+    
+    static void drawHead() {
+        drawToppings();
+        drawCheek();
         
         glPushMatrix();
         drawCube(4.5, 2.5, 4, cBlack, 0, -2.5/2, 0);
         drawFace();
         glPopMatrix();
-        
+
         drawSphere(1.4, 30, 30, GLU_FILL, cGrey, 0, -2.4, 0);
     }
 };
@@ -517,10 +631,26 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 void processSpecialKeys(int key, int x, int y) {
     if (key == GLUT_KEY_UP) {
-
+        if (isOrtho) {
+            if (mTz > O_NEAR) {
+                mTz -= mtSpeed;
+            }
+        } else {
+            if (mTz > -P_FAR) {
+                mTz -= mtSpeed;
+            }
+        }
     }
     else if (key == GLUT_KEY_DOWN) {
-
+        if (isOrtho) {
+            if (mTz < O_FAR) {
+                mTz += mtSpeed;
+            }
+        } else {
+            if (mTz < P_FAR) {
+                mTz += mtSpeed;
+            }
+        }
     }
     else if (key == GLUT_KEY_LEFT) {
         mTx -= mtSpeed;
@@ -708,6 +838,9 @@ GLvoid initGL(GLsizei width, GLsizei height) {
     glClearDepth(1.0);    // Enables clearing of the depth buffer.
     glEnable(GL_DEPTH_TEST); // Enables depth testing.
     glShadeModel(GL_SMOOTH); // Enables smooth color shading.
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_BLEND);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity(); // Reset the projection matrix.
@@ -721,7 +854,7 @@ void timer(int value) {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA | GLUT_MULTISAMPLE);
 
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition(100, 100);
