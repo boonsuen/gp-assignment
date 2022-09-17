@@ -85,7 +85,7 @@ GLuint textures[3]; /* storage for 3 textures. */
  * UTILITY METHODS
  * -----------------------------------------------
  */
-void drawQuad(float width, float height, float color[], float tx, float ty, float tz) {
+void drawRect(float width, float height, float color[], float tx, float ty, float tz) {
     glPushMatrix();
     glTranslatef(tx, ty, tz);
     glColor3fv(color);
@@ -503,10 +503,10 @@ public:
         glRotatef(180, 0, 1, 0);
         drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, -2.501);
         glPopMatrix();
-        drawQuad(0.3, 0.7, cGrey, 2.5, -0.7, 2.501);
-        drawQuad(0.3, 0.6, cGrey, 2.5, -1.63, 2.501);
-        drawQuad(0.3, 0.7, cGrey, -2.5, -0.7, 2.501);
-        drawQuad(0.3, 0.6, cGrey, -2.5, -1.63, 2.501);
+        drawRect(0.3, 0.7, cGrey, 2.5, -0.7, 2.501);
+        drawRect(0.3, 0.6, cGrey, 2.5, -1.63, 2.501);
+        drawRect(0.3, 0.7, cGrey, -2.5, -0.7, 2.501);
+        drawRect(0.3, 0.6, cGrey, -2.5, -1.63, 2.501);
     }
     
     static void drawHead() {
