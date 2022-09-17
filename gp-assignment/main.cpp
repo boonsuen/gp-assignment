@@ -411,14 +411,36 @@ public:
         drawHemisphere(3.0, 30, 30, cLightGrey, 0, 0, 0);
         glPopMatrix();
         
+        // Hat
+        GLfloat whiteHatV1[] = { -0.5, 2.9, 1.8 }; GLfloat whiteHatV5[] = { -0.5, 2, -2.2 };
+        GLfloat whiteHatV2[] = { 0.5, 2.9, 1.8 }; GLfloat whiteHatV6[] = { 0.5, 2, -2.2 };
+        GLfloat whiteHatV3[] = { 0.35, 3.7, 1.5 }; GLfloat whiteHatV7[] = { 0.35, 3.3, -1.5 };
+        GLfloat whiteHatV4[] = { -0.35, 3.7, 1.5 }; GLfloat whiteHatV8[] = { -0.35, 3.3, -1.5 };
+        drawSixFacesPolygon(whiteHatV1, whiteHatV2, whiteHatV3, whiteHatV4,
+                            whiteHatV5, whiteHatV6, whiteHatV7, whiteHatV8, cWhite);
+        whiteHatV5[1] = -2;
+        whiteHatV6[1] = -2;
+        drawSixFacesPolygon(whiteHatV1, whiteHatV2, whiteHatV3, whiteHatV4,
+                            whiteHatV5, whiteHatV6, whiteHatV7, whiteHatV8, cWhite);
+        
         glPushMatrix(); {
-            glTranslatef(0, 1.4, 2.13);
-            glRotatef(35, 1, 0, 0);
-            drawCube(1, 2, 3, cHeadRed, 0, 0, 0);
+            glColor3fv(cGrey);
+            glBegin(GL_QUADS);
+            glVertex3f(-0.35, 3, 1.801); glVertex3f(0.35, 3, 1.801);
+            glVertex3f(0.25, 3.6, 1.601); glVertex3f(-0.25, 3.6, 1.601);
+            glEnd();
             glPopMatrix();
         }
         
-        GLfloat yellowAntennaV1[] = { 1, 0.8, 3.1 }; GLfloat yellowAntennaV5[] = { 1, 0.7, 3.0 };
+        glPushMatrix(); {
+            glTranslatef(0, 1.4, 2.43);
+            glRotatef(30, 1, 0, 0);
+            drawCube(1, 2, 2.7, cHeadRed, 0, 0, 0);
+            glPopMatrix();
+        }
+        
+        // Antennas
+        GLfloat yellowAntennaV1[] = { 1, 0.8, 3.2 }; GLfloat yellowAntennaV5[] = { 1, 0.7, 3.1 };
         GLfloat yellowAntennaV2[] = { 2.5, 5.2, 2.5 }; GLfloat yellowAntennaV6[] = { 2.4, 5.2, 2.4 };
         GLfloat yellowAntennaV3[] = { 2.5, 5.4, 2.5 }; GLfloat yellowAntennaV7[] = { 2.4, 5.4, 2.4 };
         GLfloat yellowAntennaV4[] = { 1, 0.8, 3.2 }; GLfloat yellowAntennaV8[] = { 1, 1.3, 3.1 };
@@ -832,7 +854,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA | GLUT_MULTISAMPLE);
 
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitWindowPosition(100, 100);
+    glutInitWindowPosition(0, 0);
     glutCreateWindow("Robot");
 
     /* Register the function to do all our OpenGL drawing. */
