@@ -327,42 +327,27 @@ GLfloat cAntennaYellow[] = { 254.0/255, 223.0/255, 0 };
  */
 class Head {
 public:
-    static void drawFace() {
+    static void drawEye(bool isRed, bool isLeft) {
         glPushMatrix();
-        glColor3fv(cHeadRed);
-        glTranslatef(0.15, 0, 0);
-        glScalef(1.15, 1.15, 1);
+        glColor3fv(isRed ? cHeadRed : cEyeYellow);
+        if (isRed) {
+            glScalef(1.15, 1.15, 1);
+            glTranslatef(isLeft ? 0.15 : -0.15, 0, 0);
+        }
         glBegin(GL_POLYGON);
-        glVertex3f(-2, -0.1, 2.005);
-        glVertex3f(-2, -0.2, 2.005);
-        glVertex3f(-1.4, -0.5, 2.005);
-        glVertex3f(-0.15, -0.3, 2.005);
-        glVertex3f(-0.15, -0.2, 2.005);
-        glEnd();
-        glTranslatef(-0.3, 0, 0);
-        glBegin(GL_POLYGON);
-        glVertex3f(2, -0.1, 2.005);
-        glVertex3f(2, -0.2, 2.005);
-        glVertex3f(1.4, -0.5, 2.005);
-        glVertex3f(0.15, -0.3, 2.005);
-        glVertex3f(0.15, -0.2, 2.005);
+        glVertex3f(isLeft ? -2    : 2   , -0.1, isRed ? 2.005 : 2.01);
+        glVertex3f(isLeft ? -2    : 2   , -0.2, isRed ? 2.005 : 2.01);
+        glVertex3f(isLeft ? -1.4  : 1.4 , -0.5, isRed ? 2.005 : 2.01);
+        glVertex3f(isLeft ? -0.15 : 0.15, -0.3, isRed ? 2.005 : 2.01);
+        glVertex3f(isLeft ? -0.15 : 0.15, -0.2, isRed ? 2.005 : 2.01);
         glEnd();
         glPopMatrix();
-        glColor3fv(cEyeYellow);
-        glBegin(GL_POLYGON);
-        glVertex3f(-2, -0.1, 2.01);
-        glVertex3f(-2, -0.2, 2.01);
-        glVertex3f(-1.4, -0.5, 2.01);
-        glVertex3f(-0.15, -0.3, 2.01);
-        glVertex3f(-0.15, -0.2, 2.01);
-        glEnd();
-        glBegin(GL_POLYGON);
-        glVertex3f(2, -0.1, 2.01);
-        glVertex3f(2, -0.2, 2.01);
-        glVertex3f(1.4, -0.5, 2.01);
-        glVertex3f(0.15, -0.3, 2.01);
-        glVertex3f(0.15, -0.2, 2.01);
-        glEnd();
+    }
+    static void drawFace() {
+        drawEye(true, true);
+        drawEye(true, false);
+        drawEye(false, true);
+        drawEye(false, false);
         
         glColor3fv(cWhite);
         glBegin(GL_POLYGON);
@@ -393,27 +378,17 @@ public:
         glVertex3f(1.4, -0.65, 2.31);
         glEnd();
         
+        // Nose
         glColor3fv(cGrey);
         glBegin(GL_QUADS);
-        glVertex3f(-0.6, -0.9, 2.315);
-        glVertex3f(-0.6, -1.1, 2.315);
-        glVertex3f(0, -0.95, 2.315);
-        glVertex3f(0, -0.75, 2.315);
-        
-        glVertex3f(-0.6, -1.2, 2.315);
-        glVertex3f(-0.6, -1.4, 2.315);
-        glVertex3f(0, -1.25, 2.315);
-        glVertex3f(0, -1.05, 2.315);
-        
-        glVertex3f(0.6, -0.9, 2.315);
-        glVertex3f(0.6, -1.1, 2.315);
-        glVertex3f(0, -0.95, 2.315);
-        glVertex3f(0, -0.75, 2.315);
-        
-        glVertex3f(0.6, -1.2, 2.315);
-        glVertex3f(0.6, -1.4, 2.315);
-        glVertex3f(0, -1.25, 2.315);
-        glVertex3f(0, -1.05, 2.315);
+        glVertex3f(-0.6, -0.9, 2.315); glVertex3f(-0.6, -1.1, 2.315);
+        glVertex3f(0, -0.95, 2.315); glVertex3f(0, -0.75, 2.315);
+        glVertex3f(-0.6, -1.2, 2.315); glVertex3f(-0.6, -1.4, 2.315);
+        glVertex3f(0, -1.25, 2.315); glVertex3f(0, -1.05, 2.315);
+        glVertex3f(0.6, -0.9, 2.315); glVertex3f(0.6, -1.1, 2.315);
+        glVertex3f(0, -0.95, 2.315); glVertex3f(0, -0.75, 2.315);
+        glVertex3f(0.6, -1.2, 2.315); glVertex3f(0.6, -1.4, 2.315);
+        glVertex3f(0, -1.25, 2.315); glVertex3f(0, -1.05, 2.315);
         glEnd();
         
         GLfloat lMouthV1[] = { -0.5, -2.65, 2.6 }; GLfloat lMouthV5[] = { -0.5, -2.65, 1.8 };
