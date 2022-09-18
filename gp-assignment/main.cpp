@@ -2,15 +2,15 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
-const char* ICE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-prac/Prac7/Prac7/ice.bmp";
-const char* BOX_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-prac/Prac7/Prac7/box.bmp";
+const char* ICE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/ice.bmp";
+const char* WHITE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/white.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/freeglut.h>
 const char* ICE_TEXTURE_PATH = "ice.bmp";
-const char* BOX_TEXTURE_PATH = "box.bmp";
+const char* WHITE_TEXTURE_PATH = "white.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -68,7 +68,7 @@ const float PI = 3.1415926535;
 
 bool isOrtho = true; // Is ortho view
 const float O_NEAR = -10, O_FAR = 10; // Ortho near far
-const float P_NEAR = 0.1, P_FAR = 30; // Perspective near far
+const float P_NEAR = 0.1, P_FAR = 40; // Perspective near far
 float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
 float prSpeed = 2.0; // Rotate Y for projection
 
@@ -78,7 +78,11 @@ float mTx = 0, mTy = 0, mTz = 0, mtSpeed = 2; // Translate for modelview
 float mRx = 0;
 
 // Texture
-GLuint textures[3]; /* storage for 3 textures. */
+bool isTexture = false;
+const int TEXTURES_NO = 2;
+GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
+const char* filenames[TEXTURES_NO] = { ICE_TEXTURE_PATH, WHITE_TEXTURE_PATH };
+int activeTexture = 0;
 
 /*
  * -----------------------------------------------
@@ -496,14 +500,14 @@ public:
         
         glPushMatrix();
         glRotatef(180, 0, 0, 1);
-        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, 2.501);
+        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, 2.505);
         glRotatef(180, 0, 1, 0);
-        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, -2.501);
+        drawRightTriangle(0.3, 0.3, cGrey, 2.5, 2.08, -2.505);
         glPopMatrix();
-        drawRect(0.3, 0.7, cGrey, 2.5, -0.7, 2.501);
-        drawRect(0.3, 0.6, cGrey, 2.5, -1.63, 2.501);
-        drawRect(0.3, 0.7, cGrey, -2.5, -0.7, 2.501);
-        drawRect(0.3, 0.6, cGrey, -2.5, -1.63, 2.501);
+        drawRect(0.3, 0.7, cGrey, 2.5, -0.7, 2.505);
+        drawRect(0.3, 0.6, cGrey, 2.5, -1.63, 2.505);
+        drawRect(0.3, 0.7, cGrey, -2.5, -0.7, 2.505);
+        drawRect(0.3, 0.6, cGrey, -2.5, -1.63, 2.505);
     }
     
     static void drawHead() {
@@ -560,6 +564,12 @@ void lighting() {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    if (isTexture) {
+        glEnable(GL_TEXTURE_2D);
+    } else {
+        glDisable(GL_TEXTURE_2D);
+    }
 
     projection();
     lighting();
@@ -575,7 +585,7 @@ void display() {
     }
     
     // Clear texture
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     
     glPushMatrix(); {
         Head::drawHead();
@@ -589,7 +599,15 @@ void display() {
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
-    if (key == '1') {
+    if (key == '0') { // Reset
+        pTx = 0;
+        pTy = 0;
+        ry = 0;
+        mTx = 0;
+        mTy = 0;
+        mTz = isOrtho ? 0 : -15;
+        mRx = 0;
+    } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
             mTz = 0;
@@ -614,15 +632,15 @@ void processNormalKeys(unsigned char key, int x, int y) {
         mRx -= prSpeed;
     }
     
-    // Reset
-    if (key == 32) {
-        pTx = 0;
-        pTy = 0;
-        ry = 0;
-        mTx = 0;
-        mTy = 0;
-        mTz = isOrtho ? 0 : -15;
-        mRx = 0;
+    // Enter (Enable/disable texture)
+    if (key == 13) {
+        isTexture = !isTexture;
+    } else if (key == '6') { // Change texture
+        if (activeTexture == 0) {
+            activeTexture = 1;
+        } else {
+            activeTexture = 0;
+        }
     }
 }
 
@@ -637,8 +655,7 @@ void processSpecialKeys(int key, int x, int y) {
                 mTz -= mtSpeed;
             }
         }
-    }
-    else if (key == GLUT_KEY_DOWN) {
+    } else if (key == GLUT_KEY_DOWN) {
         if (isOrtho) {
             if (mTz < O_FAR) {
                 mTz += mtSpeed;
@@ -648,11 +665,9 @@ void processSpecialKeys(int key, int x, int y) {
                 mTz += mtSpeed;
             }
         }
-    }
-    else if (key == GLUT_KEY_LEFT) {
+    } else if (key == GLUT_KEY_LEFT) {
         mTx -= mtSpeed;
-    }
-    else if (key == GLUT_KEY_RIGHT) {
+    } else if (key == GLUT_KEY_RIGHT) {
         mTx += mtSpeed;
     }
 }
@@ -764,66 +779,61 @@ int imageLoad(const char* filename, Image* image) {
 
 // Load Bitmaps and convert to texture
 GLvoid loadGLTextures(GLvoid) {
-    Image* image1; // Load Texture
-    Image* image2; // Load Texture
-
-    // allocate space for texture.
-    image1 = (Image*)malloc(sizeof(Image));
-    if (image1 == NULL) {
-        printf("Error allocating space for image");
-        exit(0);
-    }
-
-    if (!imageLoad(ICE_TEXTURE_PATH, image1)) {
-        exit(1);
-    }
-
-    image2 = (Image*)malloc(sizeof(Image));
-    if (image2 == NULL) {
-        printf("Error allocating space for image");
-        exit(0);
-    }
-
-    if (!imageLoad(BOX_TEXTURE_PATH, image2)) {
-        exit(1);
-    }
-
     // Create Textures
-    glGenTextures(3, &textures[0]);
+    glGenTextures(TEXTURES_NO, &textures[0]);
+    
+    for (int i = 0; i < TEXTURES_NO; i++) {
+        // allocate space for texture.
+        Image* image = (Image*)malloc(sizeof(Image));
+        if (image == NULL) {
+            printf("Error allocating space for image");
+            exit(0);
+        }
+        if (!imageLoad(filenames[i], image)) {
+            exit(1);
+        }
+        
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, image->sizeX, image->sizeY, 0,
+            GL_BGR_EXT, GL_UNSIGNED_BYTE, image->data);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image->sizeX, image->sizeY, GL_BGR_EXT, GL_UNSIGNED_BYTE, image->data);
+    }
 
-    // texture 1 (poor quality scaling)
-    glBindTexture(GL_TEXTURE_2D, textures[0]);  // 2d texture (x and y size)
-    // cheap scaling when image bigger than texture.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // cheap scaling when image samlled than texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // 2d texture level of detail 0 (normal), 3 components (red, green, blue), x size from
-    // image, y size from image, border 0 (normal) rgb color data, unsigned byte data,
-    // and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
-        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
-
-    // texture 2 (linear scaling)
-    glBindTexture(GL_TEXTURE_2D, textures[1]); // 2d texture (x and y size)
-    // scale linearly when image bigger than texture.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // scale linearly when image smaller than texture.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image2->sizeX, image2->sizeY, 0,
-        GL_BGR_EXT, GL_UNSIGNED_BYTE, image2->data);
-
-    // texture 3 (mipmapped scaling)
-    glBindTexture(GL_TEXTURE_2D, textures[2]); // 2d textuer (x and y size)
-    // scale linearly when image bigger than texture.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // scale linearly + mipmap when image smalled than texture.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
-        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
-
-    // 2d texture 3 colors, width, height, RGB in that order, byte data, and the data.
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image1->sizeX, image1->sizeY, GL_BGR_EXT,
-        GL_UNSIGNED_BYTE, image1->data);
+//    // texture 1 (poor quality scaling)
+//    glBindTexture(GL_TEXTURE_2D, textures[0]);  // 2d texture (x and y size)
+//    // cheap scaling when image bigger than texture.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//    // cheap scaling when image samlled than texture
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    // 2d texture level of detail 0 (normal), 3 components (red, green, blue), x size from
+//    // image, y size from image, border 0 (normal) rgb color data, unsigned byte data,
+//    // and finally the data itself.
+//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
+//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
+//
+//    // texture 2 (linear scaling)
+//    glBindTexture(GL_TEXTURE_2D, textures[1]); // 2d texture (x and y size)
+//    // scale linearly when image bigger than texture.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    // scale linearly when image smaller than texture.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image2->sizeX, image2->sizeY, 0,
+//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image2->data);
+//
+//    // texture 3 (mipmapped scaling)
+//    glBindTexture(GL_TEXTURE_2D, textures[2]); // 2d textuer (x and y size)
+//    // scale linearly when image bigger than texture.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    // scale linearly + mipmap when image smalled than texture.
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
+//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
+//
+//    // 2d texture 3 colors, width, height, RGB in that order, byte data, and the data.
+//    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image1->sizeX, image1->sizeY, GL_BGR_EXT,
+//        GL_UNSIGNED_BYTE, image1->data);
 }
 
 /* A general OpenGL initialization function. Sets all of the initial parameters. */
@@ -836,7 +846,7 @@ GLvoid initGL(GLsizei width, GLsizei height) {
     glEnable(GL_DEPTH_TEST); // Enables depth testing.
     glShadeModel(GL_SMOOTH); // Enables smooth color shading.
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_MULTISAMPLE);
+    glEnable(0x809D);
     glEnable(GL_BLEND);
 
     glMatrixMode(GL_PROJECTION);
