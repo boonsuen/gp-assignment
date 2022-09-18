@@ -4,6 +4,7 @@
 #include <GLUT/glut.h>
 const char* ICE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/ice.bmp";
 const char* WHITE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/white.bmp";
+const char* BLACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/black.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -11,6 +12,7 @@ const char* WHITE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/
 #include <GL/freeglut.h>
 const char* ICE_TEXTURE_PATH = "ice.bmp";
 const char* WHITE_TEXTURE_PATH = "white.bmp";
+const char* BLACK_TEXTURE_PATH = "black.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -79,9 +81,13 @@ float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 2;
+const int TEXTURES_NO = 3;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
-const char* filenames[TEXTURES_NO] = { ICE_TEXTURE_PATH, WHITE_TEXTURE_PATH };
+const char* filenames[TEXTURES_NO] = {
+    ICE_TEXTURE_PATH,
+    WHITE_TEXTURE_PATH,
+    BLACK_TEXTURE_PATH
+};
 int activeTexture = 0;
 
 /*
@@ -348,6 +354,7 @@ public:
         glPopMatrix();
     }
     static void drawFace() {
+        glBindTexture(GL_TEXTURE_2D, 0);
         drawEye(true, true);
         drawEye(true, false);
         drawEye(false, true);
@@ -407,6 +414,7 @@ public:
         GLfloat rMouthV4[] = { 0, -2, 2.8 };      GLfloat rMouthV8[] = { 0, -2, 1.8 };
         drawSixFacesPolygon(rMouthV1, rMouthV2, rMouthV3, rMouthV4,
                             rMouthV5, rMouthV6, rMouthV7, rMouthV8, cHeadRed);
+        glBindTexture(GL_TEXTURE_2D, activeTexture);
     }
     
     static void drawToppings() {
@@ -444,6 +452,7 @@ public:
         }
         
         // Antennas
+        glBindTexture(GL_TEXTURE_2D, 0);
         GLfloat yellowAntennaV1[] = { 1, 0.8, 3.2 }; GLfloat yellowAntennaV5[] = { 1, 0.7, 3.1 };
         GLfloat yellowAntennaV2[] = { 2.5, 5.2, 2.5 }; GLfloat yellowAntennaV6[] = { 2.4, 5.2, 2.4 };
         GLfloat yellowAntennaV3[] = { 2.5, 5.4, 2.5 }; GLfloat yellowAntennaV7[] = { 2.4, 5.4, 2.4 };
@@ -456,6 +465,7 @@ public:
         yellowAntennaV4[0] = -1.0; yellowAntennaV8[0] = -1.0;
         drawSixFacesPolygon(yellowAntennaV1, yellowAntennaV2, yellowAntennaV3, yellowAntennaV4,
                             yellowAntennaV5, yellowAntennaV6, yellowAntennaV7, yellowAntennaV8, cAntennaYellow);
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
         
         GLfloat whiteAntennaV1[] = { 0, 0.5, 3.3 }; GLfloat whiteAntennaV5[] = { 0, 0.4, 3.2 };
         GLfloat whiteAntennaV2[] = { 6, 2.2, 2.7 }; GLfloat whiteAntennaV6[] = { 5.9, 2.2, 2.6 };
@@ -636,10 +646,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
     if (key == 13) {
         isTexture = !isTexture;
     } else if (key == '6') { // Change texture
-        if (activeTexture == 0) {
-            activeTexture = 1;
-        } else {
+        if (activeTexture >= TEXTURES_NO - 1) {
             activeTexture = 0;
+        } else {
+            activeTexture++;
         }
     }
 }

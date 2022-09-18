@@ -138,6 +138,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="black.bmp" />
     <Image Include="ice.bmp" />
     <Image Include="white.bmp" />
   </ItemGroup>
