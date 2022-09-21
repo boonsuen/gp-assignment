@@ -957,23 +957,34 @@ public:
     float scaleX = 0;
     float scaleY = 0;
     void drawWaist() {
-        if (defenseMode) {
+        // Defense Waist
+        {
             glPushMatrix();
             glTranslatef(-0.92, -0.4, 0);
             glScalef(scaleX, scaleY, 1);
             drawLeftDefenseWaist();
             glPopMatrix();
+            
             glPushMatrix();
             glTranslatef(0.92, -0.4, 0);
             glScalef(scaleX, scaleY, 1);
             drawRightDefenseWaist();
             glPopMatrix();
-            if (scaleX < 1) {
-                scaleX += 0.01;
-                std::cout << scaleX << std::endl;
-            }
-            if (scaleY < 1) {
-                scaleY += 0.01;
+            
+            if (defenseMode) {
+                if (scaleX < 1) {
+                    scaleX += 0.01;
+                }
+                if (scaleY < 1) {
+                    scaleY += 0.01;
+                }
+            } else {
+                if (scaleX >= 0) {
+                    scaleX -= 0.01;
+                }
+                if (scaleY >= 0) {
+                    scaleY -= 0.01;
+                }
             }
         }
         
@@ -1151,10 +1162,6 @@ void processSpecialKeys(int key, int x, int y) {
         mTx += mtSpeed;
     } else if (key == GLUT_KEY_F1) {
         defenseMode = !defenseMode;
-        if (defenseMode) {
-            legs.scaleX = 0;
-            legs.scaleY = 0;
-        }
     }
 }
 
