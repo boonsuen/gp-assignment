@@ -72,6 +72,7 @@ const int WINDOW_HEIGHT = 800;
 const int FRAME_RATE = 15; // Refresh interval in milliseconds (1000/15 = 66 frames per second)
 const float PI = 3.1415926535;
 
+// View & Projection & Transformation
 bool isOrtho = true; // Is ortho view
 const float O_NEAR = -10, O_FAR = 10; // Ortho near far
 const float P_NEAR = 0.1, P_FAR = 40; // Perspective near far
@@ -93,6 +94,9 @@ const char* filenames[TEXTURES_NO] = {
     BLACK_TEXTURE_PATH
 };
 int activeTexture = 0;
+
+// Status
+bool defenseMode = true;
 
 /*
  * -----------------------------------------------
@@ -611,13 +615,16 @@ public:
     }
 };
 
+// Leg colors
 GLfloat cDarkBlue[] = { 0, 28.0/255, 63.0/255 };
 GLfloat cLightSkinGrey[] = { 233.0/255, 234.0/255, 245.0/255 };
 GLfloat cLightSkinGrey2[] = { 213.0/255, 214.0/255, 219.0/255 };
 GLfloat cPrimaryBlue[] = { 0, 23.0/255, 163.0/255 };
 GLfloat cPrimaryLightBlue[] = { 0, 118.0/255, 237.0/255 };
+GLfloat cLegBoost[] = { 1, 153.0/255, 0};
 class Legs {
 public:
+    Legs() {}
     static void drawFoot() {
         glBindTexture(GL_TEXTURE_2D, 0);
         GLfloat blueFV1[] = { -0.9, -1.5, 4 }; GLfloat blueFV5[] = { -0.9, -1.5, 0.5 };
@@ -697,7 +704,7 @@ public:
             GLfloat whiteTV4[] = { -1.1, -0.3, 1 }; GLfloat whiteTV8[] = { -1.1, -0.5, 0.5 };
             drawSixFacesPolygon(whiteTV1, whiteTV2, whiteTV3, whiteTV4,
                                 whiteTV5, whiteTV6, whiteTV7, whiteTV8, cWhite);
-            drawCube(2.2, 1.95, 1.89, cWhite, 0, -0.975-0.5, -0.45);
+            drawCube(2.2, 1.95, 1.90, cWhite, 0, -0.975-0.5, -0.45);
             glColor3fv(cLightSkinGrey2);
             glLineWidth(2);
             glBegin(GL_LINES);
@@ -741,6 +748,37 @@ public:
             glEnd();
             glPopMatrix();
             drawCylinder(cWhite, 0.75, 1, 3.5, 10, 10, GLU_FILL, true, 0, -5.5, -0.1);
+            glPushMatrix();
+            glColor3fv(cLegBoost);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glBegin(GL_TRIANGLES);
+            glVertex3f(-0.25, -4.5, 0.83);
+            glVertex3f(0.25, -4.5, 0.83);
+            glVertex3f(0, -4, 0.8);
+            glVertex3f(-0.25, -4, 0.8);
+            glVertex3f(0.25, -4, 0.8);
+            glVertex3f(0, -3.5, 0.77);
+            glVertex3f(-0.25, -3.5, 0.77);
+            glVertex3f(0.25, -3.5, 0.77);
+            glVertex3f(0, -3, 0.74);
+            glEnd();
+            glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+            
+            glColor3fv(cLightSkinGrey2);
+            glBegin(GL_LINES);
+            glVertex3f(-0.25, -5, 0.82);
+            glVertex3f(-0.25, -2.4, 0.65);
+            glVertex3f(0.25, -5, 0.82);
+            glVertex3f(0.25, -2.4, 0.65);
+            glEnd();
+            
+            glPopMatrix();
+            glPushMatrix(); {
+                glTranslatef(0, -4.5, -1);
+                glRotatef(30, 1, 0, 0);
+                drawCylinder(cLegBoost, 0.1, 0.3, 0.6, 10, 10, GLU_FILL, false, 0, 0, -0.2);
+                glPopMatrix();
+            }
             drawCylinder(cGrey, 0.5, 0.5, 1, 30, 30, GLU_FILL, true, 0, -6, -0.1);
             glPushMatrix();
             glRotatef(90, 0, 1, 0);
@@ -842,7 +880,103 @@ public:
         glPopMatrix();
     }
     
-    static void drawWaist() {
+    void drawLeftDefenseWaist() {
+        GLfloat whiteLV1[] = { -2.08, -2.5, 2 }; GLfloat whiteLV5[] = { -2.38, -2.7, 1.5 };
+        GLfloat whiteLV2[] = { 0, -3.5, 2 }; GLfloat whiteLV6[] = { 0, -3.7, 1.5 };
+        GLfloat whiteLV3[] = { 0, 0, 2 }; GLfloat whiteLV7[] = { 0, 0, 1.5 };
+        GLfloat whiteLV4[] = { -2.08, 0, 2 }; GLfloat whiteLV8[] = { -2.38, 0, 1.5 };
+        drawSixFacesPolygon(whiteLV1, whiteLV2, whiteLV3, whiteLV4,
+                            whiteLV5, whiteLV6, whiteLV7, whiteLV8, cWhite);
+        
+        whiteLV1[2] = -2; whiteLV5[2] = -1.5;
+        whiteLV2[2] = -2; whiteLV6[2] = -1.5;
+        whiteLV3[2] = -2; whiteLV7[2] = -1.5;
+        whiteLV4[2] = -2; whiteLV8[2] = -1.5;
+        drawSixFacesPolygon(whiteLV1, whiteLV2, whiteLV3, whiteLV4,
+                            whiteLV5, whiteLV6, whiteLV7, whiteLV8, cWhite);
+        
+        glBindTexture(GL_TEXTURE_2D, 0);
+        GLfloat red[] = {219.0/255, 59.0/255, 45.0/255};
+        drawCube(1.1, 1.2, 0.2, red, -0.98, -0.7, 2);
+        glColor3fv(cAntennaYellow);
+        glBegin(GL_QUADS);
+        glVertex3f(-1.58, -2.5, 2.002);
+        glVertex3f(-0.4, -3, 2.002);
+        glVertex3f(-0.4, -2.7, 2.002);
+        glVertex3f(-1.58, -2.2, 2.002);
+        glEnd();
+        drawDisk(cGrey, 0.05, 0.13, 10, 10, GLU_FILL, -1.22, -1.02, 2.101, false);
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+        
+        glColor3fv(cLightSkinGrey2);
+        glBegin(GL_LINES);
+        glVertex3f(-1.28, -2.1, 2.01);
+        glVertex3f(-1.28, -1.5, 2.01);
+        glVertex3f(-0.7, -2.3, 2.01);
+        glVertex3f(-0.7, -1.5, 2.01);
+        glEnd();
+    }
+    
+    void drawRightDefenseWaist() {
+        GLfloat whiteRV1[] = { 0, -3.5, 2 }; GLfloat whiteRV5[] = { 0, -3.7, 1.5 };
+        GLfloat whiteRV2[] = { 2.08, -2.5, 2 }; GLfloat whiteRV6[] = { 2.38, -2.5, 1.5 };
+        GLfloat whiteRV3[] = { 2.08, 0, 2 }; GLfloat whiteRV7[] = { 2.38, 0, 1.5 };
+        GLfloat whiteRV4[] = { 0, 0, 2 }; GLfloat whiteRV8[] = { 0, 0, 1.5 };
+        drawSixFacesPolygon(whiteRV1, whiteRV2, whiteRV3, whiteRV4,
+                            whiteRV5, whiteRV6, whiteRV7, whiteRV8, cWhite);
+        
+        whiteRV1[2] = -2; whiteRV5[2] = -1.5;
+        whiteRV2[2] = -2; whiteRV6[2] = -1.5;
+        whiteRV3[2] = -2; whiteRV7[2] = -1.5;
+        whiteRV4[2] = -2; whiteRV8[2] = -1.5;
+        drawSixFacesPolygon(whiteRV1, whiteRV2, whiteRV3, whiteRV4,
+                            whiteRV5, whiteRV6, whiteRV7, whiteRV8, cWhite);
+        
+        glBindTexture(GL_TEXTURE_2D, 0);
+        GLfloat red[] = {219.0/255, 59.0/255, 45.0/255};
+        drawCube(1.1, 1.2, 0.2, red, 0.98, -0.7, 2);
+        glColor3fv(cAntennaYellow);
+        glBegin(GL_QUADS);
+        glVertex3f(1.58, -2.5, 2.002);
+        glVertex3f(0.4, -3, 2.002);
+        glVertex3f(0.4, -2.7, 2.002);
+        glVertex3f(1.58, -2.2, 2.002);
+        glEnd();
+        drawDisk(cGrey, 0.05, 0.13, 10, 10, GLU_FILL, 1.22, -1.02, 2.101, false);
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+        
+        glColor3fv(cLightSkinGrey2);
+        glBegin(GL_LINES);
+        glVertex3f(1.28, -2.1, 2.01);
+        glVertex3f(1.28, -1.5, 2.01);
+        glVertex3f(0.7, -2.3, 2.01);
+        glVertex3f(0.7, -1.5, 2.01);
+        glEnd();
+    }
+    
+    float scaleX = 0;
+    float scaleY = 0;
+    void drawWaist() {
+        if (defenseMode) {
+            glPushMatrix();
+            glTranslatef(-0.92, -0.4, 0);
+            glScalef(scaleX, scaleY, 1);
+            drawLeftDefenseWaist();
+            glPopMatrix();
+            glPushMatrix();
+            glTranslatef(0.92, -0.4, 0);
+            glScalef(scaleX, scaleY, 1);
+            drawRightDefenseWaist();
+            glPopMatrix();
+            if (scaleX < 1) {
+                scaleX += 0.01;
+                std::cout << scaleX << std::endl;
+            }
+            if (scaleY < 1) {
+                scaleY += 0.01;
+            }
+        }
+        
         drawCube(8, 0.8, 4, cGrey, 0, 0, 0);
         
         GLfloat middleV1[] = { -0.9, -1.8, 2.5 }; GLfloat middleV5[] = { -0.9, -3, 1.6 };
@@ -868,7 +1002,7 @@ public:
         glPopMatrix();
     }
     
-    static void drawLegs() {
+    void drawLegs() {
         glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
         glPushMatrix();
         glTranslatef(0, 6, 0);
@@ -903,6 +1037,7 @@ void lighting() {
    
 }
 
+Legs legs;
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -936,7 +1071,7 @@ void display() {
         glPopMatrix();
         Body::drawBody();
         Hands::drawHands();
-        Legs::drawLegs();
+        legs.drawLegs();
         glPopMatrix();
     }
 
@@ -1014,6 +1149,12 @@ void processSpecialKeys(int key, int x, int y) {
         mTx -= mtSpeed;
     } else if (key == GLUT_KEY_RIGHT) {
         mTx += mtSpeed;
+    } else if (key == GLUT_KEY_F1) {
+        defenseMode = !defenseMode;
+        if (defenseMode) {
+            legs.scaleX = 0;
+            legs.scaleY = 0;
+        }
     }
 }
 
