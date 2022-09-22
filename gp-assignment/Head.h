@@ -115,6 +115,7 @@ void Head::drawFace() {
 void Head::drawToppings() {
     glPushMatrix();
     glRotatef(90, 1, 0, 0);
+    u.drawCircle(cLightGrey, 3, 3, 0, true, false, false, 0, 0, 0);
     u.drawHemisphere(3.0, 30, 30, cLightGrey, 0, 0, 0);
     glPopMatrix();
 

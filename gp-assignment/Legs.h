@@ -29,6 +29,9 @@ public:
     float hipAngleLeft = 0;
     float hipAngleRight = 0;
     float hipAngleMax = 45;
+    float kneeAngleLeft = 0;
+    float kneeAngleRight = 0;
+    float kneeAngleMax = 45;
 
     void drawFoot();
     void drawCalf();
@@ -82,31 +85,6 @@ void Legs::drawFoot() {
 }
 
 void Legs::drawCalf() {
-    glPushMatrix();
-    u.drawCube(1.2, 1.2, 1.6, cDarkBlue, 0, 0.6, 0);
-    glRotatef(90, 0, 0, 1);
-    u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.2, 30, 30, GLU_FILL, true, 0, -0.6, 0);
-    glPopMatrix();
-    glPushMatrix();
-    glRotatef(90, 0, 1, 0);
-    u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, -0.601);
-    u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, 0.601);
-    glPopMatrix();
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(-0.601, 0.1, -0.5);
-    glVertex3f(-0.601, 0.1, 0.5);
-    glVertex3f(-0.601, -0.4, -0.28);
-    glVertex3f(-0.601, 0.5, 0);
-    glVertex3f(-0.601, -0.4, 0.28);
-    glEnd();
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(0.601, 0.1, -0.5);
-    glVertex3f(0.601, 0.1, 0.5);
-    glVertex3f(0.601, -0.4, -0.28);
-    glVertex3f(0.601, 0.5, 0);
-    glVertex3f(0.601, -0.4, 0.28);
-    glEnd();
-
     glPushMatrix(); {
         glTranslatef(0, 0.15, 0);
 
@@ -223,6 +201,38 @@ void Legs::drawCalf() {
 }
 
 void Legs::drawThigh() {
+    glPushMatrix(); {
+        glTranslatef(0, -5.6, 0);
+        
+        glPushMatrix();
+        u.drawCube(1.2, 1.2, 1.6, cDarkBlue, 0, 0.6, 0);
+        glRotatef(90, 0, 0, 1);
+        u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.2, 30, 30, GLU_FILL, true, 0, -0.6, 0);
+        glPopMatrix();
+        glPushMatrix();
+        glRotatef(90, 0, 1, 0);
+        glLineWidth(2);
+        u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, -0.601);
+        u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, 0.601);
+        glPopMatrix();
+        
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(-0.601, 0.1, -0.5);
+        glVertex3f(-0.601, 0.1, 0.5);
+        glVertex3f(-0.601, -0.4, -0.28);
+        glVertex3f(-0.601, 0.5, 0);
+        glVertex3f(-0.601, -0.4, 0.28);
+        glEnd();
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0.601, 0.1, -0.5);
+        glVertex3f(0.601, 0.1, 0.5);
+        glVertex3f(0.601, -0.4, -0.28);
+        glVertex3f(0.601, 0.5, 0);
+        glVertex3f(0.601, -0.4, 0.28);
+        glEnd();
+    }
+    glPopMatrix();
+    
     u.drawCube(1.8, 1.5, 1.6, cDarkBlue, 0, -1.5, 0);
     glPushMatrix();
     glRotatef(90, 0, 0, 1);
@@ -273,32 +283,38 @@ void Legs::drawThigh() {
 
 void Legs::drawLeftLeg() {
     glPushMatrix();
-    glTranslatef(0, 1.11, 0);
-    drawThigh();
-    glPushMatrix();
-    glTranslatef(0, -5.6, 0);
-    drawCalf();
-    glTranslatef(0, -5.5, 0);
-    drawFoot();
-    glPopMatrix();
+        glTranslatef(0, 1.11, 0);
+        drawThigh();
+        glPushMatrix();
+            glTranslatef(0, -5.6, 0);
+            glRotatef(kneeAngleLeft, 1, 0, 0);
+            drawCalf();
+            glTranslatef(0, -5.5, 0);
+            drawFoot();
+        glPopMatrix();
     glPopMatrix();
 }
 
 void Legs::drawRightLeg() {
     glTranslatef(0, 1.11, 0);
     glPushMatrix();
-    drawThigh();
-    glPushMatrix();
-    glTranslatef(0, -5.6, 0);
-    drawCalf();
-    glTranslatef(0, -5.5, 0);
-    drawFoot();
-    glPopMatrix();
+        drawThigh();
+        glPushMatrix();
+            glTranslatef(0, -5.6, 0);
+            glRotatef(kneeAngleRight, 1, 0, 0);
+            drawCalf();
+            glTranslatef(0, -5.5, 0);
+            drawFoot();
+        glPopMatrix();
     glPopMatrix();
 }
 
 void Legs::drawLeftDefenseWaist() {
     glPushMatrix();
+    glTranslatef(0, 0, 1.75);
+    glScalef(scaleX, scaleY, scaleX);
+    glTranslatef(0, 0, -1.75);
+    
     glTranslatef(0, -0.4, 1.75);
     glRotatef(hipAngleLeft < 0 ? hipAngleLeft : 0, 1, 0, 0);
     glTranslatef(0, 0.4, -1.75);
@@ -334,6 +350,10 @@ void Legs::drawLeftDefenseWaist() {
     
     // Back
     glPushMatrix();
+    glTranslatef(0, 0, -1.75);
+    glScalef(scaleX, scaleY, scaleX);
+    glTranslatef(0, 0, 1.75);
+    
     glTranslatef(0, -0.4, -1.75);
     glRotatef(hipAngleLeft > 0 ? hipAngleLeft : 0, 1, 0, 0);
     glTranslatef(0, 0.4, 1.75);
@@ -349,6 +369,10 @@ void Legs::drawLeftDefenseWaist() {
 
 void Legs::drawRightDefenseWaist() {
     glPushMatrix();
+    glTranslatef(0, 0, 1.75);
+    glScalef(scaleX, scaleY, scaleX);
+    glTranslatef(0, 0, -1.75);
+    
     glTranslatef(0, -0.4, 1.75);
     glRotatef(hipAngleRight < 0 ? hipAngleRight : 0, 1, 0, 0);
     glTranslatef(0, 0.4, -1.75);
@@ -384,6 +408,10 @@ void Legs::drawRightDefenseWaist() {
     
     // Back
     glPushMatrix();
+    glTranslatef(0, 0, -1.75);
+    glScalef(scaleX, scaleY, scaleX);
+    glTranslatef(0, 0, 1.75);
+    
     glTranslatef(0, -0.4, -1.75);
     glRotatef(hipAngleRight > 0 ? hipAngleRight : 0, 1, 0, 0);
     glTranslatef(0, 0.4, 1.75);
@@ -401,13 +429,11 @@ void Legs::drawWaist() {
     {
         glPushMatrix();
         glTranslatef(-0.92, -0.4, 0);
-        glScalef(scaleX, scaleY, 1);
         drawLeftDefenseWaist();
         glPopMatrix();
 
         glPushMatrix();
         glTranslatef(0.92, -0.4, 0);
-        glScalef(scaleX, scaleY, 1);
         drawRightDefenseWaist();
         glPopMatrix();
 
@@ -484,23 +510,49 @@ void Legs::keyActions(unsigned char key) {
             this->hipAngleLeft -= 1;
             std::cout << "Rotate left leg hip front" << std::endl;
         }
-    }
-    if (key == 'A' || key == 'a') {
+    } else if (key == 'A' || key == 'a') {
         if (this->hipAngleLeft < hipAngleMax) {
             this->hipAngleLeft += 1;
             std::cout << "Rotate left leg hip back" << std::endl;
         }
-    }
-    if (key == 'W' || key == 'w') {
+    } else if (key == 'W' || key == 'w') {
         if (this->hipAngleRight > -hipAngleMax) {
             this->hipAngleRight -= 1;
             std::cout << "Rotate right leg hip front" << std::endl;
         }
-    }
-    if (key == 'S' || key == 's') {
+    } else if (key == 'S' || key == 's') {
         if (this->hipAngleRight < hipAngleMax) {
             this->hipAngleRight += 1;
             std::cout << "Rotate right leg hip back" << std::endl;
         }
+    }
+    
+    if (key == 'E' || key == 'e') {
+        if (this->kneeAngleLeft > 0) {
+            this->kneeAngleLeft -= 1;
+            std::cout << "Rotate left leg knee front" << std::endl;
+        }
+    } else if (key == 'D' || key == 'd') {
+        if (this->kneeAngleLeft < kneeAngleMax) {
+            this->kneeAngleLeft += 1;
+            std::cout << "Rotate left leg knee back" << std::endl;
+        }
+    } else if (key == 'R' || key == 'r') {
+        if (this->kneeAngleRight > 0) {
+            this->kneeAngleRight -= 1;
+            std::cout << "Rotate right leg knee front" << std::endl;
+        }
+    } else if (key == 'F' || key == 'f') {
+        if (this->kneeAngleRight < kneeAngleMax) {
+            this->kneeAngleRight += 1;
+            std::cout << "Rotate right leg knee back" << std::endl;
+        }
+    }
+    
+    if (key == '0') {
+        this->hipAngleLeft = 0;
+        this->hipAngleRight = 0;
+        this->kneeAngleLeft = 0;
+        this->kneeAngleRight = 0;
     }
 }
