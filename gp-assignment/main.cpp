@@ -27,9 +27,7 @@ const char* BLACK_TEXTURE_PATH = "black.bmp";
 
 // 1. Includes
 // 2. Function headers
-// 2. Global constants and variables
-// 3. Utility methods
-// 6. Drawing classes
+// 3. Global constants and variables
 // 4. projection();
 // 5. lighting();
 // 7. display();
@@ -169,7 +167,40 @@ void display() {
     glutSwapBuffers();
 }
 
+bool legKeysMode = false;
+bool handKeysMode = false;
 void processNormalKeys(unsigned char key, int x, int y) {
+    // Legs
+    if (key == '7') {
+        legKeysMode = !legKeysMode;
+    }
+    if (legKeysMode) {
+        if (key == 'Q' || key == 'q') {
+            std::cout << "Rotate left leg hip front" << std::endl;
+        }
+        if (key == 'A' || key == 'a') {
+            std::cout << "Rotate left leg hip back" << std::endl;
+        }
+        if (key == 'W' || key == 'w') {
+            std::cout << "Rotate left leg knee front" << std::endl;
+        }
+        if (key == 'S' || key == 's') {
+            std::cout << "Rotate left leg knee back" << std::endl;
+        }
+        return;
+    }
+    
+    // Hands
+    if (key == '6') {
+        handKeysMode = !handKeysMode;
+    }
+    if (handKeysMode) {
+        if (key == 'Q' || key == 'q') {
+            std::cout << "Hand stuff" << std::endl;
+        }
+        return;
+    }
+    
     if (key == '0') { // Reset
         pTx = 0;
         pTy = 0;
@@ -347,7 +378,7 @@ int imageLoad(const char* filename, Image* image) {
         return 0;
     }
 
-    return 1; // we're done.
+    return 1;
 }
 
 // Load Bitmaps and convert to texture

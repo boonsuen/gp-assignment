@@ -171,7 +171,6 @@ void Legs::drawCalf() {
         glVertex3f(0.25, -3.5, 0.77);
         glVertex3f(0, -3, 0.74);
         glEnd();
-        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 
         glColor3fv(cLightSkinGrey2);
         glBegin(GL_LINES);
@@ -188,6 +187,8 @@ void Legs::drawCalf() {
             u.drawCylinder(cLegBoost, 0.1, 0.3, 0.6, 10, 10, GLU_FILL, false, 0, 0, -0.2);
             glPopMatrix();
         }
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+        
         u.drawCylinder(cGrey, 0.5, 0.5, 1, 30, 30, GLU_FILL, true, 0, -6, -0.1);
         glPushMatrix();
         glRotatef(90, 0, 1, 0);
