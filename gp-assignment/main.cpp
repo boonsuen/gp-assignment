@@ -190,6 +190,9 @@ void processNormalKeys(unsigned char key, int x, int y) {
         return;
     }
     
+    // Head (C/B/G/V)
+    head.keyActions(key);
+    
     if (key == '0') { // Reset
         pTx = 0;
         pTy = 0;

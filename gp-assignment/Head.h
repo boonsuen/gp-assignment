@@ -24,11 +24,17 @@
 class Head {
 public:
     Utility u;
+    float headHorizontalAngle = 0;
+    float headHorizontalAngleMax = 45;
+    float headVerticalAngle = 0;
+    float headVerticalAngleMax = 20;
+    
     void drawEye(bool isRed, bool isLeft);
     void drawFace();
     void drawToppings();
     void drawCheek();
     void drawHead();
+    void keyActions(unsigned char key);
 };
 
 void Head::drawEye(bool isRed, bool isLeft) {
@@ -217,13 +223,41 @@ void Head::drawCheek() {
 }
 
 void Head::drawHead() {
-    drawToppings();
-    drawCheek();
+    glPushMatrix(); {
+        glTranslatef(0, -2.4, 0);
+        glRotatef(headHorizontalAngle, 0, 1, 0);
+        glRotatef(headVerticalAngle, 1, 0, 0);
+        glTranslatef(0, 2.4, 0);
+        
+        drawToppings();
+        drawCheek();
 
-    glPushMatrix();
-    u.drawCube(4.5, 2.5, 4, cBlack, 0, -2.5 / 2, 0);
-    drawFace();
+        glPushMatrix();
+        u.drawCube(4.5, 2.5, 4, cBlack, 0, -2.5 / 2, 0);
+        drawFace();
+        glPopMatrix();
+    }
     glPopMatrix();
 
     u.drawSphere(1.4, 30, 30, GLU_FILL, cGrey, 0, -2.4, 0);
+}
+
+void Head::keyActions(unsigned char key) {
+    if (key == 'C' || key == 'c') {
+        if (this->headHorizontalAngle > -headHorizontalAngleMax) {
+            this->headHorizontalAngle -= 1;
+        }
+    } else if (key == 'B' || key == 'b') {
+        if (this->headHorizontalAngle < headHorizontalAngleMax) {
+            this->headHorizontalAngle += 1;
+        }
+    } else if (key == 'G' || key == 'g') {
+        if (this->headVerticalAngle > -headVerticalAngleMax) {
+            this->headVerticalAngle -= 1;
+        }
+    } else if (key == 'V' || key == 'v') {
+        if (this->headVerticalAngle < headVerticalAngleMax) {
+            this->headVerticalAngle += 1;
+        }
+    }
 }
