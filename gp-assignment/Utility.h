@@ -21,6 +21,13 @@
 #include <string>
 #include "common.h"
 
+using namespace std;
+
+//texture
+BITMAP BMP;
+HBITMAP hBMP = NULL;
+GLuint textures = 0;
+
 class Utility {
 public:
     void drawRect(float width, float height, float color[], float tx, float ty, float tz);
@@ -81,7 +88,46 @@ public:
         float ty,
         float tz,
         bool isHorizontal);
+    //TCM START
+    void drawSphere(float r);
+    void drawShape(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ);
+    void drawShape_3(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ, string frontBack, string topBottom, string leftRight);
+    void drawShape_6(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ, string front, string back, string top, string bottom, string left, string right);
+    void drawCylinder(double tr, double br, double h);
+    void drawInnerBody(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+    GLuint loadTexture(LPCSTR fileName);
+    void drawRectangle(float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
+    void starVertical(float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
+    void starHorizontal(float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
+    void shieldPentagon(float minZ, float maxZ);
+    //TCM END
 };
+
+GLuint Utility::loadTexture(LPCSTR fileName) {
+
+    GLuint textures = 0;
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+        fileName, IMAGE_BITMAP, 0, 0,
+        LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+
+    GetObject(hBMP, sizeof(BMP), &BMP);
+
+    glEnable(GL_TEXTURE_2D);
+    glGenTextures(1, &textures);
+    glBindTexture(GL_TEXTURE_2D, textures);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0,
+        GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+    DeleteObject(hBMP);
+
+    return textures;
+}
 
 void Utility::drawRect(float width, float height, float color[], float tx, float ty, float tz) {
     glPushMatrix();
@@ -368,3 +414,682 @@ void Utility::drawDisk(GLfloat color[],
     gluDeleteQuadric(disk);
     glPopMatrix();
 }
+
+//TCM START
+void Utility::drawSphere(float r)
+{
+    GLUquadricObj* sphere = NULL;
+    sphere = gluNewQuadric();
+    gluQuadricDrawStyle(sphere, GLU_FILL);
+    gluQuadricTexture(sphere, true);
+    gluSphere(sphere, r, 30, 30);
+    gluDeleteQuadric(sphere);
+}
+
+void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ) {
+    //Back
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glEnd();
+
+    //Bottom
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glEnd();
+
+    //Left
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+
+    //Top
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+
+    //Right
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glEnd();
+
+    //Front
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+}
+
+void Utility::drawShape_3(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ, string frontBack, string topBottom, string leftRight) {
+    //Back
+    textures = loadTexture(frontBack.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Bottom
+    textures = loadTexture(topBottom.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Left
+    textures = loadTexture(leftRight.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Top
+    textures = loadTexture(topBottom.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Right
+    textures = loadTexture(leftRight.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Front
+    textures = loadTexture(frontBack.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+}
+
+void Utility::drawShape_6(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ, string front, string back, string top, string bottom, string left, string right) {
+    //Back
+    textures = loadTexture(back.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Bottom
+    textures = loadTexture(bottom.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Left
+    textures = loadTexture(left.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMaxX, downMaxY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Top
+    textures = loadTexture(top.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMaxX, upMaxY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Right
+    textures = loadTexture(right.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMinZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMinZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+
+    //Front
+    textures = loadTexture(front.c_str());
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(upMinX, upMinY, upMaxZ);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(downMinX, downMinY, downMaxZ);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(downMaxX, downMaxY, downMaxZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(upMaxX, upMaxY, upMaxZ);
+    glEnd();
+    glDeleteTextures(1, &textures);
+    glDisable(GL_TEXTURE_2D);
+}
+
+void Utility::drawCylinder(double tr, double br, double h) {
+    GLUquadricObj* cylinder = NULL;
+    cylinder = gluNewQuadric();
+    gluQuadricDrawStyle(cylinder, GLU_FILL);
+    gluQuadricTexture(cylinder, TRUE);
+    gluQuadricNormals(cylinder, GLU_SMOOTH);
+    gluCylinder(cylinder, tr, br, h, 30, 30);
+    gluDeleteQuadric(cylinder);
+}
+
+void Utility::drawInnerBody(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+    glBegin(GL_LINES);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(maxX, maxY, maxZ);
+    glEnd();
+}
+
+void Utility::drawRectangle(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
+
+    //Back
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, maxY, minZ);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(maxX, minY, minZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(maxX, maxY, minZ);
+    glEnd();
+
+    //Bottom
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(maxX, minY, minZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(maxX, minY, maxZ);
+    glEnd();
+
+    //Left
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, maxY, maxZ);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(minX, maxY, minZ);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(minX, minY, maxZ);
+    glEnd();
+
+    //Top
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, maxY, maxZ);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(minX, maxY, minZ);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(maxX, maxY, maxZ);
+    glEnd();
+
+    //Right
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(maxX, minY, minZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(maxX, minY, maxZ);
+    glEnd();
+
+    //Front
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(minX, maxY, maxZ);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(maxX, minY, maxZ);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(maxX, maxY, maxZ);
+    glEnd();
+
+}
+
+void Utility::starVertical(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, -minY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, -minY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, -minY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, -minY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, -minY, minZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, -minY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, -minY, minZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, -minY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glEnd();
+
+
+}
+
+void Utility::starHorizontal(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(-minX, minZ);
+    glVertex3f(-minX, minY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glTexCoord2f(-minX, minZ);
+    glVertex3f(-minX, minY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(-minX, maxZ);
+    glVertex3f(-minX, minY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glTexCoord2f(-minX, maxZ);
+    glVertex3f(-minX, minY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(-minX, minZ);
+    glVertex3f(-minX, minY, minZ);
+    glTexCoord2f(-minX, maxZ);
+    glVertex3f(-minX, minY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, maxY, minZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, maxY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, maxY, minZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, maxY, maxZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(minX, minZ);
+    glVertex3f(minX, minY, minZ);
+    glTexCoord2f(minX, maxZ);
+    glVertex3f(minX, minY, maxZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(maxX, minZ);
+    glVertex3f(maxX, -maxY, minZ);
+    glTexCoord2f(maxX, maxZ);
+    glVertex3f(maxX, -maxY, maxZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-maxX, minZ);
+    glVertex3f(-maxX, -maxY, minZ);
+    glTexCoord2f(-maxX, maxZ);
+    glVertex3f(-maxX, -maxY, maxZ);
+    glTexCoord2f(-minX, maxZ);
+    glVertex3f(-minX, minY, maxZ);
+    glTexCoord2f(-minX, minZ);
+    glVertex3f(-minX, minY, minZ);
+    glEnd();
+
+}
+
+void Utility::shieldPentagon(float minZ, float maxZ) {
+
+    glBegin(GL_POLYGON);
+    glTexCoord2f(-0.1f, minZ);
+    glVertex3f(-0.1f, 0.2f, minZ);
+    glTexCoord2f(0.1f, minZ);
+    glVertex3f(0.1f, 0.2f, minZ);
+    glTexCoord2f(0.16f, minZ);
+    glVertex3f(0.16f, -0.09f, minZ);
+    glTexCoord2f(0.0f, minZ);
+    glVertex3f(0.0f, -0.25f, minZ);
+    glTexCoord2f(-0.16f, minZ);
+    glVertex3f(-0.16f, -0.09f, minZ);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glTexCoord2f(-0.1f, maxZ);
+    glVertex3f(-0.1f, 0.2f, maxZ);
+    glTexCoord2f(0.1f, maxZ);
+    glVertex3f(0.1f, 0.2f, maxZ);
+    glTexCoord2f(0.16f, maxZ);
+    glVertex3f(0.16f, -0.09f, maxZ);
+    glTexCoord2f(0.0f, maxZ);
+    glVertex3f(0.0f, -0.25f, maxZ);
+    glTexCoord2f(-0.16f, maxZ);
+    glVertex3f(-0.16f, -0.09f, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-0.16f, minZ);
+    glVertex3f(-0.16f, -0.09f, minZ);
+    glTexCoord2f(0.0f, minZ);
+    glVertex3f(0.0f, -0.25f, minZ);
+    glTexCoord2f(0.0f, maxZ);
+    glVertex3f(0.0f, -0.25f, maxZ);
+    glTexCoord2f(-0.16f, maxZ);
+    glVertex3f(-0.16f, -0.09f, maxZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-0.16f, minZ);
+    glVertex3f(-0.16f, -0.09f, minZ);
+    glTexCoord2f(-0.16f, maxZ);
+    glVertex3f(-0.16f, -0.09f, maxZ);
+    glTexCoord2f(-0.1f, maxZ);
+    glVertex3f(-0.1f, 0.2f, maxZ);
+    glTexCoord2f(-0.1f, minZ);
+    glVertex3f(-0.1f, 0.2f, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(-0.1f, minZ);
+    glVertex3f(-0.1f, 0.2f, minZ);
+    glTexCoord2f(-0.1f, maxZ);
+    glVertex3f(-0.1f, 0.2f, maxZ);
+    glTexCoord2f(0.1f, maxZ);
+    glVertex3f(0.1f, 0.2f, maxZ);
+    glTexCoord2f(0.1f, minZ);
+    glVertex3f(0.1f, 0.2f, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.1f, minZ);
+    glVertex3f(0.1f, 0.2f, minZ);
+    glTexCoord2f(0.1f, maxZ);
+    glVertex3f(0.1f, 0.2f, maxZ);
+    glTexCoord2f(0.16f, maxZ);
+    glVertex3f(0.16f, -0.09f, maxZ);
+    glTexCoord2f(0.16f, minZ);
+    glVertex3f(0.16f, -0.09f, minZ);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.16f, minZ);
+    glVertex3f(0.16f, -0.09f, minZ);
+    glTexCoord2f(0.16f, maxZ);
+    glVertex3f(0.16f, -0.09f, maxZ);
+    glTexCoord2f(0.0f, maxZ);
+    glVertex3f(0.0f, -0.25f, maxZ);
+    glTexCoord2f(0.0f, minZ);
+    glVertex3f(0.0f, -0.25f, minZ);
+    glEnd();
+
+}
+//TCM END
