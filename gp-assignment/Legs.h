@@ -26,6 +26,9 @@ public:
     Utility u;
     float scaleX = 0;
     float scaleY = 0;
+    float hipAngleLeft = 0;
+    float hipAngleRight = 0;
+    float hipAngleMax = 45;
 
     void drawFoot();
     void drawCalf();
@@ -36,6 +39,8 @@ public:
     void drawRightDefenseWaist();
     void drawWaist();
     void drawLegs();
+    
+    void keyActions(unsigned char key);
 };
 
 void Legs::drawFoot() {
@@ -267,16 +272,21 @@ void Legs::drawThigh() {
 }
 
 void Legs::drawLeftLeg() {
+    glPushMatrix();
+    glTranslatef(0, 1.11, 0);
     drawThigh();
     glPushMatrix();
     glTranslatef(0, -5.6, 0);
     drawCalf();
     glTranslatef(0, -5.5, 0);
     drawFoot();
+    glPopMatrix();
     glPopMatrix();
 }
 
 void Legs::drawRightLeg() {
+    glTranslatef(0, 1.11, 0);
+    glPushMatrix();
     drawThigh();
     glPushMatrix();
     glTranslatef(0, -5.6, 0);
@@ -284,20 +294,19 @@ void Legs::drawRightLeg() {
     glTranslatef(0, -5.5, 0);
     drawFoot();
     glPopMatrix();
+    glPopMatrix();
 }
 
 void Legs::drawLeftDefenseWaist() {
+    glPushMatrix();
+    glTranslatef(0, -0.4, 1.75);
+    glRotatef(hipAngleLeft < 0 ? hipAngleLeft : 0, 1, 0, 0);
+    glTranslatef(0, 0.4, -1.75);
+    
     GLfloat whiteLV1[] = { -2.08, -2.5, 2 }; GLfloat whiteLV5[] = { -2.38, -2.7, 1.5 };
     GLfloat whiteLV2[] = { 0, -3.5, 2 }; GLfloat whiteLV6[] = { 0, -3.7, 1.5 };
     GLfloat whiteLV3[] = { 0, 0, 2 }; GLfloat whiteLV7[] = { 0, 0, 1.5 };
     GLfloat whiteLV4[] = { -2.08, 0, 2 }; GLfloat whiteLV8[] = { -2.38, 0, 1.5 };
-    u.drawSixFacesPolygon(whiteLV1, whiteLV2, whiteLV3, whiteLV4,
-        whiteLV5, whiteLV6, whiteLV7, whiteLV8, cWhite);
-
-    whiteLV1[2] = -2; whiteLV5[2] = -1.5;
-    whiteLV2[2] = -2; whiteLV6[2] = -1.5;
-    whiteLV3[2] = -2; whiteLV7[2] = -1.5;
-    whiteLV4[2] = -2; whiteLV8[2] = -1.5;
     u.drawSixFacesPolygon(whiteLV1, whiteLV2, whiteLV3, whiteLV4,
         whiteLV5, whiteLV6, whiteLV7, whiteLV8, cWhite);
 
@@ -321,20 +330,33 @@ void Legs::drawLeftDefenseWaist() {
     glVertex3f(-0.7, -2.3, 2.01);
     glVertex3f(-0.7, -1.5, 2.01);
     glEnd();
+    glPopMatrix();
+    
+    // Back
+    glPushMatrix();
+    glTranslatef(0, -0.4, -1.75);
+    glRotatef(hipAngleLeft > 0 ? hipAngleLeft : 0, 1, 0, 0);
+    glTranslatef(0, 0.4, 1.75);
+    
+    whiteLV1[2] = -2; whiteLV5[2] = -1.5;
+    whiteLV2[2] = -2; whiteLV6[2] = -1.5;
+    whiteLV3[2] = -2; whiteLV7[2] = -1.5;
+    whiteLV4[2] = -2; whiteLV8[2] = -1.5;
+    u.drawSixFacesPolygon(whiteLV1, whiteLV2, whiteLV3, whiteLV4,
+        whiteLV5, whiteLV6, whiteLV7, whiteLV8, cWhite);
+    glPopMatrix();
 }
 
 void Legs::drawRightDefenseWaist() {
+    glPushMatrix();
+    glTranslatef(0, -0.4, 1.75);
+    glRotatef(hipAngleRight < 0 ? hipAngleRight : 0, 1, 0, 0);
+    glTranslatef(0, 0.4, -1.75);
+    
     GLfloat whiteRV1[] = { 0, -3.5, 2 }; GLfloat whiteRV5[] = { 0, -3.7, 1.5 };
     GLfloat whiteRV2[] = { 2.08, -2.5, 2 }; GLfloat whiteRV6[] = { 2.38, -2.5, 1.5 };
     GLfloat whiteRV3[] = { 2.08, 0, 2 }; GLfloat whiteRV7[] = { 2.38, 0, 1.5 };
     GLfloat whiteRV4[] = { 0, 0, 2 }; GLfloat whiteRV8[] = { 0, 0, 1.5 };
-    u.drawSixFacesPolygon(whiteRV1, whiteRV2, whiteRV3, whiteRV4,
-        whiteRV5, whiteRV6, whiteRV7, whiteRV8, cWhite);
-
-    whiteRV1[2] = -2; whiteRV5[2] = -1.5;
-    whiteRV2[2] = -2; whiteRV6[2] = -1.5;
-    whiteRV3[2] = -2; whiteRV7[2] = -1.5;
-    whiteRV4[2] = -2; whiteRV8[2] = -1.5;
     u.drawSixFacesPolygon(whiteRV1, whiteRV2, whiteRV3, whiteRV4,
         whiteRV5, whiteRV6, whiteRV7, whiteRV8, cWhite);
 
@@ -358,6 +380,20 @@ void Legs::drawRightDefenseWaist() {
     glVertex3f(0.7, -2.3, 2.01);
     glVertex3f(0.7, -1.5, 2.01);
     glEnd();
+    glPopMatrix();
+    
+    // Back
+    glPushMatrix();
+    glTranslatef(0, -0.4, -1.75);
+    glRotatef(hipAngleRight > 0 ? hipAngleRight : 0, 1, 0, 0);
+    glTranslatef(0, 0.4, 1.75);
+    whiteRV1[2] = -2; whiteRV5[2] = -1.5;
+    whiteRV2[2] = -2; whiteRV6[2] = -1.5;
+    whiteRV3[2] = -2; whiteRV7[2] = -1.5;
+    whiteRV4[2] = -2; whiteRV8[2] = -1.5;
+    u.drawSixFacesPolygon(whiteRV1, whiteRV2, whiteRV3, whiteRV4,
+        whiteRV5, whiteRV6, whiteRV7, whiteRV8, cWhite);
+    glPopMatrix();
 }
 
 void Legs::drawWaist() {
@@ -423,13 +459,48 @@ void Legs::drawLegs() {
     glPushMatrix();
     glTranslatef(0, 6, 0);
 
-    glPushMatrix();
-    glTranslatef(-2.2, 0, 0);
-    drawLeftLeg();
-    glTranslatef(4.4, 0, 0);
-    drawRightLeg();
+    glPushMatrix(); {
+        glPushMatrix();
+        glTranslatef(-2.2, -1.6, 0);
+        glRotatef(hipAngleLeft, 1, 0, 0);
+        drawLeftLeg();
+        glPopMatrix();
+        
+        glPushMatrix();
+        glTranslatef(2.2, -1.6, 0);
+        glRotatef(hipAngleRight, 1, 0, 0);
+        drawRightLeg();
+        glPopMatrix();
+    }
     glPopMatrix();
 
     drawWaist();
     glPopMatrix();
+}
+
+void Legs::keyActions(unsigned char key) {
+    if (key == 'Q' || key == 'q') {
+        if (this->hipAngleLeft > -hipAngleMax) {
+            this->hipAngleLeft -= 1;
+            std::cout << "Rotate left leg hip front" << std::endl;
+        }
+    }
+    if (key == 'A' || key == 'a') {
+        if (this->hipAngleLeft < hipAngleMax) {
+            this->hipAngleLeft += 1;
+            std::cout << "Rotate left leg hip back" << std::endl;
+        }
+    }
+    if (key == 'W' || key == 'w') {
+        if (this->hipAngleRight > -hipAngleMax) {
+            this->hipAngleRight -= 1;
+            std::cout << "Rotate right leg hip front" << std::endl;
+        }
+    }
+    if (key == 'S' || key == 's') {
+        if (this->hipAngleRight < hipAngleMax) {
+            this->hipAngleRight += 1;
+            std::cout << "Rotate right leg hip back" << std::endl;
+        }
+    }
 }

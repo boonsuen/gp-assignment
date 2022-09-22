@@ -167,34 +167,23 @@ void display() {
     glutSwapBuffers();
 }
 
-bool legKeysMode = false;
-bool handKeysMode = false;
+bool legKeyMode = false;
+bool handKeyMode = false;
 void processNormalKeys(unsigned char key, int x, int y) {
     // Legs
     if (key == '7') {
-        legKeysMode = !legKeysMode;
+        legKeyMode = !legKeyMode;
     }
-    if (legKeysMode) {
-        if (key == 'Q' || key == 'q') {
-            std::cout << "Rotate left leg hip front" << std::endl;
-        }
-        if (key == 'A' || key == 'a') {
-            std::cout << "Rotate left leg hip back" << std::endl;
-        }
-        if (key == 'W' || key == 'w') {
-            std::cout << "Rotate left leg knee front" << std::endl;
-        }
-        if (key == 'S' || key == 's') {
-            std::cout << "Rotate left leg knee back" << std::endl;
-        }
+    if (legKeyMode) {
+        legs.keyActions(key);
         return;
     }
     
     // Hands
-    if (key == '6') {
-        handKeysMode = !handKeysMode;
+    if (key == '8') {
+        handKeyMode = !handKeyMode;
     }
-    if (handKeysMode) {
+    if (handKeyMode) {
         if (key == 'Q' || key == 'q') {
             std::cout << "Hand stuff" << std::endl;
         }
