@@ -19,11 +19,11 @@ const char* BLACK_TEXTURE_PATH = "black.bmp";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "Head.hpp"
-#include "Body.hpp"
-#include "Hands.hpp"
-#include "Legs.hpp"
-#include "common.h"
+#include "Head.h"
+#include "Body.h"
+#include "Hands.h"
+#include "Legs.h"
+#include "Common.h"
 
 // 1. Includes
 // 2. Function headers

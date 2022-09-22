@@ -1,8 +1,19 @@
 #pragma once
 
-#ifndef common_h
-#define common_h
-#endif /* common_h */
+#if defined(__APPLE__)
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+#endif
+#include <iostream>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
 
 extern const float PI;
 
