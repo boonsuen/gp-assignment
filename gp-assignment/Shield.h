@@ -32,7 +32,7 @@ public:
 void Shield::DrawHandle() {
 
 	glPushMatrix();
-	textures = u.loadTexture("HandleBlack.bmp");
+//	textures = u.loadTexture("HandleBlack.bmp");
 	u.drawRectangle(0.0f, 0.3f, 0.0f, 0.05f, 0.0f, 0.05f);
 	glDeleteTextures(1, &textures);
 	glDisable(GL_TEXTURE_2D);
@@ -42,7 +42,7 @@ void Shield::DrawHandle() {
 	glRotatef(60.0f, 0.0f, 0.0f, -1.0f);
 	glTranslatef(-0.2f, 0.0f, 0.0f);
 
-	textures = u.loadTexture("HandleBlack.bmp");
+//	textures = u.loadTexture("HandleBlack.bmp");
 	u.drawRectangle(0.0f, 0.2f, 0.0f, 0.05f, 0.0f, 0.05f);
 	glDeleteTextures(1, &textures);
 	glDisable(GL_TEXTURE_2D);
@@ -55,7 +55,7 @@ void Shield::DrawHandle() {
 
 	glTranslatef(0.3f, 0.0f, 0.0f);
 
-	textures = u.loadTexture("HandleBlack.bmp");
+//	textures = u.loadTexture("HandleBlack.bmp");
 	u.drawRectangle(0.0f, 0.2f, 0.0f, 0.05f, 0.0f, 0.05f);
 	glDeleteTextures(1, &textures);
 	glDisable(GL_TEXTURE_2D);

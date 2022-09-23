@@ -44,7 +44,13 @@
     <Image Include="backpack.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="blackSilver.bmp">
+    <Image Include="black-sword.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="blue-sword.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="red-sword.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
@@ -68,6 +74,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Shield.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sword.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

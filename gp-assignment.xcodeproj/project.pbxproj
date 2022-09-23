@@ -30,11 +30,13 @@
 		F0074D2428DBF4A5001FFAD2 /* Head.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Head.h; sourceTree = "<group>"; };
 		F0074D2528DBF4DD001FFAD2 /* Legs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Legs.h; sourceTree = "<group>"; };
 		F0074D2628DBF4DD001FFAD2 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		F0074D2728DCCB9E001FFAD2 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		F0074D2828DCCBED001FFAD2 /* Sword.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sword.h; sourceTree = "<group>"; };
+		F0074D2928DD7C26001FFAD2 /* Shield.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shield.h; sourceTree = "<group>"; };
 		F063208228D3553D00FA9C4E /* gp-assignment */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "gp-assignment"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F063208528D3553D00FA9C4E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F063208D28D3569800FA9C4E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		F063208F28D3569D00FA9C4E /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		F0E72C7D28DB7BE10097D848 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,13 +72,15 @@
 		F063208428D3553D00FA9C4E /* gp-assignment */ = {
 			isa = PBXGroup;
 			children = (
+				F0074D2928DD7C26001FFAD2 /* Shield.h */,
+				F0074D2828DCCBED001FFAD2 /* Sword.h */,
+				F0074D2728DCCB9E001FFAD2 /* Common.h */,
 				F0074D2528DBF4DD001FFAD2 /* Legs.h */,
 				F0074D2628DBF4DD001FFAD2 /* Utility.h */,
 				F0074D2328DBF4A5001FFAD2 /* Hands.h */,
 				F0074D2428DBF4A5001FFAD2 /* Head.h */,
 				F0074D2228DBF48B001FFAD2 /* Body.h */,
 				F063208528D3553D00FA9C4E /* main.cpp */,
-				F0E72C7D28DB7BE10097D848 /* common.h */,
 			);
 			path = "gp-assignment";
 			sourceTree = "<group>";

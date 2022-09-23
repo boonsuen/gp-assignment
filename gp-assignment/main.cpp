@@ -5,6 +5,14 @@
 const char* ICE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/ice.bmp";
 const char* WHITE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/white.bmp";
 const char* BLACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/black.bmp";
+const char* BLACK_SWORD_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/black-sword.bmp";
+const char* BLUE_SWORD_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/blue-sword.bmp";
+const char* RED_SWORD_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/red-sword.bmp";
+const char* BODY_RED_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/red.bmp";
+const char* BODY_BLUE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/blue.bmp";
+const char* BODY_BACKPACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/backpack.bmp";
+const char* BODY_SILVER_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/silver.bmp";
+const char* BODY_ROCKET_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/rocketPower.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -13,6 +21,14 @@ const char* BLACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/
 const char* ICE_TEXTURE_PATH = "ice.bmp";
 const char* WHITE_TEXTURE_PATH = "white.bmp";
 const char* BLACK_TEXTURE_PATH = "black.bmp";
+const char* BLACK_SWORD_TEXTURE_PATH = "black-sword.bmp";
+const char* BLUE_SWORD_TEXTURE_PATH = "blue-sword.bmp";
+const char* RED_SWORD_TEXTURE_PATH = "red-sword.bmp";
+const char* BODY_RED_TEXTURE_PATH = "red.bmp";
+const char* BODY_BLUE_TEXTURE_PATH = "blue.bmp";
+const char* BODY_BACKPACK_TEXTURE_PATH = "backpack.bmp";
+const char* BODY_SILVER_TEXTURE_PATH = "silver.bmp";
+const char* BODY_ROCKET_TEXTURE_PATH = "rocketPower.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -24,6 +40,7 @@ const char* BLACK_TEXTURE_PATH = "black.bmp";
 #include "Hands.h"
 #include "Legs.h"
 #include "Common.h"
+#include "Sword.h"
 
 // 1. Includes
 // 2. Function headers
@@ -75,17 +92,28 @@ float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 3;
+const int TEXTURES_NO = 11;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
 const char* filenames[TEXTURES_NO] = {
-    ICE_TEXTURE_PATH,
-    WHITE_TEXTURE_PATH,
-    BLACK_TEXTURE_PATH
+    ICE_TEXTURE_PATH,           // 0
+    WHITE_TEXTURE_PATH,         // 1
+    BLACK_TEXTURE_PATH,         // 2
+    BLACK_SWORD_TEXTURE_PATH,   // 3
+    BLUE_SWORD_TEXTURE_PATH,    // 4
+    RED_SWORD_TEXTURE_PATH,     // 5
+    BODY_RED_TEXTURE_PATH,      // 6
+    BODY_BLUE_TEXTURE_PATH,     // 7
+    BODY_BACKPACK_TEXTURE_PATH, // 8
+    BODY_SILVER_TEXTURE_PATH,   // 9
+    BODY_ROCKET_TEXTURE_PATH,   // 10
 };
 int activeTexture = 0;
 
 // Status
 bool defenseMode = true;
+bool attackMode = false;
+bool headAttackMode = false;
+bool swordAttackMode = false;
 
 // Colors
 float cWhite[] = { 1, 1, 1 };
@@ -127,6 +155,7 @@ Head head;
 Body body;
 Hands hands;
 Legs legs;
+Sword sword;
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -152,17 +181,34 @@ void display() {
     // Clear texture
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     
+    attackMode = headAttackMode && headAttackMode;
+    
     glPushMatrix(); {
+//        glTranslatef(-7, 0, 0);
+        
         glPushMatrix();
-        glTranslatef(0, 8, 0); // 7
-        glScalef(0.4, 0.4, 0.4);
+        glTranslatef(0, 6.5, 0);
+        glScalef(0.35, 0.35, 0.35);
         head.drawHead();
         glPopMatrix();
+        
+        glPushMatrix();
+        glTranslatef(0.9, -5, -0.3);
+        glScalef(6, 6, 6);
         body.drawBody();
-        hands.drawHands();
+        glPopMatrix();
+        
+//        hands.drawHands();
+        
+        glPushMatrix();
+        glTranslatef(0, -4.3, 0);
+        glScalef(0.70, 0.70, 0.70);
         legs.drawLegs();
         glPopMatrix();
     }
+    glPopMatrix();
+    
+    sword.drawSword();
 
     glutSwapBuffers();
 }
@@ -193,6 +239,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
     // Head (C/B/G/V)
     head.keyActions(key);
     
+    // View and Projection
     if (key == '0') { // Reset
         pTx = 0;
         pTy = 0;
@@ -230,12 +277,19 @@ void processNormalKeys(unsigned char key, int x, int y) {
     if (key == 13) {
         isTexture = !isTexture;
     } else if (key == '6') { // Change texture
-        if (activeTexture >= TEXTURES_NO - 1) {
+        if (activeTexture >= 2) {
             activeTexture = 0;
         } else {
             activeTexture++;
         }
     }
+    
+    // Weapons
+    if (key == '2') {
+        headAttackMode = !headAttackMode;
+    }
+    // 3 (Show/Hide Sword), 4 (Sword Attack Mode)
+    sword.keyActions(key);
 }
 
 void processSpecialKeys(int key, int x, int y) {

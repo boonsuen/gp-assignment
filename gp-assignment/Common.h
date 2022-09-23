@@ -17,10 +17,14 @@
 
 extern const float PI;
 
+extern bool isTexture;
 extern GLuint textures[];
 extern int activeTexture;
 
 extern bool defenseMode;
+extern bool attackMode;
+extern bool headAttackMode;
+extern bool swordAttackMode;
 
 extern float cWhite[];
 extern float cBlack[];

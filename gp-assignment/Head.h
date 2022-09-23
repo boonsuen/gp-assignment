@@ -31,6 +31,7 @@ public:
     
     void drawEye(bool isRed, bool isLeft);
     void drawFace();
+    void drawBulletAnimation(float tx, float ty, float tz);
     void drawToppings();
     void drawCheek();
     void drawHead();
@@ -39,7 +40,8 @@ public:
 
 void Head::drawEye(bool isRed, bool isLeft) {
     glPushMatrix();
-    glColor3fv(isRed ? cHeadRed : cEyeYellow);
+    GLfloat eyeAttackModeColor[] = { 33.0/255, 242.0/255, 169.0/255 };
+    glColor3fv(isRed ? cHeadRed : (attackMode ? eyeAttackModeColor : cEyeYellow));
     if (isRed) {
         glScalef(1.15, 1.15, 1);
         glTranslatef(isLeft ? 0.15 : -0.15, 0, 0);
@@ -118,6 +120,52 @@ void Head::drawFace() {
     glBindTexture(GL_TEXTURE_2D, activeTexture);
 }
 
+float headBulletTz1 = 0;
+float headBulletTz2 = 0;
+GLfloat bulletColor[] = { 249.0/255, 75.0/255, 44.0/255 };
+
+class HeadBullet {
+public:
+    Utility u;
+    void draw(float tz) {
+        glPushMatrix();
+        if (tz >= 0) {
+            u.drawSphere(0.2, 10, 10, GLU_FILL, bulletColor, 0, 0, tz);
+        }
+        glPopMatrix();
+    }
+};
+
+HeadBullet headBullet;
+void Head::drawBulletAnimation(float tx, float ty, float tz) {
+    glPushMatrix();
+    glTranslatef(tx, ty, tz);
+    if (headBulletTz1 > 20) {
+        headBulletTz1 = 0;
+    }
+    if (headBulletTz2 >= 30) {
+        headBulletTz2 = 0;
+    }
+    
+    headBullet.draw(0 + headBulletTz1);
+    headBullet.draw(-1 + headBulletTz1);
+    headBullet.draw(-2 + headBulletTz1);
+    headBullet.draw(-3 + headBulletTz1);
+    headBullet.draw(-4 + headBulletTz1);
+    
+    headBullet.draw(-10 + headBulletTz2);
+    headBullet.draw(-11 + headBulletTz2);
+    headBullet.draw(-12 + headBulletTz2);
+    headBullet.draw(-13 + headBulletTz2);
+    headBullet.draw(-14 + headBulletTz2);
+    
+    if (!(headBulletTz2 > 20 && headBulletTz2 < 30)) {
+        headBulletTz1 += 0.1;
+    }
+    headBulletTz2 += 0.1;
+    glPopMatrix();
+}
+
 void Head::drawToppings() {
     glPushMatrix();
     glRotatef(90, 1, 0, 0);
@@ -138,7 +186,8 @@ void Head::drawToppings() {
         whiteHatV5, whiteHatV6, whiteHatV7, whiteHatV8, cWhite);
 
     glPushMatrix(); {
-        glColor3fv(cGrey);
+        GLfloat topAttackModeColor[] = { 124.0/255, 254.0/255, 210.0/255 };
+        glColor3fv(attackMode ? topAttackModeColor : cGrey);
         glBegin(GL_QUADS);
         glVertex3f(-0.35, 3, 1.801); glVertex3f(0.35, 3, 1.801);
         glVertex3f(0.25, 3.6, 1.601); glVertex3f(-0.25, 3.6, 1.601);
@@ -182,6 +231,10 @@ void Head::drawToppings() {
 
     // Ears
     glPushMatrix(); {
+        if (headAttackMode) {
+            this->drawBulletAnimation(2.6, 2, 0.2);
+            this->drawBulletAnimation(-2.6, 2, 0.2);
+        }
         glScalef(1, 1, 4.5);
         u.drawHemisphere(0.4, 20, 20, cEarGrey, 2.6, 2, 0.2);
         u.drawCircle(cGrey, 0.4, 0.4, 0, true, false, false, 2.6, 2, 0.2);

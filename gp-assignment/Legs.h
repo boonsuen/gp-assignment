@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "common.h"
+#include "Common.h"
 #include "Utility.h"
 
 class Legs {
@@ -35,7 +35,7 @@ public:
 
     void drawFoot();
     void drawCalf();
-    void drawThigh();
+    void drawThigh(float kneeAngle);
     void drawLeftLeg();
     void drawRightLeg();
     void drawLeftDefenseWaist();
@@ -53,7 +53,7 @@ void Legs::drawFoot() {
     GLfloat blueFV3[] = { 0.9, 0, 1 }; GLfloat blueFV7[] = { 0.9, 0, -0.5 };
     GLfloat blueFV4[] = { -0.9, 0, 1 }; GLfloat blueFV8[] = { -0.9, 0, -0.5 };
     u.drawSixFacesPolygon(blueFV1, blueFV2, blueFV3, blueFV4,
-        blueFV5, blueFV6, blueFV7, blueFV8, cPrimaryLightBlue);
+        blueFV5, blueFV6, blueFV7, blueFV8, (attackMode ? cHeadRed : cPrimaryLightBlue));
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     GLfloat whiteFV1[] = { -0.901, -1.1, 3.23 }; GLfloat whiteFV5[] = { -0.901, -1.1, 0.7 };
     GLfloat whiteFV2[] = { 0.901, -1.1, 3.23 }; GLfloat whiteFV6[] = { 0.901, -1.1, 0.7 };
@@ -81,7 +81,7 @@ void Legs::drawFoot() {
     GLfloat blueBV3[] = { 0.801, 0, -1 }; GLfloat blueBV7[] = { 0.801, 0.5, -1.201 };
     GLfloat blueBV4[] = { -0.801, 0, -1 }; GLfloat blueBV8[] = { -0.801, 0.5, -1.201 };
     u.drawSixFacesPolygon(blueBV1, blueBV2, blueBV3, blueBV4,
-        blueBV5, blueBV6, blueBV7, blueBV8, cPrimaryLightBlue);
+        blueBV5, blueBV6, blueBV7, blueBV8, (attackMode ? cHeadRed : cPrimaryLightBlue));
 }
 
 void Legs::drawCalf() {
@@ -126,8 +126,9 @@ void Legs::drawCalf() {
         GLfloat kneeBlueV2[] = { 0.501, -0.6, 1.35 }; GLfloat kneeBlueV6[] = { 0.5, -0.8, 0.5 };
         GLfloat kneeBlueV3[] = { 0.501, -0.1, 1.401 }; GLfloat kneeBlueV7[] = { 0.5, -0.5, 0.5 };
         GLfloat kneeBlueV4[] = { -0.501, -0.1, 1.401 }; GLfloat kneeBlueV8[] = { -0.5, -0.5, 0.5 };
+        GLfloat kneeAttackModeColor[] = { 211.0/255, 28.0/255, 19.0/255 };
         u.drawSixFacesPolygon(kneeBlueV1, kneeBlueV2, kneeBlueV3, kneeBlueV4,
-            kneeBlueV5, kneeBlueV6, kneeBlueV7, kneeBlueV8, cPrimaryBlue);
+            kneeBlueV5, kneeBlueV6, kneeBlueV7, kneeBlueV8, (attackMode ? kneeAttackModeColor : cPrimaryBlue));
         glBegin(GL_LINE_LOOP);
         glVertex3f(0, -0.6, 1.35);
         glVertex3f(-0.5, -1.5, 1.201);
@@ -175,9 +176,9 @@ void Legs::drawCalf() {
         u.drawCylinder(cGrey, 0.5, 0.5, 1, 30, 30, GLU_FILL, true, 0, -6, -0.1);
         glPushMatrix();
         glRotatef(90, 0, 1, 0);
-        u.drawHemisphere(0.3, 30, 30, cPrimaryLightBlue, 0, -5.55, -1.1);
+        u.drawHemisphere(0.3, 30, 30, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue), 0, -5.55, -1.1);
         glRotatef(180, 0, 1, 0);
-        u.drawHemisphere(0.3, 30, 30, cPrimaryLightBlue, 0, -5.55, -1.1);
+        u.drawHemisphere(0.3, 30, 30, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue), 0, -5.55, -1.1);
         glPopMatrix();
         // Ankle
         glPushMatrix();
@@ -200,7 +201,7 @@ void Legs::drawCalf() {
     }
 }
 
-void Legs::drawThigh() {
+void Legs::drawThigh(float kneeAngle) {
     glPushMatrix(); {
         glTranslatef(0, -5.6, 0);
         
@@ -209,6 +210,9 @@ void Legs::drawThigh() {
         glRotatef(90, 0, 0, 1);
         u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.2, 30, 30, GLU_FILL, true, 0, -0.6, 0);
         glPopMatrix();
+        
+        glPushMatrix();
+        glRotatef(kneeAngle, 1, 0, 0);
         glPushMatrix();
         glRotatef(90, 0, 1, 0);
         glLineWidth(2);
@@ -230,6 +234,7 @@ void Legs::drawThigh() {
         glVertex3f(0.601, 0.5, 0);
         glVertex3f(0.601, -0.4, 0.28);
         glEnd();
+        glPopMatrix();
     }
     glPopMatrix();
     
@@ -284,7 +289,7 @@ void Legs::drawThigh() {
 void Legs::drawLeftLeg() {
     glPushMatrix();
         glTranslatef(0, 1.11, 0);
-        drawThigh();
+        drawThigh(kneeAngleLeft);
         glPushMatrix();
             glTranslatef(0, -5.6, 0);
             glRotatef(kneeAngleLeft, 1, 0, 0);
@@ -298,7 +303,7 @@ void Legs::drawLeftLeg() {
 void Legs::drawRightLeg() {
     glTranslatef(0, 1.11, 0);
     glPushMatrix();
-        drawThigh();
+        drawThigh(kneeAngleRight);
         glPushMatrix();
             glTranslatef(0, -5.6, 0);
             glRotatef(kneeAngleRight, 1, 0, 0);
@@ -455,7 +460,7 @@ void Legs::drawWaist() {
         }
     }
 
-    u.drawCube(8, 0.8, 4, cGrey, 0, 0, 0);
+    u.drawCube(7, 0.8, 4, cGrey, 0, 0, 0);
 
     GLfloat middleV1[] = { -0.9, -1.8, 2.5 }; GLfloat middleV5[] = { -0.9, -3, 1.6 };
     GLfloat middleV2[] = { 0.9, -1.8, 2.5 }; GLfloat middleV6[] = { 0.9, -3, 1.6 };
