@@ -20,6 +20,7 @@
 #include <string>
 #include "common.h"
 #include "Utility.h"
+#include "Shield.h"
 
 
 float cYellow[] = { 1.0, 0.95, 0 };
@@ -28,6 +29,13 @@ float cRed[] = { 1, 63.0 / 255, 57.0 / 255 };
 class Hands {
 public:
     Utility u;
+    float wholeAngleRight = 0;
+    float wholeAngleLeft = 0;
+    float wholeAngleMax = 50;
+    float LowerArmAngleRight = 0;
+    float LowerArmAngleLeft = 0;
+    float LowerArmAngleMax = 50;
+
     void drawHands();
     void drawLeftHand();
     void drawRightHand();
@@ -40,8 +48,62 @@ public:
     void drawPalm();
     void drawThumb();
     void drawFinger();
+
+    void keyActions(unsigned char key);
    
 };
+
+void Hands::keyActions(unsigned char key) {
+    if (key == 'Q' || key == 'q') {
+        if (this->wholeAngleRight > -wholeAngleMax) {
+            this->wholeAngleRight -= 1;
+        }
+    }
+    else if (key == 'A' || key == 'a') {
+        if (this->wholeAngleRight < wholeAngleMax) {
+            this->wholeAngleRight += 1;
+        }
+    }
+    else if (key == 'W' || key == 'w') {
+        if (this->wholeAngleLeft > -wholeAngleMax) {
+            this->wholeAngleLeft -= 1;
+        }
+    }
+    else if (key == 'S' || key == 's') {
+        if (this->wholeAngleLeft < wholeAngleMax) {
+            this->wholeAngleLeft += 1;
+        }
+    }
+
+    if (key == 'E' || key == 'e') {
+        if (this->LowerArmAngleLeft < LowerArmAngleMax) {
+            this->LowerArmAngleLeft += 1;
+        }
+    }
+    else if (key == 'D' || key == 'd') {
+        
+        if (this->LowerArmAngleLeft > 0) {
+            this->LowerArmAngleLeft -= 1;
+        }
+    }
+    else if (key == 'R' || key == 'r') {
+        if (this->LowerArmAngleRight < LowerArmAngleMax) {
+            this->LowerArmAngleRight += 1;
+        }
+    }
+    else if (key == 'F' || key == 'f') {
+        if (this->LowerArmAngleRight > 0) {
+            this->LowerArmAngleRight -= 1;
+        }
+    }
+
+    if (key == '0') {
+        this-> wholeAngleRight = 0;
+        this-> wholeAngleLeft = 0;
+        this-> LowerArmAngleRight = 0;
+        this-> LowerArmAngleLeft = 0;
+    }
+}
 
 void Hands::drawShoulder() {
     //No Movement
@@ -261,31 +323,77 @@ void Hands::drawFinger() {
 
 }
 
+
 void Hands::drawLeftHand() {
     glPushMatrix(); {
         /*glRotatef(180,0,1,0);*/
         glScalef(-1, 1, 1);
-        drawRightHand();
+
+        drawShoulder();
+
+        glPushMatrix();
+        glTranslatef(3.04, 4.9, 0);
+        glRotatef(wholeAngleLeft, 1, 0, 0);
+        glTranslatef(-3.04, -4.9, 0);
+
+        drawUpperArm();
+        drawElbow();
+
+        glPushMatrix(); {
+            glTranslatef(3.04, 1.63, 0);
+            glRotatef(-LowerArmAngleLeft, 1, 0, 0);
+            glTranslatef(-3.04, -1.63, 0);
+            drawLowerArm();
+
+            glPushMatrix();
+            glTranslatef(1, 0.2, 0);
+            glScalef(1.3, 1.4, 1.7);
+            drawWrist();
+            drawPalm();
+            drawThumb();
+            drawFinger();
+            glPopMatrix();
+        } glPopMatrix();
+
+        drawShoulderPad();
+
+        glPopMatrix();
+
         glPopMatrix();
     }
 }
 
+
 void Hands::drawRightHand() {
     drawShoulder();
-    drawUpperArm();
-    drawElbow();
-    drawLowerArm();
 
     glPushMatrix();
-    glTranslatef(1,0.2,0);
-    glScalef(1.3,1.4,1.7);
-    drawWrist();
-    drawPalm();
-    drawThumb();
-    drawFinger();
-    glPopMatrix();
+    glTranslatef(-3.04, 4.9, 0);
+    glRotatef(wholeAngleRight, 1, 0, 0);
+    glTranslatef(3.04, -4.9, 0);
+
+    drawUpperArm();
+    drawElbow();
+
+    glPushMatrix(); {
+        glTranslatef(-3.04, 1.63, 0);
+        glRotatef(-LowerArmAngleRight, 1, 0, 0);
+        glTranslatef(3.04, -1.63, 0);
+        drawLowerArm();
+
+        glPushMatrix();
+        glTranslatef(1,0.2,0);
+        glScalef(1.3,1.4,1.7);
+        drawWrist();
+        drawPalm();
+        drawThumb();
+        drawFinger();
+        glPopMatrix();
+    } glPopMatrix();
 
     drawShoulderPad();
+
+    glPopMatrix();
 }
 
 void Hands::drawHands() {
