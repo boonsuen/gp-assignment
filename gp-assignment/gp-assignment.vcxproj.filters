@@ -29,6 +29,24 @@
     <Image Include="black.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="blue.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="HandleBlack.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="red.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="rocketpower.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="backpack.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="blackSilver.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -47,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Legs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
