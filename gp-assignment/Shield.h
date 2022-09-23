@@ -92,7 +92,7 @@ void Shield::drawShield() {
 	glPushMatrix();
 	glScalef(0.9f, 1.7f, 0.9f);
 	glTranslatef(0, -0.005, 0.005);
-    glColor3fv(cRed);
+    glColor3fv(cHeadRed);
     glBindTexture(GL_TEXTURE_2D, textures[6]);
 	u.shieldPentagon(0.0f, 0.04f);
 	glPopMatrix();

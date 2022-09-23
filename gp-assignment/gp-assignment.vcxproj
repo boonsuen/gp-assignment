@@ -145,9 +145,11 @@
     <Image Include="blue.bmp" />
     <Image Include="HandleBlack.bmp" />
     <Image Include="ice.bmp" />
+    <Image Include="land.bmp" />
     <Image Include="red-sword.bmp" />
     <Image Include="red.bmp" />
     <Image Include="rocketpower.bmp" />
+    <Image Include="sky.bmp" />
     <Image Include="white.bmp" />
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,8 @@ const char* BODY_BACKPACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-ass
 const char* BODY_SILVER_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/silver.bmp";
 const char* BODY_ROCKET_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/rocketPower.bmp";
 const char* SHIELD_HANDLE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/HandleBlack.bmp";
+const char* SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sky.bmp";
+const char* LAND_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/land.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -31,6 +33,8 @@ const char* BODY_BACKPACK_TEXTURE_PATH = "backpack.bmp";
 const char* BODY_SILVER_TEXTURE_PATH = "silver.bmp";
 const char* BODY_ROCKET_TEXTURE_PATH = "rocketPower.bmp";
 const char* SHIELD_HANDLE_TEXTURE_PATH = "HandleBlack.bmp";
+const char* SKY_TEXTURE_PATH = "sky.bmp";
+const char* LAND_TEXTURE_PATH = "land.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -83,7 +87,7 @@ const float PI = 3.1415926535;
 
 // View & Projection & Transformation
 bool isOrtho = true; // Is ortho view
-const float O_NEAR = -10, O_FAR = 10; // Ortho near far
+const float O_NEAR = -20, O_FAR = 20; // Ortho near far
 const float P_NEAR = 0.1, P_FAR = 40; // Perspective near far
 float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
 float prSpeed = 2.0; // Rotate Y for projection
@@ -95,7 +99,7 @@ float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 12;
+const int TEXTURES_NO = 14;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
@@ -110,8 +114,11 @@ const char* filenames[TEXTURES_NO] = {
     BODY_SILVER_TEXTURE_PATH,   // 9
     BODY_ROCKET_TEXTURE_PATH,   // 10
     SHIELD_HANDLE_TEXTURE_PATH, // 11
+    SKY_TEXTURE_PATH,           // 12
+    LAND_TEXTURE_PATH,          // 13
 };
 int activeTexture = 0;
+bool showSkybox = false;
 
 // Status
 bool defenseMode = true;
@@ -144,7 +151,7 @@ void projection() {
     glTranslatef(pTx, pTy, 0); // Translate X & Y for O and P projection
         
     if (isOrtho) {
-        glOrtho(-10, 10, -10, 10, O_NEAR, O_FAR);
+        glOrtho(-20, 20, -20, 20, O_NEAR, O_FAR);
         glRotatef(ry, 0, 1, 0); // Rotate Y for ortho only!!!
     } else {
         gluPerspective(70, 1, P_NEAR, P_FAR);
@@ -155,6 +162,55 @@ void lighting() {
    
 }
 
+void drawSkyBox(float width, float height, float depth) {
+    glPushMatrix();
+    glColor3fv(cWhite);
+    
+    glBindTexture(GL_TEXTURE_2D, textures[13]);
+    glBegin(GL_QUADS);
+    // Face 1, bottom
+    glTexCoord2f(0.0, 1.0);  glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
+    glTexCoord2f(1.0, 1.0);  glVertex3f(width / 2, -(height / 2), -(depth / 2));
+    glTexCoord2f(1.0, 0.0);  glVertex3f(width / 2, -(height / 2), depth / 2);
+    glTexCoord2f(0.0, 0.0);  glVertex3f(-(width / 2), -(height / 2), depth / 2);
+    glEnd();
+    
+    glBindTexture(GL_TEXTURE_2D, textures[12]);
+    glBegin(GL_QUADS);
+    // Face 2, front
+    glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
+    glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
+    glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, depth / 2);
+    glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
+
+    // Face 3, right
+    glTexCoord2f(0, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
+    glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), -(depth / 2));
+    glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
+    glTexCoord2f(0, 1); glVertex3f(width / 2, height / 2, depth / 2);
+
+    // Face 4, top
+    glTexCoord2f(0.7, 0.4); glVertex3f(width / 2, height / 2, depth / 2);
+    glTexCoord2f(0.7, 0.7); glVertex3f(width / 2, height / 2, -(depth / 2));
+    glTexCoord2f(0.4, 0.7); glVertex3f(-(width / 2), height / 2, -(depth / 2));
+    glTexCoord2f(0.4, 0.5); glVertex3f(-(width / 2), height / 2, depth / 2);
+
+    // Face 5, left
+    glTexCoord2f(1, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
+    glTexCoord2f(1, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
+    glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
+    glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, -(depth / 2));
+
+    // Face 6, back
+    glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, -(depth / 2));
+    glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
+    glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), -(depth / 2));
+    glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
+    glEnd();
+
+    glPopMatrix();
+}
+
 Head head;
 Body body;
 Hands hands;
@@ -163,6 +219,21 @@ Sword sword;
 Shield shield;
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    if (!isOrtho && showSkybox) {
+        glEnable(GL_TEXTURE_2D);
+        glPushMatrix();
+//        glBindTexture(GL_TEXTURE_2D, textures[12]);
+        drawSkyBox(27, 27, 27);
+//        glPushMatrix();
+//        glMatrixMode(GL_MODELVIEW);
+//        glRotatef(-90, 1, 0, 0);
+//        utility.drawSphere(0.5, 60, 60, GLU_FILL, cWhite, 0, 0, 0);
+//        glPopMatrix();
+        
+        glPopMatrix();
+        glDisable(GL_TEXTURE_2D);
+    }
     
     if (isTexture) {
         glEnable(GL_TEXTURE_2D);
@@ -180,7 +251,11 @@ void display() {
     glRotatef(mRx, 1, 0, 0);
         
     if (!isOrtho) {
-        glRotatef(-ry, 0, 1, 0); // Rotate the object if perspective
+        glRotatef(ry, 0, 1, 0); // Rotate the object if perspective
+    }
+    
+    if (isOrtho) {
+        glScalef(2, 2, 2);
     }
     
     // Clear texture
@@ -188,9 +263,10 @@ void display() {
     
     attackMode = headAttackMode && headAttackMode;
     
+    glPushMatrix();
+    glScalef(0.4, 0.4, 0.4);
+    
     glPushMatrix(); {
-//        glTranslatef(-7, 0, 0);
-        
         glPushMatrix();
         glTranslatef(0, 6.5, 0);
         glScalef(0.35, 0.35, 0.35);
@@ -222,6 +298,8 @@ void display() {
     glRotatef(-90, 0, 0, 1);
     glScalef(4, 4, 4);
     shield.drawShield();
+    glPopMatrix();
+    
     glPopMatrix();
 
     glutSwapBuffers();
@@ -260,14 +338,14 @@ void processNormalKeys(unsigned char key, int x, int y) {
         ry = 0;
         mTx = 0;
         mTy = 0;
-        mTz = isOrtho ? 0 : -15;
+        mTz = isOrtho ? 0 : -13;
         mRx = 0;
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
             mTz = 0;
         } else {
-            mTz = -15;
+            mTz = -13;
         }
     } else if (key == 'A' || key == 'a') {
         pTx -= ptSpeed;
@@ -296,6 +374,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
         } else {
             activeTexture++;
         }
+    } else if (key == 'H' || key == 'h') { // Show/hide skybox
+        showSkybox = !showSkybox;
     }
     
     // Weapons
