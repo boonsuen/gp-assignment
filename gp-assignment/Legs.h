@@ -220,6 +220,7 @@ void Legs::drawThigh(float kneeAngle) {
         u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, 0.601);
         glPopMatrix();
         
+        glBindTexture(GL_TEXTURE_2D, 0);
         glBegin(GL_LINE_LOOP);
         glVertex3f(-0.601, 0.1, -0.5);
         glVertex3f(-0.601, 0.1, 0.5);
@@ -234,6 +235,8 @@ void Legs::drawThigh(float kneeAngle) {
         glVertex3f(0.601, 0.5, 0);
         glVertex3f(0.601, -0.4, 0.28);
         glEnd();
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+        
         glPopMatrix();
     }
     glPopMatrix();

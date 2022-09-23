@@ -198,11 +198,13 @@ void Head::drawToppings() {
     }
 
     glPushMatrix(); {
+        glBindTexture(GL_TEXTURE_2D, 0);
         glTranslatef(0, 1.4, 2.43);
         glRotatef(30, 1, 0, 0);
         u.drawCube(1, 2, 2.7, cHeadRed, 0, 0, 0);
-        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     }
+    glPopMatrix();
 
     // Antennas
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -218,7 +220,6 @@ void Head::drawToppings() {
     yellowAntennaV4[0] = -1.0; yellowAntennaV8[0] = -1.0;
     u.drawSixFacesPolygon(yellowAntennaV1, yellowAntennaV2, yellowAntennaV3, yellowAntennaV4,
         yellowAntennaV5, yellowAntennaV6, yellowAntennaV7, yellowAntennaV8, cAntennaYellow);
-    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 
     GLfloat whiteAntennaV1[] = { 0, 0.5, 3.3 }; GLfloat whiteAntennaV5[] = { 0, 0.4, 3.2 };
     GLfloat whiteAntennaV2[] = { 6, 2.2, 2.7 }; GLfloat whiteAntennaV6[] = { 5.9, 2.2, 2.6 };
@@ -230,6 +231,7 @@ void Head::drawToppings() {
     whiteAntennaV3[0] = -6; whiteAntennaV7[0] = -5.9;
     u.drawSixFacesPolygon(whiteAntennaV1, whiteAntennaV2, whiteAntennaV3, whiteAntennaV4,
         whiteAntennaV5, whiteAntennaV6, whiteAntennaV7, whiteAntennaV8, cWhite);
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 
     // Ears
     glPushMatrix(); {

@@ -24,47 +24,59 @@
 class Shield {
 public:
 	Utility u;
-	void DrawShield();
-	void DrawHandle();
+    float scale = 0;
+    float translate = 0;
+    
+	void drawShield();
+	void drawHandle();
 	void callShield();
 };
 
-void Shield::DrawHandle() {
+void Shield::drawHandle() {
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, textures[11]);
+    
+    u.drawCylinder(cDarkBlue, 0.05, 0.05, 0.2, 30, 30, GLU_FILL, true, 0.15, 0, -0.15);
 
-	glPushMatrix();
-//	textures = u.loadTexture("HandleBlack.bmp");
-	u.drawRectangle(0.0f, 0.3f, 0.0f, 0.05f, 0.0f, 0.05f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	glRotatef(60.0f, 0.0f, 0.0f, -1.0f);
-	glTranslatef(-0.2f, 0.0f, 0.0f);
-
-//	textures = u.loadTexture("HandleBlack.bmp");
-	u.drawRectangle(0.0f, 0.2f, 0.0f, 0.05f, 0.0f, 0.05f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.3f, 0.0f, 0.0f);
-	glRotatef(60.0f, 0.0f, 0.0f, 1.0f);
-	glTranslatef(-0.3f, -0.0f, -0.0f);
-
-	glTranslatef(0.3f, 0.0f, 0.0f);
-
-//	textures = u.loadTexture("HandleBlack.bmp");
-	u.drawRectangle(0.0f, 0.2f, 0.0f, 0.05f, 0.0f, 0.05f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+    glPopMatrix();
 }
 
-void Shield::DrawShield() {
-
+float r = 0;
+void Shield::drawShield() {
+    r++;
+    glPushMatrix();
+    glTranslatef(0.146, 0.15, -0.145);
+    glRotatef(r, 0, 1, 0);
+    glTranslatef(-0.146, -0.15, 0.145);
+    
+    glPushMatrix();
+    glTranslatef(0, 0.15, -0.145);
+    glTranslatef(0, translate, 0);
+    glScalef(1, scale, scale);
+    glTranslatef(0, -0.15, 0.145);
+    
+    if (defenseMode) {
+        if (scale < 1) {
+            scale += 0.01;
+        }
+        if (translate > 0) {
+            translate -= 0.002;
+        }
+    } else {
+        if (scale >= 0) {
+            scale -= 0.01;
+            if (scale < 0) {
+                scale = 0;
+            }
+        }
+        if (translate <= 0.2) {
+            translate += 0.002;
+        }
+    }
+    
+    drawHandle();
+    
 	glPushMatrix();
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glTranslatef(0.15f, 0.0f, 0.2f);
@@ -72,42 +84,31 @@ void Shield::DrawShield() {
 
 	glPushMatrix();
 	glScalef(1.0f, 2.0f, 1.0f);
-	textures = u.loadTexture("white.bmp");
+    glColor3fv(isTexture ? cWhite : cLightGrey);
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture == 2 ? 1 : 9]);
 	u.shieldPentagon(0.0f, 0.03f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 	glPushMatrix();
 	glScalef(0.9f, 1.7f, 0.9f);
 	glTranslatef(0, -0.005, 0.005);
-	textures = u.loadTexture("red.bmp");
+    glColor3fv(cRed);
+    glBindTexture(GL_TEXTURE_2D, textures[6]);
 	u.shieldPentagon(0.0f, 0.04f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0.0, 0.0, 0.04);
 
-	textures = u.loadTexture("yellow.bmp");
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glColor3fv(cEyeYellow);
 	u.starVertical(0.0f, 0.025f, 0.125f, 0.15f, 0.0f, 0.01f);
 	u.starHorizontal(0.075f, 0.1f, 0.0f, 0.025f, 0.0f, 0.01f);
-	glDeleteTextures(1, &textures);
-	glDisable(GL_TEXTURE_2D);
-
+    
 	glPopMatrix();
 	glPopMatrix();
-}
-
-void Shield::callShield() {
-
-	glPushMatrix();
-	glTranslatef(-0.2, 0.23f, -0.15f);
-	glScalef(0.65f, 0.65f, 0.65f);
-
-	DrawHandle();
-	DrawShield();
-	glPopMatrix();
-
+    glPopMatrix();
+    glPopMatrix();
+    
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 }

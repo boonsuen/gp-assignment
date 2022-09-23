@@ -13,6 +13,7 @@ const char* BODY_BLUE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignm
 const char* BODY_BACKPACK_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/backpack.bmp";
 const char* BODY_SILVER_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/silver.bmp";
 const char* BODY_ROCKET_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/rocketPower.bmp";
+const char* SHIELD_HANDLE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/HandleBlack.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -29,6 +30,7 @@ const char* BODY_BLUE_TEXTURE_PATH = "blue.bmp";
 const char* BODY_BACKPACK_TEXTURE_PATH = "backpack.bmp";
 const char* BODY_SILVER_TEXTURE_PATH = "silver.bmp";
 const char* BODY_ROCKET_TEXTURE_PATH = "rocketPower.bmp";
+const char* SHIELD_HANDLE_TEXTURE_PATH = "HandleBlack.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -41,6 +43,7 @@ const char* BODY_ROCKET_TEXTURE_PATH = "rocketPower.bmp";
 #include "Legs.h"
 #include "Common.h"
 #include "Sword.h"
+#include "Shield.h"
 
 // 1. Includes
 // 2. Function headers
@@ -92,7 +95,7 @@ float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 11;
+const int TEXTURES_NO = 12;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
@@ -106,6 +109,7 @@ const char* filenames[TEXTURES_NO] = {
     BODY_BACKPACK_TEXTURE_PATH, // 8
     BODY_SILVER_TEXTURE_PATH,   // 9
     BODY_ROCKET_TEXTURE_PATH,   // 10
+    SHIELD_HANDLE_TEXTURE_PATH, // 11
 };
 int activeTexture = 0;
 
@@ -156,6 +160,7 @@ Body body;
 Hands hands;
 Legs legs;
 Sword sword;
+Shield shield;
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -198,7 +203,7 @@ void display() {
         body.drawBody();
         glPopMatrix();
         
-//        hands.drawHands();
+        hands.drawHands();
         
         glPushMatrix();
         glTranslatef(0, -4.3, 0);
@@ -208,7 +213,16 @@ void display() {
     }
     glPopMatrix();
     
+    
     sword.drawSword();
+    
+    glPushMatrix();
+    glTranslatef(3.5, 1, 0.6);
+    glRotatef(90, 1, 0, 0);
+    glRotatef(-90, 0, 0, 1);
+    glScalef(4, 4, 4);
+    shield.drawShield();
+    glPopMatrix();
 
     glutSwapBuffers();
 }
