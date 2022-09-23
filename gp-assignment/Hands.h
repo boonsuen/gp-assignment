@@ -21,6 +21,10 @@
 #include "common.h"
 #include "Utility.h"
 
+
+float cYellow[] = { 1.0, 0.95, 0 };
+float cRed[] = { 1, 63.0 / 255, 57.0 / 255 };
+
 class Hands {
 public:
     Utility u;
@@ -30,13 +34,17 @@ public:
     void drawShoulder();
     void drawShoulderPad();
     void drawUpperArm();
-    //void drawElbow();
-    //void drawLowerArm();
+    void drawElbow();
+    void drawLowerArm();
+    void drawWrist();
+    void drawPalm();
+    void drawThumb();
+    void drawFinger();
    
 };
 
 void Hands::drawShoulder() {
-    // A cylinder that wont move
+    //No Movement
     glBindTexture(GL_TEXTURE_2D, 0);
     glPushMatrix();
     glRotatef(90,0,0,1);
@@ -92,10 +100,11 @@ void Hands::drawShoulderPad() {
 }
 
 GLfloat uav1 = 0, uav2 = 1.5;
-GLfloat UAV1[] = { uav1+0.2, 0, 0.75 }; GLfloat UAV5[] = { uav1 + 0.1, 0, -0.75 };
-GLfloat UAV2[] = { uav2-0.2, 0, 0.75 }; GLfloat UAV6[] = { uav2 - 0.1, 0, -0.75 };
+GLfloat UAV1[] = { static_cast<GLfloat>(uav1 + 0.2), 0, 0.6 }; GLfloat UAV5[] = { static_cast<GLfloat>(uav1 + 0.1), 0, -0.6 };
+GLfloat UAV2[] = { static_cast<GLfloat>(uav2-0.2), 0, 0.6 }; GLfloat UAV6[] = { static_cast<GLfloat>(uav2 - 0.1), 0, -0.6 };
 GLfloat UAV3[] = { uav2, 1, 0.75 }; GLfloat UAV7[] = { uav2, 1, -0.75 };
 GLfloat UAV4[] = { uav1, 1, 0.75 }; GLfloat UAV8[] = { uav1, 1, -0.75 };
+
 void Hands::drawUpperArm() {
     // 1st
     u.drawCube(1.45, 1.7,1, cGrey, -3.3,4.8,0);
@@ -107,7 +116,8 @@ void Hands::drawUpperArm() {
     }
 
     // 3rd
-    u.drawCube(1.4, 1.5, 1, cWhite, -3.3, 3.5, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    u.drawCube(1.4, 1.5, 1, cLightGrey, -3.3, 3.5, 0);
 
     //4th
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); 
@@ -117,6 +127,137 @@ void Hands::drawUpperArm() {
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+
+}
+
+void Hands::drawElbow() {
+    //No Movement
+    glBindTexture(GL_TEXTURE_2D, 0);
+    u.drawCube(1, 0.5, 1, cBlack, -3.3, 1.6, 0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPushMatrix();
+    glRotatef(90, 0, 0, 1);
+    /*u.drawCylinder(cWhite, 0.34, 0.34, 1.2, 30, 30, GLU_FILL, true, 1.6, 2.7, 0);*/
+    u.drawCylinder(cGrey, 0.35, 0.35, 1.4, 10, 10, GLU_FILL, true, 1.6, 2.6, 0);
+    //u.drawDisk(cBlack, 0.34, 0.37, 10, 10, GLU_FILL, 1.6, 2.6, 2.101, false);
+    glPopMatrix();
+}
+
+void Hands::drawLowerArm() {
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
+    glPushMatrix(); {
+        glTranslatef(-4, 1.4, 0);
+        glScalef(1, -1, 1);
+        glScalef(0.9, 0.9, 0.9);
+        u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cWhite);
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    u.drawCube(1, 1, 1, cLightGrey, -3.3, 0, 0);
+
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); {
+        u.drawCube(1.1, 0.6, 1.1, cWhite, -3.3, -0.5, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+}
+
+void Hands::drawWrist() {
+    glPushMatrix(); {
+        glTranslatef(-3.83, -1, 0);
+        glScalef(0.7, 0.3, 0.7);
+        u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cBlack);
+        glPopMatrix();
+    }
+}
+
+void Hands::drawPalm() {
+    
+
+    //Glove
+    u.drawCube(0.4, 0.3, 0.7, cGrey, -3.3, -1.15, 0);
+    glPushMatrix(); {
+
+        glTranslatef(-3.5, -1.6, 0);
+        glScalef(0.27, 0.3, 0.45);
+        u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cGrey);
+        glPopMatrix();
+    }
+}
+void Hands::drawThumb() {
+    glPushMatrix();
+    glTranslatef(0,-0.23,-0.2);
+    /*glRotatef(90, 1, 0, 0);
+    glTranslatef(0, -1.15, 0);*/
+
+
+    u.drawCube(0.24, 0.149, 0.65, cLightGrey, -3.3, -1.15, 0.32);
+    glPushMatrix();
+    glRotatef(-90, 1, 0, 0);
+    u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+    u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
+    glPopMatrix();
+    //u.drawCube(0.23, 0.15, 0.7, cGrey, -3.3, -1.15, 0.47);
+    glPopMatrix();
+}
+
+void Hands::drawFinger() {
+    u.drawCube(0.3, 0.3, 0.42, cLightGrey2, -3.3, -1.6, 0);
+
+    glPushMatrix(); {
+        glScalef(1,1,0.6);
+        glRotatef(90,1,0,0);
+        glTranslatef(0,0.87,1.2);
+        u.drawCube(0.24, 0.15, 0.7, cLightGrey, -3.3, -1.15, 0.32);
+        glPushMatrix();
+        glRotatef(-90, 1, 0, 0);
+        glScalef(1, 1.2, 1);
+        u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
+        glPopMatrix();
+    } glPopMatrix();
+
+    glPushMatrix(); {
+        glScalef(1, 1, 0.6);
+        glRotatef(90, 1, 0, 0);
+        glTranslatef(0, 1.07, 1.3);
+        u.drawCube(0.24, 0.15, 0.7, cLightGrey, -3.3, -1.15, 0.32);
+        glPushMatrix();
+        glRotatef(-90, 1, 0, 0);
+        glScalef(1, 1.2, 1);
+        u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
+        glPopMatrix();
+    } glPopMatrix();
+
+    glPushMatrix(); {
+        glScalef(1, 1, 0.6);
+        glRotatef(90, 1, 0, 0);
+        glTranslatef(0, 1.27, 1.3);
+        u.drawCube(0.24, 0.15, 0.7, cLightGrey, -3.3, -1.15, 0.32);
+        glPushMatrix();
+        glRotatef(-90, 1, 0, 0);
+        glScalef(1, 1.2, 1);
+        u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
+        glPopMatrix();
+    } glPopMatrix();
+
+    glPushMatrix(); {
+        glScalef(1, 1, 0.6);
+        glRotatef(90, 1, 0, 0);
+        glTranslatef(0, 1.47, 1.25);
+        u.drawCube(0.24, 0.15, 0.7, cLightGrey, -3.3, -1.15, 0.32);
+        glPushMatrix();
+        glRotatef(-90, 1, 0, 0);
+        glScalef(1, 1.2, 1);
+        u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
+        glPopMatrix();
+    } glPopMatrix();
+
 
 }
 
@@ -132,6 +273,18 @@ void Hands::drawLeftHand() {
 void Hands::drawRightHand() {
     drawShoulder();
     drawUpperArm();
+    drawElbow();
+    drawLowerArm();
+
+    glPushMatrix();
+    glTranslatef(1,0.2,0);
+    glScalef(1.3,1.4,1.7);
+    drawWrist();
+    drawPalm();
+    drawThumb();
+    drawFinger();
+    glPopMatrix();
+
     drawShoulderPad();
 }
 
