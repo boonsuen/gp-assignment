@@ -24,6 +24,7 @@
 class Body {
 public:
     Utility u;
+    float rocketRotate = 0;
     void drawBody();
 	void drawOverallBody();
 	void rocketThrust();
@@ -117,17 +118,26 @@ void Body::rocketThrust() {
 	glPopMatrix();
     
 	glPushMatrix();
-	glTranslatef(-0.3f, 1.2f, -0.24f);
-	glRotatef(-25.0f, 0.1f, 0.0f, 0.0f);
-	glScalef(1.0, 1.0, 0.8);
-    
-    glColor3fv(isTexture ? cWhite : cPrimaryBlue);
-    glBindTexture(GL_TEXTURE_2D, textures[10]);
-	u.drawSphere(0.11);
-	glPushMatrix();
-    glTranslatef(0.3f, 0.0f, 0.0f);
-    u.drawSphere(0.11);
-	glPopMatrix();
+        glTranslatef(-0.3f, 1.2f, -0.24f);
+        glRotatef(-25.0f, 0.1f, 0.0f, 0.0f);
+        glScalef(1.0, 1.0, 0.8);
+        {
+        glColor3fv(isTexture ? cWhite : cPrimaryBlue);
+        glBindTexture(GL_TEXTURE_2D, textures[10]);
+            
+        glPushMatrix();
+        glRotatef(rocketRotate, 0, 1, 0);
+        u.drawSphere(0.11);
+        glPopMatrix();
+            
+        glPushMatrix();
+        glTranslatef(0.3f, 0.0f, 0.0f);
+        glRotatef(-rocketRotate, 0, 1, 0);
+        u.drawSphere(0.11);
+        glPopMatrix();
+            
+        rocketRotate += 1;
+        }
 	glPopMatrix();
 }
 

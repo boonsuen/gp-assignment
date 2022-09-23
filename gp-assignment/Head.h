@@ -138,6 +138,7 @@ public:
 
 HeadBullet headBullet;
 void Head::drawBulletAnimation(float tx, float ty, float tz) {
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPushMatrix();
     glTranslatef(tx, ty, tz);
     if (headBulletTz1 > 20) {
@@ -164,6 +165,7 @@ void Head::drawBulletAnimation(float tx, float ty, float tz) {
     }
     headBulletTz2 += 0.1;
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 }
 
 void Head::drawToppings() {
