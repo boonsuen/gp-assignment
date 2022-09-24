@@ -130,7 +130,26 @@ bool swordAttackMode = false;
 float bodyRotate = 0;
 float bodyRotateMax = 45;
 
-// Colors
+// =============== LIGHTING ================
+float lightDir = 0;
+float lightRX = 5, lightRY = 7, lightRZ = 0;
+GLenum lightType = GL_DIFFUSE;
+
+float amb[] = { 1, 102.0/255, 1 }; // ambient
+float posA[] = { lightRX, lightRY, lightRZ};
+
+float diff[] = { 1, 153.0/255, 0 }; // diffuse
+float diffD[] = { 1, 153.0/255, 0 };
+float posD[] = { lightRX, lightRY, lightRZ};
+float ambM[] = { 1.0, 1.0, 102.0/255 };
+
+float spec[] = { 0.0, 0.0, 1.0 }; // specular
+float specM[] = { 0.0, 0.0, 1.0 };
+float posS[] = { lightRX, lightRY, lightRZ};
+bool lightOn = false;
+float lightCount = 1;
+
+// =============== COLORS ================
 float cWhite[] = { 1, 1, 1 };
 float cBlack[] = { 0.2, 0.2, 0.2 };
 float cGrey[] = { 71.0/255, 68.0/255, 68.0/255 };
@@ -163,7 +182,61 @@ void projection() {
 }
 
 void lighting() {
-   
+    posA[0] = lightRX;
+    posA[1] = lightRY;
+    posA[2] = lightRZ;
+
+    posD[0] = lightRX;
+    posD[1] = lightRY;
+    posD[2] = lightRZ;
+
+    posS[0] = lightRX;
+    posS[1] = lightRY;
+    posS[2] = lightRZ;
+    
+    std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
+
+    glEnable(GL_NORMALIZE);
+    if (lightOn) {
+        glEnable(GL_LIGHTING);
+    } else {
+        glDisable(GL_LIGHTING);
+    }
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+    glLightfv(GL_LIGHT0, GL_POSITION, posA);
+
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diff);
+    glLightfv(GL_LIGHT1, GL_POSITION, posD);
+
+    glLightfv(GL_LIGHT2, GL_SPECULAR, spec);
+    glLightfv(GL_LIGHT2, GL_POSITION, posS);
+
+    glColor3f(1, 0, 0);
+    glEnable(GL_LIGHT0);
+    glDisable(GL_LIGHT1);
+    glDisable(GL_LIGHT2);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+
+    if (lightType == GL_AMBIENT) {
+        glColor3f(1, 0, 0);
+        glEnable(GL_LIGHT0);
+//        glDisable(GL_LIGHT1);
+//        glDisable(GL_LIGHT2);
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+    } else if (lightType == GL_DIFFUSE) {
+        glColor3f(0, 1, 0);
+        glEnable(GL_LIGHT1);
+//        glDisable(GL_LIGHT0);
+//        glDisable(GL_LIGHT2);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffD);
+    } else {
+        glColor3f(0, 1, 0);
+        glEnable(GL_LIGHT2);
+        glDisable(GL_LIGHT0);
+        glDisable(GL_LIGHT1);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specM);
+    }
 }
 
 void drawSkyBox(float width, float height, float depth) {
@@ -257,6 +330,15 @@ void display() {
         glEnable(GL_TEXTURE_2D);
     } else {
         glDisable(GL_TEXTURE_2D);
+    }
+    
+    {
+        glDisable(GL_LIGHTING);
+        glPushMatrix();
+        glTranslatef(lightRX, lightRY, lightRZ);
+        glColor3f(1, 0, 0);
+        head.u.drawSphere(0.5, 30, 30, GLU_FILL, cEyeYellow, 0, 0, 0);
+        glPopMatrix();
     }
 
     projection();
@@ -529,6 +611,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
         head.headHorizontalAngle = 0;
         head.headVerticalAngle = 0;
         bodyRotate = 0;
+        lightOn = false;
+        lightRX = 5;
+        lightRY = 7;
+        lightRZ = 0;
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
@@ -565,6 +651,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
         }
     } else if (key == 'H' || key == 'h') { // Show/hide skybox
         showSkybox = !showSkybox;
+    }
+    // Space (Enable/disable lighting)
+    if (key == 32) {
+        lightOn = !lightOn;
     }
     
     // Weapons
@@ -606,6 +696,21 @@ void processSpecialKeys(int key, int x, int y) {
         mTx += mtSpeed;
     } else if (key == GLUT_KEY_F1) {
         defenseMode = !defenseMode;
+    }
+    
+    // Lighting
+    if (key == GLUT_KEY_F2) {
+        lightRX -= 1; // Light left
+    } else if (key == GLUT_KEY_F3) {
+        lightRX += 1; // Light right
+    } else if (key == GLUT_KEY_F4) {
+        lightRY += 1; // Light up
+    } else if (key == GLUT_KEY_F5) {
+        lightRY -= 1; // Light down
+    } else if (key == GLUT_KEY_F6) {
+        lightRZ += 1; // Light front
+    } else if (key == GLUT_KEY_F7) {
+        lightRZ -= 1; // Light back
     }
 }
 

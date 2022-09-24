@@ -100,9 +100,13 @@ void Utility::drawRect(float width, float height, float color[], float tx, float
     glTranslatef(tx, ty, tz);
     glColor3fv(color);
     glBegin(GL_QUADS);
+    glNormal3f(-(width / 2), height / 2, 0);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, 0);
+    glNormal3f(width / 2, height / 2, 0);
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, 0);
+    glNormal3f(width / 2, -(height / 2), 0);
     glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), 0);
+    glNormal3f(-(width / 2), -(height / 2), 0);
     glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), 0);
     glEnd();
     glPopMatrix();
@@ -286,6 +290,7 @@ void Utility::drawSphere(GLdouble radius, GLint slices, GLint stacks, GLenum dra
     sphere = gluNewQuadric();
     gluQuadricDrawStyle(sphere, draw);
     gluQuadricTexture(sphere, true);
+    gluQuadricNormals(sphere, GLU_SMOOTH);
     gluSphere(sphere, radius, slices, stacks);
     gluDeleteQuadric(sphere);
     glPopMatrix();
@@ -311,6 +316,7 @@ void Utility::drawCylinder(GLfloat color[],
     cylinder = gluNewQuadric();
     gluQuadricDrawStyle(cylinder, draw);
     gluQuadricTexture(cylinder, true);
+    gluQuadricNormals(cylinder, GLU_SMOOTH);
     gluCylinder(cylinder, baseRadius, topRadius, height, slices, stacks);
     gluDeleteQuadric(cylinder);
     if (closed) {
@@ -376,6 +382,7 @@ void Utility::drawDisk(GLfloat color[],
     disk = gluNewQuadric();
     gluQuadricDrawStyle(disk, draw);
     gluQuadricTexture(disk, true);
+    gluQuadricNormals(disk, GLU_SMOOTH);
     gluDisk(disk, inner, outer, slices, loops);
     gluDeleteQuadric(disk);
     glPopMatrix();
@@ -388,6 +395,7 @@ void Utility::drawSphere(float r)
     sphere = gluNewQuadric();
     gluQuadricDrawStyle(sphere, GLU_FILL);
     gluQuadricTexture(sphere, true);
+    gluQuadricNormals(sphere, GLU_SMOOTH);
     gluSphere(sphere, r, 30, 30);
     gluDeleteQuadric(sphere);
 }
