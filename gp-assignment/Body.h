@@ -161,7 +161,7 @@ void Body::drawBack() {
 
 	glPushMatrix();
 	glRotatef(90.0f, 0.1f, 0.0f, 0.0f);
-	glTranslatef(-0.27f, -0.1f, -2.0f);
+	glTranslatef(-0.29f, -0.1f, -2.0f);
 	glScalef(1.0, 0.8, 1.0);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
     glColor3fv(isTexture ? cWhite : cGrey);

@@ -434,7 +434,7 @@ void display() {
             glPopMatrix();
             
             glPushMatrix();
-            glTranslatef(0.9, -4.8, 0);
+            glTranslatef(0.88, -4.8, 0);
             glScalef(6, 6, 6);
             body.drawBody();
             glPopMatrix();
