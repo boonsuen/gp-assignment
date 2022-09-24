@@ -16,6 +16,8 @@ const char* BODY_ROCKET_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assig
 const char* SHIELD_HANDLE_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/HandleBlack.bmp";
 const char* SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sky.bmp";
 const char* LAND_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/land.bmp";
+const char* MOON_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/moon.bmp";
+const char* SUN_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sun.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -35,6 +37,8 @@ const char* BODY_ROCKET_TEXTURE_PATH = "rocketPower.bmp";
 const char* SHIELD_HANDLE_TEXTURE_PATH = "HandleBlack.bmp";
 const char* SKY_TEXTURE_PATH = "sky.bmp";
 const char* LAND_TEXTURE_PATH = "land.bmp";
+const char* MOON_TEXTURE_PATH = "moon.bmp";
+const char* SUN_TEXTURE_PATH = "sun.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -92,14 +96,14 @@ const float P_NEAR = 0.1, P_FAR = 40; // Perspective near far
 float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
 float prSpeed = 2.0; // Rotate Y for projection
 
-float ry = 90; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!!!) and Model View
+float ry = 0; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!!!) and Model View
 
 float mTx = 0, mTy = 0, mTz = 0, mtSpeed = 2; // Translate for modelview
 float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 14;
+const int TEXTURES_NO = 16;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
@@ -116,6 +120,8 @@ const char* filenames[TEXTURES_NO] = {
     SHIELD_HANDLE_TEXTURE_PATH, // 11
     SKY_TEXTURE_PATH,           // 12
     LAND_TEXTURE_PATH,          // 13
+    MOON_TEXTURE_PATH,          // 14
+    SUN_TEXTURE_PATH,           // 15
 };
 int activeTexture = 0;
 bool showSkybox = false;
@@ -131,15 +137,14 @@ float bodyRotate = 0;
 float bodyRotateMax = 45;
 
 // =============== LIGHTING ================
-float lightDir = 0;
-float lightRX = 5, lightRY = 7, lightRZ = 0;
+bool isNightTheme = false;
+float lightRX = 2.5, lightRY = 3.5, lightRZ = 3;
 GLenum lightType = GL_DIFFUSE;
 
-float amb[] = { 1, 102.0/255, 1 }; // ambient
+float amb[] = { 251.0/255, 255.0/255, 137.0/255 }; // ambient
 float posA[] = { lightRX, lightRY, lightRZ};
 
-float diff[] = { 1, 153.0/255, 0 }; // diffuse
-float diffD[] = { 1, 153.0/255, 0 };
+float diff[] = { 1, 0, 0 };
 float posD[] = { lightRX, lightRY, lightRZ};
 float ambM[] = { 1.0, 1.0, 102.0/255 };
 
@@ -147,7 +152,6 @@ float spec[] = { 0.0, 0.0, 1.0 }; // specular
 float specM[] = { 0.0, 0.0, 1.0 };
 float posS[] = { lightRX, lightRY, lightRZ};
 bool lightOn = false;
-float lightCount = 1;
 
 // =============== COLORS ================
 float cWhite[] = { 1, 1, 1 };
@@ -194,6 +198,22 @@ void lighting() {
     posS[1] = lightRY;
     posS[2] = lightRZ;
     
+    if (isNightTheme) {
+        amb[0] = 90.0/255;
+        amb[1] = 159.0/255;
+        amb[2] = 247.0/255;
+        diff[0] = 0;
+        diff[1] = 0;
+        diff[2] = 1;
+    } else {
+        amb[0] = 251.0/255;
+        amb[1] = 255.0/255;
+        amb[2] = 137.0/255;
+        diff[0] = 1;
+        diff[1] = 0;
+        diff[2] = 0;
+    }
+    
     std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
 
     glEnable(GL_NORMALIZE);
@@ -205,38 +225,37 @@ void lighting() {
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
     glLightfv(GL_LIGHT0, GL_POSITION, posA);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
 
     glLightfv(GL_LIGHT1, GL_DIFFUSE, diff);
     glLightfv(GL_LIGHT1, GL_POSITION, posD);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);
 
     glLightfv(GL_LIGHT2, GL_SPECULAR, spec);
     glLightfv(GL_LIGHT2, GL_POSITION, posS);
 
-    glColor3f(1, 0, 0);
     glEnable(GL_LIGHT0);
-    glDisable(GL_LIGHT1);
+    glEnable(GL_LIGHT1);
     glDisable(GL_LIGHT2);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+//    glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
 
-    if (lightType == GL_AMBIENT) {
-        glColor3f(1, 0, 0);
-        glEnable(GL_LIGHT0);
-//        glDisable(GL_LIGHT1);
-//        glDisable(GL_LIGHT2);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
-    } else if (lightType == GL_DIFFUSE) {
-        glColor3f(0, 1, 0);
-        glEnable(GL_LIGHT1);
+//    if (lightType == GL_AMBIENT) {
+//        glEnable(GL_LIGHT0);
+////        glDisable(GL_LIGHT1);
+////        glDisable(GL_LIGHT2);
+//        glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+//    } else if (lightType == GL_DIFFUSE) {
+//        glEnable(GL_LIGHT1);
+////        glDisable(GL_LIGHT0);
+////        glDisable(GL_LIGHT2);
+//        glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);
+//    } else {
+//        glColor3f(0, 1, 0);
+//        glEnable(GL_LIGHT2);
 //        glDisable(GL_LIGHT0);
-//        glDisable(GL_LIGHT2);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffD);
-    } else {
-        glColor3f(0, 1, 0);
-        glEnable(GL_LIGHT2);
-        glDisable(GL_LIGHT0);
-        glDisable(GL_LIGHT1);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, specM);
-    }
+//        glDisable(GL_LIGHT1);
+//        glMaterialfv(GL_FRONT, GL_SPECULAR, specM);
+//    }
 }
 
 void drawSkyBox(float width, float height, float depth) {
@@ -244,8 +263,10 @@ void drawSkyBox(float width, float height, float depth) {
     glColor3fv(cWhite);
     
     glBindTexture(GL_TEXTURE_2D, textures[13]);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
     glBegin(GL_QUADS);
     // Face 1, bottom
+    glNormal3f(0, 1, 0);
     glTexCoord2f(0.0, 1.0);  glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
     glTexCoord2f(1.0, 1.0);  glVertex3f(width / 2, -(height / 2), -(depth / 2));
     glTexCoord2f(1.0, 0.0);  glVertex3f(width / 2, -(height / 2), depth / 2);
@@ -255,30 +276,35 @@ void drawSkyBox(float width, float height, float depth) {
     glBindTexture(GL_TEXTURE_2D, textures[12]);
     glBegin(GL_QUADS);
     // Face 2, front
+    glNormal3f(0, 0, -1);
     glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, depth / 2);
     glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
 
     // Face 3, right
+    glNormal3f(-1, 0, 0);
     glTexCoord2f(0, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
     glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), -(depth / 2));
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(0, 1); glVertex3f(width / 2, height / 2, depth / 2);
 
     // Face 4, top
+    glNormal3f(0, -1, 0);
     glTexCoord2f(0.7, 0.4); glVertex3f(width / 2, height / 2, depth / 2);
     glTexCoord2f(0.7, 0.7); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(0.4, 0.7); glVertex3f(-(width / 2), height / 2, -(depth / 2));
     glTexCoord2f(0.4, 0.5); glVertex3f(-(width / 2), height / 2, depth / 2);
 
     // Face 5, left
+    glNormal3f(1, 0, 0);
     glTexCoord2f(1, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
     glTexCoord2f(1, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
     glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, -(depth / 2));
 
     // Face 6, back
+    glNormal3f(0, 0, 1);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, -(depth / 2));
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), -(depth / 2));
@@ -318,6 +344,27 @@ bool isLeftLeg = false;
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    if (lightOn) {
+        glDisable(GL_LIGHTING);
+        glPushMatrix();
+        glTranslatef(lightRX, lightRY, lightRZ);
+        glEnable(GL_TEXTURE_2D);
+        if (isNightTheme) {
+            glBindTexture(GL_TEXTURE_2D, textures[14]);
+            GLfloat moonColor[] = { 45.0/255, 109.0/255, 237.0/255 };
+            head.u.drawSphere(0.5, 30, 30, GLU_FILL, moonColor, 0, 0, 0);
+        } else {
+            glBindTexture(GL_TEXTURE_2D, textures[15]);
+            GLfloat sunColor[] = { 246.0/255, 161.0/255, 38.0/255 };
+            head.u.drawSphere(0.5, 30, 30, GLU_FILL, sunColor, 0, 0, 0);
+        }
+        glDisable(GL_TEXTURE_2D);
+        glPopMatrix();
+    }
+
+    projection();
+    lighting();
+    
     if (!isOrtho && showSkybox) {
         glEnable(GL_TEXTURE_2D);
         glPushMatrix();
@@ -331,18 +378,6 @@ void display() {
     } else {
         glDisable(GL_TEXTURE_2D);
     }
-    
-    {
-        glDisable(GL_LIGHTING);
-        glPushMatrix();
-        glTranslatef(lightRX, lightRY, lightRZ);
-        glColor3f(1, 0, 0);
-        head.u.drawSphere(0.5, 30, 30, GLU_FILL, cEyeYellow, 0, 0, 0);
-        glPopMatrix();
-    }
-
-    projection();
-    lighting();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -612,9 +647,9 @@ void processNormalKeys(unsigned char key, int x, int y) {
         head.headVerticalAngle = 0;
         bodyRotate = 0;
         lightOn = false;
-        lightRX = 5;
-        lightRY = 7;
-        lightRZ = 0;
+        lightRX = 2.5;
+        lightRY = 3.5;
+        lightRZ = 3;
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
@@ -700,17 +735,19 @@ void processSpecialKeys(int key, int x, int y) {
     
     // Lighting
     if (key == GLUT_KEY_F2) {
-        lightRX -= 1; // Light left
+        lightRX -= 0.5; // Light left
     } else if (key == GLUT_KEY_F3) {
-        lightRX += 1; // Light right
+        lightRX += 0.5; // Light right
     } else if (key == GLUT_KEY_F4) {
-        lightRY += 1; // Light up
+        lightRY += 0.5; // Light up
     } else if (key == GLUT_KEY_F5) {
-        lightRY -= 1; // Light down
+        lightRY -= 0.5; // Light down
     } else if (key == GLUT_KEY_F6) {
-        lightRZ += 1; // Light front
+        lightRZ += 0.5; // Light front
     } else if (key == GLUT_KEY_F7) {
-        lightRZ -= 1; // Light back
+        lightRZ -= 0.5; // Light back
+    } else if (key == GLUT_KEY_F8) {
+        isNightTheme = !isNightTheme;
     }
 }
 
@@ -887,7 +924,7 @@ GLvoid initGL(GLsizei width, GLsizei height) {
     glClearDepth(1.0);    // Enables clearing of the depth buffer.
     glEnable(GL_DEPTH_TEST); // Enables depth testing.
     glShadeModel(GL_SMOOTH); // Enables smooth color shading.
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(0x809D);
     glEnable(GL_BLEND);
 

@@ -196,36 +196,42 @@ void Utility::drawCube(float width, float height, float depth, float color[], fl
     glBegin(GL_QUADS);
     glColor3fv(color);
     // Face 1, bottom
+    glNormal3f(0, -1, 0);
     glTexCoord2f(0.0, 1.0);  glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
     glTexCoord2f(1.0, 1.0);  glVertex3f(width / 2, -(height / 2), -(depth / 2));
     glTexCoord2f(1.0, 0.0);  glVertex3f(width / 2, -(height / 2), depth / 2);
     glTexCoord2f(0.0, 0.0);  glVertex3f(-(width / 2), -(height / 2), depth / 2);
 
     // Face 2, front
+    glNormal3f(0, 0, 1);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), -(height / 2), depth / 2);
     glTexCoord2f(1, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
     glTexCoord2f(1, 0); glVertex3f(width / 2, height / 2, depth / 2);
     glTexCoord2f(0, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
 
     // Face 3, right
+    glNormal3f(1, 0, 0);
     glTexCoord2f(0, 1); glVertex3f(width / 2, -(height / 2), depth / 2);
     glTexCoord2f(1, 1); glVertex3f(width / 2, -(height / 2), -(depth / 2));
     glTexCoord2f(1, 0); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(0, 0); glVertex3f(width / 2, height / 2, depth / 2);
 
     // Face 4, top
+    glNormal3f(0, 1, 0);
     glTexCoord2f(0, 1); glVertex3f(width / 2, height / 2, depth / 2);
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(1, 0); glVertex3f(-(width / 2), height / 2, -(depth / 2));
     glTexCoord2f(0, 0); glVertex3f(-(width / 2), height / 2, depth / 2);
 
     // Face 5, left
+    glNormal3f(-1, 0, 0);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
     glTexCoord2f(1, 1); glVertex3f(-(width / 2), -(height / 2), depth / 2);
     glTexCoord2f(1, 0); glVertex3f(-(width / 2), -(height / 2), -(depth / 2));
     glTexCoord2f(0, 0); glVertex3f(-(width / 2), height / 2, -(depth / 2));
 
     // Face 6, back
+    glNormal3f(0, 0, -1);
     glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, -(depth / 2));
     glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, -(depth / 2));
     glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), -(depth / 2));
@@ -242,36 +248,42 @@ void Utility::drawSixFacesPolygon(float v1[], float v2[], float v3[], float v4[]
     glBegin(GL_QUADS);
     glColor3fv(color);
     // Face 1, bottom
+    glNormal3f(0, -1, 0);
     glTexCoord2f(0.0, 1.0);  glVertex3f(v5[0], v5[1], v5[2]);
     glTexCoord2f(1.0, 1.0);  glVertex3f(v6[0], v6[1], v6[2]);
     glTexCoord2f(1.0, 0.0);  glVertex3f(v2[0], v2[1], v2[2]);
     glTexCoord2f(0.0, 0.0);  glVertex3f(v1[0], v1[1], v1[2]);
 
     // Face 2, front
+    glNormal3f(0, 0, 1);
     glTexCoord2f(0, 1); glVertex3f(v1[0], v1[1], v1[2]);
     glTexCoord2f(1, 1); glVertex3f(v4[0], v4[1], v4[2]);
     glTexCoord2f(1, 0); glVertex3f(v3[0], v3[1], v3[2]);
     glTexCoord2f(0, 0); glVertex3f(v2[0], v2[1], v2[2]);
 
     // Face 3, right
+    glNormal3f(1, 0, 0);
     glTexCoord2f(0, 1); glVertex3f(v2[0], v2[1], v2[2]);
     glTexCoord2f(1, 1); glVertex3f(v6[0], v6[1], v6[2]);
     glTexCoord2f(1, 0); glVertex3f(v7[0], v7[1], v7[2]);
     glTexCoord2f(0, 0); glVertex3f(v3[0], v3[1], v3[2]);
 
     // Face 4, top
+    glNormal3f(0, 1, 0);
     glTexCoord2f(0, 1); glVertex3f(v3[0], v3[1], v3[2]);
     glTexCoord2f(1, 1); glVertex3f(v7[0], v7[1], v7[2]);
     glTexCoord2f(1, 0); glVertex3f(v8[0], v8[1], v8[2]);
     glTexCoord2f(0, 0); glVertex3f(v4[0], v4[1], v4[2]);
 
     // Face 5, left
+    glNormal3f(-1, 0, 0);
     glTexCoord2f(0, 1); glVertex3f(v4[0], v4[1], v4[2]);
     glTexCoord2f(1, 1); glVertex3f(v1[0], v1[1], v1[2]);
     glTexCoord2f(1, 0); glVertex3f(v5[0], v5[1], v5[2]);
     glTexCoord2f(0, 0); glVertex3f(v8[0], v8[1], v8[2]);
 
     // Face 6, back
+    glNormal3f(0, 0, -1);
     glTexCoord2f(0, 1); glVertex3f(v8[0], v8[1], v8[2]);
     glTexCoord2f(1, 1); glVertex3f(v7[0], v7[1], v7[2]);
     glTexCoord2f(1, 0); glVertex3f(v6[0], v6[1], v6[2]);
@@ -403,6 +415,7 @@ void Utility::drawSphere(float r)
 void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMaxX, float downMinY, float downMaxY, float upMinY, float upMaxY, float downMinZ, float downMaxZ, float upMinZ, float upMaxZ) {
     //Back
     glBegin(GL_QUADS);
+    glNormal3f(0, 0, -1);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(upMinX, upMinY, upMinZ);
     glTexCoord2f(0.0f, 1.0f);
@@ -415,6 +428,7 @@ void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMa
 
     //Bottom
     glBegin(GL_QUADS);
+    glNormal3f(0, -1, 0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(downMinX, downMinY, downMinZ);
     glTexCoord2f(0.0f, 1.0f);
@@ -427,6 +441,7 @@ void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMa
 
     //Left
     glBegin(GL_QUADS);
+    glNormal3f(-1, 0, 0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(upMaxX, upMaxY, upMinZ);
     glTexCoord2f(0.0f, 1.0f);
@@ -439,6 +454,7 @@ void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMa
 
     //Top
     glBegin(GL_QUADS);
+    glNormal3f(0, 1, 0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(upMaxX, upMaxY, upMinZ);
     glTexCoord2f(0.0f, 1.0f);
@@ -451,6 +467,7 @@ void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMa
 
     //Right
     glBegin(GL_QUADS);
+    glNormal3f(1, 0, 0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(upMinX, upMinY, upMinZ);
     glTexCoord2f(0.0f, 1.0f);
@@ -463,6 +480,7 @@ void Utility::drawShape(float downMinX, float downMaxX, float upMinX, float upMa
 
     //Front
     glBegin(GL_QUADS);
+    glNormal3f(0, 0, 1);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(upMinX, upMinY, upMaxZ);
     glTexCoord2f(0.0f, 1.0f);

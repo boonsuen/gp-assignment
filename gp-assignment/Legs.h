@@ -48,7 +48,7 @@ public:
 
 void Legs::drawFoot() {
     glBindTexture(GL_TEXTURE_2D, 0);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, (attackMode ? cHeadRed : cPrimaryLightBlue));
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (attackMode ? cHeadRed : cPrimaryLightBlue));
     GLfloat blueFV1[] = { -0.9, -1.5, 4 }; GLfloat blueFV5[] = { -0.9, -1.5, 0.5 };
     GLfloat blueFV2[] = { 0.9, -1.5, 4 }; GLfloat blueFV6[] = { 0.9, -1.5, 0.5 };
     GLfloat blueFV3[] = { 0.9, 0, 1 }; GLfloat blueFV7[] = { 0.9, 0, -0.5 };
@@ -56,14 +56,14 @@ void Legs::drawFoot() {
     u.drawSixFacesPolygon(blueFV1, blueFV2, blueFV3, blueFV4,
         blueFV5, blueFV6, blueFV7, blueFV8, (attackMode ? cHeadRed : cPrimaryLightBlue));
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     GLfloat whiteFV1[] = { -0.901, -1.1, 3.23 }; GLfloat whiteFV5[] = { -0.901, -1.1, 0.7 };
     GLfloat whiteFV2[] = { 0.901, -1.1, 3.23 }; GLfloat whiteFV6[] = { 0.901, -1.1, 0.7 };
     GLfloat whiteFV3[] = { 0.901, -0.17, 1.34 }; GLfloat whiteFV7[] = { 0.901, -0.5, 0.24 };
     GLfloat whiteFV4[] = { -0.901, -0.17, 1.34 }; GLfloat whiteFV8[] = { -0.901, -0.5, 0.24 };
     u.drawSixFacesPolygon(whiteFV1, whiteFV2, whiteFV3, whiteFV4,
         whiteFV5, whiteFV6, whiteFV7, whiteFV8, cWhite);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cLightGrey2);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey2);
     glColor3fv(cLightSkinGrey2);
     glLineWidth(3);
     glBegin(GL_LINES);
@@ -73,14 +73,14 @@ void Legs::drawFoot() {
     glVertex3f(0.8011, -0.17, 1.341);
     glEnd();
 
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cDarkBlue);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkBlue);
     GLfloat darkBV1[] = { -0.8, -1.5, -0.1 }; GLfloat darkBV5[] = { -0.8, -1.5, -2 };
     GLfloat darkBV2[] = { 0.8, -1.5, -0.1 }; GLfloat darkBV6[] = { 0.8, -1.5, -2 };
     GLfloat darkBV3[] = { 0.8, -0.17, 0.2 }; GLfloat darkBV7[] = { 0.8, 0.5, -1.2 };
     GLfloat darkBV4[] = { -0.8, -0.17, 0.2 }; GLfloat darkBV8[] = { -0.8, 0.5, -1.2 };
     u.drawSixFacesPolygon(darkBV1, darkBV2, darkBV3, darkBV4,
         darkBV5, darkBV6, darkBV7, darkBV8, cDarkBlue);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, (attackMode ? cHeadRed : cPrimaryLightBlue));
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (attackMode ? cHeadRed : cPrimaryLightBlue));
     GLfloat blueBV1[] = { -0.801, -1, -1.5 }; GLfloat blueBV5[] = { -0.801, -1.5, -2.001 };
     GLfloat blueBV2[] = { 0.801, -1, -1.5 }; GLfloat blueBV6[] = { 0.801, -1.5, -2.001 };
     GLfloat blueBV3[] = { 0.801, 0, -1 }; GLfloat blueBV7[] = { 0.801, 0.5, -1.201 };
@@ -95,7 +95,7 @@ void Legs::drawCalf() {
 
         glPushMatrix();
         glTranslatef(0, 0, 0.3);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         GLfloat whiteTV1[] = { -1.1, -1.5, 0.9 }; GLfloat whiteTV5[] = { -1.1, -2.45, 0.5 };
         GLfloat whiteTV2[] = { 1.1, -1.5, 0.9 }; GLfloat whiteTV6[] = { 1.1, -2.45, 0.5 };
         GLfloat whiteTV3[] = { 1.1, -0.3, 1 }; GLfloat whiteTV7[] = { 1.1, -0.5, 0.5 };
@@ -103,7 +103,7 @@ void Legs::drawCalf() {
         u.drawSixFacesPolygon(whiteTV1, whiteTV2, whiteTV3, whiteTV4,
             whiteTV5, whiteTV6, whiteTV7, whiteTV8, cWhite);
         u.drawCube(2.2, 1.95, 1.90, cWhite, 0, -0.975 - 0.5, -0.45);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLightSkinGrey2);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightSkinGrey2);
         glColor3fv(cLightSkinGrey2);
         glLineWidth(2);
         glBegin(GL_LINES);
@@ -123,7 +123,7 @@ void Legs::drawCalf() {
         glVertex3f(1.101, -2.45, -1.395);
         glEnd();
 
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLightGrey);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
         GLfloat kneeV1[] = { -0.5, -1.5, 1.2 }; GLfloat kneeV5[] = { -0.5, -2.45, 0.5 };
         GLfloat kneeV2[] = { 0.5, -1.5, 1.2 }; GLfloat kneeV6[] = { 0.5, -2.45, 0.5 };
         GLfloat kneeV3[] = { 0.5, -0.1, 1.4 }; GLfloat kneeV7[] = { 0.5, -0.5, 0.5 };
@@ -135,7 +135,7 @@ void Legs::drawCalf() {
         GLfloat kneeBlueV3[] = { 0.501, -0.1, 1.401 }; GLfloat kneeBlueV7[] = { 0.5, -0.5, 0.5 };
         GLfloat kneeBlueV4[] = { -0.501, -0.1, 1.401 }; GLfloat kneeBlueV8[] = { -0.5, -0.5, 0.5 };
         GLfloat kneeAttackModeColor[] = { 211.0/255, 28.0/255, 19.0/255 };
-        glMaterialfv(GL_FRONT, GL_AMBIENT, (attackMode ? kneeAttackModeColor : cPrimaryBlue));
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (attackMode ? kneeAttackModeColor : cPrimaryBlue));
         u.drawSixFacesPolygon(kneeBlueV1, kneeBlueV2, kneeBlueV3, kneeBlueV4,
             kneeBlueV5, kneeBlueV6, kneeBlueV7, kneeBlueV8, (attackMode ? kneeAttackModeColor : cPrimaryBlue));
         glBegin(GL_LINE_LOOP);
@@ -149,10 +149,10 @@ void Legs::drawCalf() {
         glVertex3f(0.5, -1.5, 1.201);
         glEnd();
         glPopMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.75, 1, 3.5, 10, 10, GLU_FILL, true, 0, -5.5, -0.1);
         glPushMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLegBoost);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLegBoost);
         glColor3fv(cLegBoost);
         glBindTexture(GL_TEXTURE_2D, 0);
         glBegin(GL_TRIANGLES);
@@ -167,7 +167,7 @@ void Legs::drawCalf() {
         glVertex3f(0, -3, 0.74);
         glEnd();
 
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLightSkinGrey2);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightSkinGrey2);
         glColor3fv(cLightSkinGrey2);
         glBegin(GL_LINES);
         glVertex3f(-0.25, -5, 0.82);
@@ -180,17 +180,17 @@ void Legs::drawCalf() {
         glPushMatrix(); {
             glTranslatef(0, -4.5, -1);
             glRotatef(30, 1, 0, 0);
-            glMaterialfv(GL_FRONT, GL_AMBIENT, cLegBoost);
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLegBoost);
             u.drawCylinder(cLegBoost, 0.1, 0.3, 0.6, 10, 10, GLU_FILL, false, 0, 0, -0.2);
             glPopMatrix();
         }
         glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
         
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cGrey);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
         u.drawCylinder(cGrey, 0.5, 0.5, 1, 30, 30, GLU_FILL, true, 0, -6, -0.1);
         glPushMatrix();
         glRotatef(90, 0, 1, 0);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue));
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue));
         u.drawHemisphere(0.3, 30, 30, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue), 0, -5.55, -1.1);
         glRotatef(180, 0, 1, 0);
         u.drawHemisphere(0.3, 30, 30, (attackMode ? kneeAttackModeColor : cPrimaryLightBlue), 0, -5.55, -1.1);
@@ -198,14 +198,14 @@ void Legs::drawCalf() {
         // Ankle
         glPushMatrix();
         glTranslatef(0, -5, 0);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLightGrey2);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey2);
         GLfloat ankle1V1[] = { -1.1, -0.5, 1.4 }; GLfloat ankle1V5[] = { -1.1, -0.9, 0 };
         GLfloat ankle1V2[] = { 1.1, -0.5, 1.4 }; GLfloat ankle1V6[] = { 1.1, -0.9, 0 };
         GLfloat ankle1V3[] = { 1.1, 0, 1.3 }; GLfloat ankle1V7[] = { 1.1, -0.2, 0 };
         GLfloat ankle1V4[] = { -1.1, 0, 1.3 }; GLfloat ankle1V8[] = { -1.1, -0.2, 0 };
         u.drawSixFacesPolygon(ankle1V1, ankle1V2, ankle1V3, ankle1V4,
             ankle1V5, ankle1V6, ankle1V7, ankle1V8, cLightGrey2);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cLightGrey);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
         GLfloat ankle2V1[] = { -1.1, -0.9, 0 }; GLfloat ankle2V5[] = { -1.1, -0.5, -1.4 };
         GLfloat ankle2V2[] = { 1.1, -0.9, 0 }; GLfloat ankle2V6[] = { 1.1, -0.5, -1.4 };
         GLfloat ankle2V3[] = { 1.1, -0.2, 0 }; GLfloat ankle2V7[] = { 1.1, 0, -1.3 };
@@ -223,7 +223,7 @@ void Legs::drawThigh(float kneeAngle) {
         glTranslatef(0, -5.6, 0);
         
         glPushMatrix();
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cDarkBlue);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkBlue);
         u.drawCube(1.2, 1.2, 1.6, cDarkBlue, 0, 0.6, 0);
         glRotatef(90, 0, 0, 1);
         u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.2, 30, 30, GLU_FILL, true, 0, -0.6, 0);
@@ -234,7 +234,7 @@ void Legs::drawThigh(float kneeAngle) {
         glPushMatrix();
         glRotatef(90, 0, 1, 0);
         glLineWidth(2);
-        glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, -0.601);
         u.drawCircle(cWhite, 0.5, 0.5, 0, true, false, true, 0, 0, 0.601);
         glPopMatrix();
@@ -260,16 +260,16 @@ void Legs::drawThigh(float kneeAngle) {
     }
     glPopMatrix();
     
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cDarkBlue);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkBlue);
     u.drawCube(1.8, 1.5, 1.6, cDarkBlue, 0, -1.5, 0);
     glPushMatrix();
     glRotatef(90, 0, 0, 1);
-    u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.8, 30, 30, GLU_FILL, true, -2, -0.9, 0);
+    u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.799, 30, 30, GLU_FILL, true, -2, -0.9, 0);
     glScalef(0.4, 1, 1);
-    u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.8, 30, 30, GLU_FILL, true, -2, -0.9, 0);
+    u.drawCylinder(cDarkBlue, 0.8, 0.8, 1.799, 30, 30, GLU_FILL, true, -2, -0.9, 0);
     glPopMatrix();
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     GLfloat whiteV1[] = { -1.0, -5, 1 }; GLfloat whiteV5[] = { -1.0, -5.5, 0.5 };
     GLfloat whiteV2[] = { 1.0, -5, 1 }; GLfloat whiteV6[] = { 1.0, -5.5, 0.5 };
     GLfloat whiteV3[] = { 1.0, -3, 1 }; GLfloat whiteV7[] = { 1.0, -2.5, 0.5 };
@@ -283,7 +283,7 @@ void Legs::drawThigh(float kneeAngle) {
     u.drawSixFacesPolygon(whiteBV1, whiteBV2, whiteBV3, whiteBV4,
         whiteBV5, whiteBV6, whiteBV7, whiteBV8, cWhite);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cLightSkinGrey2);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightSkinGrey2);
     glColor3fv(cLightSkinGrey2);
     glLineWidth(2);
     glBegin(GL_LINE_STRIP);
@@ -349,7 +349,7 @@ void Legs::drawLeftDefenseWaist() {
     glRotatef(hipAngleLeft < 0 ? hipAngleLeft : 0, 1, 0, 0);
     glTranslatef(0, 0.4, -1.75);
     
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     GLfloat whiteLV1[] = { -2.08, -2.5, 2 }; GLfloat whiteLV5[] = { -2.38, -2.7, 1.5 };
     GLfloat whiteLV2[] = { 0, -3.5, 2 }; GLfloat whiteLV6[] = { 0, -3.7, 1.5 };
     GLfloat whiteLV3[] = { 0, 0, 2 }; GLfloat whiteLV7[] = { 0, 0, 1.5 };
@@ -359,9 +359,9 @@ void Legs::drawLeftDefenseWaist() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     GLfloat red[] = { 219.0 / 255, 59.0 / 255, 45.0 / 255 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, red);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
     u.drawCube(1.1, 1.2, 0.2, red, -0.98, -0.7, 2);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cAntennaYellow);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cAntennaYellow);
     glColor3fv(cAntennaYellow);
     glBegin(GL_QUADS);
     glVertex3f(-1.58, -2.5, 2.002);
@@ -369,11 +369,11 @@ void Legs::drawLeftDefenseWaist() {
     glVertex3f(-0.4, -2.7, 2.002);
     glVertex3f(-1.58, -2.2, 2.002);
     glEnd();
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawDisk(cGrey, 0.05, 0.13, 10, 10, GLU_FILL, -1.22, -1.02, 2.101, false);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cLightSkinGrey2);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightSkinGrey2);
     glColor3fv(cLightSkinGrey2);
     glBegin(GL_LINES);
     glVertex3f(-1.28, -2.1, 2.01);
@@ -393,7 +393,7 @@ void Legs::drawLeftDefenseWaist() {
     glRotatef(hipAngleLeft > 0 ? hipAngleLeft : 0, 1, 0, 0);
     glTranslatef(0, 0.4, 1.75);
     
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     whiteLV1[2] = -2; whiteLV5[2] = -1.5;
     whiteLV2[2] = -2; whiteLV6[2] = -1.5;
     whiteLV3[2] = -2; whiteLV7[2] = -1.5;
@@ -413,7 +413,7 @@ void Legs::drawRightDefenseWaist() {
     glRotatef(hipAngleRight < 0 ? hipAngleRight : 0, 1, 0, 0);
     glTranslatef(0, 0.4, -1.75);
     
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     GLfloat whiteRV1[] = { 0, -3.5, 2 }; GLfloat whiteRV5[] = { 0, -3.7, 1.5 };
     GLfloat whiteRV2[] = { 2.08, -2.5, 2 }; GLfloat whiteRV6[] = { 2.38, -2.5, 1.5 };
     GLfloat whiteRV3[] = { 2.08, 0, 2 }; GLfloat whiteRV7[] = { 2.38, 0, 1.5 };
@@ -423,9 +423,9 @@ void Legs::drawRightDefenseWaist() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     GLfloat red[] = { 219.0 / 255, 59.0 / 255, 45.0 / 255 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, red);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
     u.drawCube(1.1, 1.2, 0.2, red, 0.98, -0.7, 2);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cAntennaYellow);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cAntennaYellow);
     glColor3fv(cAntennaYellow);
     glBegin(GL_QUADS);
     glVertex3f(1.58, -2.5, 2.002);
@@ -433,11 +433,11 @@ void Legs::drawRightDefenseWaist() {
     glVertex3f(0.4, -2.7, 2.002);
     glVertex3f(1.58, -2.2, 2.002);
     glEnd();
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawDisk(cGrey, 0.05, 0.13, 10, 10, GLU_FILL, 1.22, -1.02, 2.101, false);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cLightSkinGrey2);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightSkinGrey2);
     glColor3fv(cLightSkinGrey2);
     glBegin(GL_LINES);
     glVertex3f(1.28, -2.1, 2.01);
@@ -456,7 +456,7 @@ void Legs::drawRightDefenseWaist() {
     glTranslatef(0, -0.4, -1.75);
     glRotatef(hipAngleRight > 0 ? hipAngleRight : 0, 1, 0, 0);
     glTranslatef(0, 0.4, 1.75);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     whiteRV1[2] = -2; whiteRV5[2] = -1.5;
     whiteRV2[2] = -2; whiteRV6[2] = -1.5;
     whiteRV3[2] = -2; whiteRV7[2] = -1.5;
@@ -497,14 +497,14 @@ void Legs::drawWaist() {
         }
     }
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawCube(7, 0.8, 4, cGrey, 0, 0, 0);
 
     GLfloat middleV1[] = { -0.9, -1.8, 2.5 }; GLfloat middleV5[] = { -0.9, -3, 1.6 };
     GLfloat middleV2[] = { 0.9, -1.8, 2.5 }; GLfloat middleV6[] = { 0.9, -3, 1.6 };
     GLfloat middleV3[] = { 0.9, -0.4, 2 }; GLfloat middleV7[] = { 0.9, -2.5, -2 };
     GLfloat middleV4[] = { -0.9, -0.4, 2 }; GLfloat middleV8[] = { -0.9, -2.5, -2 };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cWhite);
     u.drawSixFacesPolygon(middleV1, middleV2, middleV3, middleV4,
         middleV5, middleV6, middleV7, middleV8, cWhite);
     GLfloat middleV1B[] = { -0.9, -1, -2.3 }; GLfloat middleV5B[] = { -0.9, -2.5, -2 };
@@ -516,13 +516,13 @@ void Legs::drawWaist() {
 
     glPushMatrix();
     glRotatef(90, 0, 1, 0);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, cGrey);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawDisk(cGrey, 0.6, 1.1, 30, 30, GLU_FILL, 0, -1.55, 0.901, false);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, cGrey);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawDisk(cGrey, 0.6, 1.1, 30, 30, GLU_FILL, 0, -1.55, -0.901, false);
     glRotatef(90, 0, 0, 1);
     glRotatef(90, 1, 0, 0);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, cBlack);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cBlack);
     u.drawCylinder(cBlack, 0.6, 0.6, 6, 30, 30, GLU_FILL, true, -1.55, -3, 0);
     glPopMatrix();
 }

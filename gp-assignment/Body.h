@@ -37,12 +37,12 @@ void Body::drawOverallBody() {
 	glPushMatrix();
 
 	// Base
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     glColor3fv(cWhite);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
 	u.drawShape(-0.45f, 0.15f, -0.435f, 0.135f, 0.83f, 0.83f, 1.0f, 1.0f, -0.205f, 0.2f, -0.18f, 0.175f);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cBodyRed);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBodyRed);
     glColor3fv(cBodyRed);
 	// Middle body
 	glPushMatrix();
@@ -51,12 +51,12 @@ void Body::drawOverallBody() {
 	u.drawShape(-0.475f, -0.275f, -0.5f, -0.3f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.185f, -0.19f, 0.35f);
 	// Middle middle
     GLfloat midleMiddleAttackModeColor[] = { 33.0/255, 242.0/255, 169.0/255 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, attackMode ? midleMiddleAttackModeColor : cPrimaryBlue);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, attackMode ? midleMiddleAttackModeColor : cPrimaryBlue);
     glColor3fv(attackMode ? midleMiddleAttackModeColor : cPrimaryBlue);
     glBindTexture(GL_TEXTURE_2D, textures[7]);
 	u.drawShape(-0.275f, -0.025f, -0.3f, 0.0f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.125f, -0.19f, 0.25f);
 	// Right middle
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cBodyRed);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBodyRed);
     glColor3fv(cBodyRed);
     glBindTexture(GL_TEXTURE_2D, textures[6]);
 	u.drawShape(-0.025f, 0.175f, 0.0f, 0.2f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.185f, -0.19f, 0.35f);
@@ -64,7 +64,7 @@ void Body::drawOverallBody() {
 	// Design for middle middle
 	glLineWidth(5.0f);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     glColor3fv(cWhite);
     glBindTexture(GL_TEXTURE_2D, textures[6]);
 	u.drawInnerBody(-0.3f, 1.35f, 0.3f, 0.0f, 1.35f, 0.3f);
@@ -75,7 +75,7 @@ void Body::drawOverallBody() {
 	glPopMatrix();
 
 	// Top
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cPrimaryLightBlue);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cPrimaryLightBlue);
     glColor3fv(cPrimaryLightBlue);
     glBindTexture(GL_TEXTURE_2D, textures[7]);
 	u.drawShape(-0.5f, 0.2f, -0.475f, 0.175f, 1.4f, 1.4f, 1.75f, 1.75f, -0.19f, 0.35f, -0.19f, 0.185f);
@@ -93,7 +93,7 @@ void Body::rocketThrust() {
 	glTranslatef(0.0f, 1.0f, -1.0f);
 	glRotatef(-25.0f, 0.1f, 0.0f, 0.0f);
 	glTranslatef(-0.0f, -1.0f, 1.0f);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, cLightGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
     glColor3fv(cLightGrey);
     glBindTexture(GL_TEXTURE_2D, textures[9]);
 	u.drawCylinder(0.15f, 0.08f, 0.15f);
@@ -117,7 +117,7 @@ void Body::rocketThrust() {
         glRotatef(-25.0f, 0.1f, 0.0f, 0.0f);
         glScalef(1.0, 1.0, 0.8);
         {
-        glMaterialfv(GL_FRONT, GL_AMBIENT, isTexture ? cWhite : cPrimaryBlue);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, isTexture ? cWhite : cPrimaryBlue);
         glColor3fv(isTexture ? cWhite : cPrimaryBlue);
         glBindTexture(GL_TEXTURE_2D, textures[10]);
             
@@ -149,7 +149,7 @@ void Body::drawBack() {
 	glRotatef(90.0f, -0.1f, 0.0f, 0.0f);
 	glTranslatef(0.15f, -1.4875f, 0.085f);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, isTexture ? cWhite : cDarkBlue);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, isTexture ? cWhite : cDarkBlue);
     glColor3fv(isTexture ? cWhite : cDarkBlue);
     glBindTexture(GL_TEXTURE_2D, textures[8]);
 	u.drawShape(-0.4f, 0.1f, -0.4f, 0.1f, 1.2f, 1.2f, 1.4f, 1.4f, 0.2f, -0.485f, 0.2f, -0.185f);
@@ -162,7 +162,7 @@ void Body::drawBack() {
 	glRotatef(90.0f, 0.1f, 0.0f, 0.0f);
 	glTranslatef(0.0f, -0.1f, -2.0f);
 	glScalef(1.0, 0.8, 1.0);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, isTexture ? cWhite : cGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, isTexture ? cWhite : cGrey);
     glColor3fv(isTexture ? cWhite : cGrey);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
 	u.drawCylinder(0.05f, 0.05f, 0.3f);
@@ -174,7 +174,7 @@ void Body::drawBack() {
 	glTranslatef(-0.29f, -0.1f, -2.0f);
 	glScalef(1.0, 0.8, 1.0);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, isTexture ? cWhite : cGrey);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, isTexture ? cWhite : cGrey);
     glColor3fv(isTexture ? cWhite : cGrey);
 	u.drawCylinder(0.05f, 0.05f, 0.3f);
 	u.drawSphere(0.05);

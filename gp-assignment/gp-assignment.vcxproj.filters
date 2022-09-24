@@ -59,6 +59,12 @@
     <Image Include="land.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="moon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="sun.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
