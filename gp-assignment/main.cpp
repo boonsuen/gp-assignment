@@ -126,6 +126,10 @@ bool attackMode = false;
 bool headAttackMode = false;
 bool swordAttackMode = false;
 
+// Body (together with Head and Hands) rotation
+float bodyRotate = 0;
+float bodyRotateMax = 45;
+
 // Colors
 float cWhite[] = { 1, 1, 1 };
 float cBlack[] = { 0.2, 0.2, 0.2 };
@@ -427,19 +431,24 @@ void display() {
         }
         
         glPushMatrix(); {
-            glPushMatrix();
-            glTranslatef(0, 6.7, 0);
-            glScalef(0.35, 0.35, 0.35);
-            head.drawHead();
+            glPushMatrix(); {
+                glRotatef(bodyRotate, 0, 1, 0);
+                
+                glPushMatrix();
+                glTranslatef(0, 6.7, 0);
+                glScalef(0.35, 0.35, 0.35);
+                head.drawHead();
+                glPopMatrix();
+                
+                glPushMatrix();
+                glTranslatef(0.88, -4.8, 0);
+                glScalef(6, 6, 6);
+                body.drawBody();
+                glPopMatrix();
+                
+                hands.drawHands();
+            }
             glPopMatrix();
-            
-            glPushMatrix();
-            glTranslatef(0.88, -4.8, 0);
-            glScalef(6, 6, 6);
-            body.drawBody();
-            glPopMatrix();
-            
-            hands.drawHands();
             
             glPushMatrix();
             glTranslatef(0, -4.3, 0);
@@ -477,7 +486,6 @@ void processNormalKeys(unsigned char key, int x, int y) {
         legs.keyActions(key);
         return;
     }
-    
     // Hands
     if (key == '8') {
         handKeyMode = !handKeyMode;
@@ -486,9 +494,18 @@ void processNormalKeys(unsigned char key, int x, int y) {
         hands.keyActions(key);
         return;
     }
-    
     // Head (C/B/G/V)
     head.keyActions(key);
+    // Body (O/P), rotation including body, hands, head
+    if (key == 'O' || key == 'o') {
+        if (bodyRotate > -bodyRotateMax) {
+            bodyRotate -= 1;
+        }
+    } else if (key == 'P' || key == 'p') {
+        if (bodyRotate < bodyRotateMax) {
+            bodyRotate += 1;
+        }
+    }
     
     if (key == '0') { // Reset
         pTx = 0;
@@ -504,7 +521,14 @@ void processNormalKeys(unsigned char key, int x, int y) {
         legs.hipAngleRight = 0;
         legs.kneeAngleLeft = 0;
         legs.kneeAngleRight = 0;
+        hands.wholeAngleRight = 0;
+        hands.wholeAngleLeft = 0;
+        hands.LowerArmAngleRight = 0;
+        hands.LowerArmAngleLeft = 0;
         moveToward = true;
+        head.headHorizontalAngle = 0;
+        head.headVerticalAngle = 0;
+        bodyRotate = 0;
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {

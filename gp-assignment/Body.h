@@ -39,7 +39,7 @@ void Body::drawOverallBody() {
 	// Base
     glColor3fv(cWhite);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
-	u.drawShape(-0.45f, 0.15f, -0.435f, 0.135f, 0.8f, 0.8f, 1.0f, 1.0f, -0.205f, 0.2f, -0.18f, 0.175f);
+	u.drawShape(-0.45f, 0.15f, -0.435f, 0.135f, 0.83f, 0.83f, 1.0f, 1.0f, -0.205f, 0.2f, -0.18f, 0.175f);
 
     glColor3fv(cBodyRed);
 	// Middle body

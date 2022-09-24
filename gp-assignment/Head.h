@@ -27,7 +27,7 @@ public:
     float headHorizontalAngle = 0;
     float headHorizontalAngleMax = 45;
     float headVerticalAngle = 0;
-    float headVerticalAngleMax = 20;
+    float headVerticalBackAngleMax = 20;
     
     void drawEye(bool isRed, bool isLeft);
     void drawFace();
@@ -309,11 +309,11 @@ void Head::keyActions(unsigned char key) {
             this->headHorizontalAngle += 1;
         }
     } else if (key == 'G' || key == 'g') {
-        if (this->headVerticalAngle > -headVerticalAngleMax) {
+        if (this->headVerticalAngle > -headVerticalBackAngleMax) {
             this->headVerticalAngle -= 1;
         }
     } else if (key == 'V' || key == 'v') {
-        if (this->headVerticalAngle < headVerticalAngleMax) {
+        if (this->headVerticalAngle < 8) {
             this->headVerticalAngle += 1;
         }
     }
