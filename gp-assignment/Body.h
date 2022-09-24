@@ -39,23 +39,23 @@ void Body::drawOverallBody() {
 	// Base
     glColor3fv(cWhite);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
-	u.drawShape(-0.45f, 0.15f, -0.435f, 0.135f, 0.8f, 0.8f, 1.0f, 1.0f, 0.0f, 0.2f, 0.025f, 0.175f);
+	u.drawShape(-0.45f, 0.15f, -0.435f, 0.135f, 0.8f, 0.8f, 1.0f, 1.0f, -0.205f, 0.2f, -0.18f, 0.175f);
 
     glColor3fv(cBodyRed);
 	// Middle body
 	glPushMatrix();
 	// Left middle
     glBindTexture(GL_TEXTURE_2D, textures[6]);
-	u.drawShape(-0.475f, -0.275f, -0.5f, -0.3f, 1.0f, 1.0f, 1.4f, 1.4f, 0.015f, 0.185f, 0.015f, 0.35f);
+	u.drawShape(-0.475f, -0.275f, -0.5f, -0.3f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.185f, -0.19f, 0.35f);
 	// Middle middle
     GLfloat midleMiddleAttackModeColor[] = { 33.0/255, 242.0/255, 169.0/255 };
     glColor3fv(attackMode ? midleMiddleAttackModeColor : cPrimaryBlue);
     glBindTexture(GL_TEXTURE_2D, textures[7]);
-	u.drawShape(-0.275f, -0.025f, -0.3f, 0.0f, 1.0f, 1.0f, 1.4f, 1.4f, 0.015f, 0.125f, 0.015f, 0.25f);
+	u.drawShape(-0.275f, -0.025f, -0.3f, 0.0f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.125f, -0.19f, 0.25f);
 	// Right middle
     glColor3fv(cBodyRed);
     glBindTexture(GL_TEXTURE_2D, textures[6]);
-	u.drawShape(-0.025f, 0.175f, 0.0f, 0.2f, 1.0f, 1.0f, 1.4f, 1.4f, 0.015f, 0.185f, 0.015f, 0.35f);
+	u.drawShape(-0.025f, 0.175f, 0.0f, 0.2f, 1.0f, 1.0f, 1.4f, 1.4f, -0.19f, 0.185f, -0.19f, 0.35f);
 
 	// Design for middle middle
 	glLineWidth(5.0f);
@@ -69,22 +69,10 @@ void Body::drawOverallBody() {
 	glLineWidth(1.0f);
 	glPopMatrix();
 
-	////connect right hand
-	//textures = loadTexture("glowingYellow.bmp");
-	//drawShape(-0.75f, -0.475f, -0.75f, -0.5f, 1.775f, 1.775f, 1.525f, 1.4f, 0.015f, 0.185f, 0.015f, 0.25f);
-	//glDeleteTextures(1, &textures);
-	//glDisable(GL_TEXTURE_2D);
-
 	// Top
     glColor3fv(cPrimaryLightBlue);
     glBindTexture(GL_TEXTURE_2D, textures[7]);
-	u.drawShape(-0.5f, 0.2f, -0.475f, 0.175f, 1.4f, 1.4f, 1.75f, 1.75f, 0.015f, 0.35f, 0.015f, 0.185f);
-
-	////connect left hand
-	//textures = loadTexture("glowingYellow.bmp");
-	//drawShape(0.2f, 0.45f, 0.175f, 0.45f, 1.4f, 1.525f, 1.775f, 1.775f, 0.015f, 0.25f, 0.015f, 0.185f);
-	//glDeleteTextures(1, &textures);
-	//glDisable(GL_TEXTURE_2D);
+	u.drawShape(-0.5f, 0.2f, -0.475f, 0.175f, 1.4f, 1.4f, 1.75f, 1.75f, -0.19f, 0.35f, -0.19f, 0.185f);
 
 	glPopMatrix();
 }
@@ -143,7 +131,7 @@ void Body::rocketThrust() {
 
 void Body::drawBack() {
 	glPushMatrix();
-
+	glTranslatef(0.0f, 0.0f, -0.2f);
 	//Back
 	glPushMatrix();
 	glTranslatef(0.0f, -0.025f, -0.19f);
