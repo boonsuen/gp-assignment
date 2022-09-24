@@ -217,20 +217,34 @@ Hands hands;
 Legs legs;
 Sword sword;
 Shield shield;
+
+// Walking Animation
+bool isWalking = false;
+float wholeRobotTz = 0;
+const int maxSteps = 10;
+int stepsWalked = 0;
+bool moveToward = true;
+
+bool rightFirstUpWalked = false;
+bool rightSecondUpWalked = false;
+bool rightDownWalked = false;
+bool leftFirstUpWalked = false;
+bool leftSecondUpWalked = false;
+bool leftDownWalked = false;
+
+bool movingFront = false;
+float maxOneLegMove = 0.2;
+float oneLegMoved = 0;
+
+bool isLeftLeg = false;
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     if (!isOrtho && showSkybox) {
         glEnable(GL_TEXTURE_2D);
         glPushMatrix();
-//        glBindTexture(GL_TEXTURE_2D, textures[12]);
         drawSkyBox(27, 27, 27);
-//        glPushMatrix();
-//        glMatrixMode(GL_MODELVIEW);
-//        glRotatef(-90, 1, 0, 0);
-//        utility.drawSphere(0.5, 60, 60, GLU_FILL, cWhite, 0, 0, 0);
-//        glPopMatrix();
-        
         glPopMatrix();
         glDisable(GL_TEXTURE_2D);
     }
@@ -263,42 +277,189 @@ void display() {
     
     attackMode = headAttackMode && headAttackMode;
     
-    glPushMatrix();
-    glScalef(0.4, 0.4, 0.4);
-    
     glPushMatrix(); {
-        glPushMatrix();
-        glTranslatef(0, 6.5, 0);
-        glScalef(0.35, 0.35, 0.35);
-        head.drawHead();
+        glTranslatef(0, 0, wholeRobotTz);
+        glRotatef(!moveToward ? 180 : 0, 0, 1, 0);
+        glScalef(0.4, 0.4, 0.4);
+        if (isWalking) {
+            bool skip = false;
+            if (stepsWalked >= maxSteps) {
+                moveToward = !moveToward;
+                stepsWalked = -3;
+            }
+            if (isLeftLeg) {
+                if (leftFirstUpWalked == false) {
+                    if (legs.hipAngleLeft > -40) {
+                        legs.hipAngleLeft -= 1/45.0 * 40;
+                    }
+                    if (legs.kneeAngleLeft < legs.kneeAngleMax) {
+                        legs.kneeAngleLeft += 1/45.0 * 50;
+                    }
+                    if (legs.hipAngleLeft <= -40 && legs.kneeAngleLeft >= legs.kneeAngleMax) {
+                        leftFirstUpWalked = true;
+                    }
+                }
+                if (leftFirstUpWalked == true && leftSecondUpWalked == false) {
+                    if (legs.kneeAngleLeft > 35) {
+                        legs.kneeAngleLeft -= 1;
+                    }
+                    if (legs.kneeAngleLeft <= 35) {
+                        leftSecondUpWalked = true;
+                        movingFront = true;
+                    }
+                }
+                
+                if (!movingFront) {
+                    if (hands.wholeAngleLeft > -30) {
+                        hands.wholeAngleLeft -= 1;
+                    }
+                    if (hands.wholeAngleLeft <= -20) {
+                        if (hands.LowerArmAngleLeft < 20) {
+                            hands.LowerArmAngleLeft += 1;
+                        }
+                    }
+                } else {
+                    if (hands.wholeAngleLeft < 0) {
+                        hands.wholeAngleLeft += 1;
+                    }
+                    if (hands.LowerArmAngleLeft > 0) {
+                        hands.LowerArmAngleLeft -= 1;
+                    }
+                }
+                
+                if (movingFront) {
+                    if (oneLegMoved < maxOneLegMove) {
+                        oneLegMoved += 0.005;
+                        if (moveToward) {
+                            wholeRobotTz += 0.005;
+                        } else {
+                            wholeRobotTz -= 0.005;
+                        }
+                    }
+                    if (legs.hipAngleLeft < 0) {
+                        legs.hipAngleLeft += 1/45.0 * 40;
+                    }
+                    if (legs.kneeAngleLeft > 0) {
+                        legs.kneeAngleLeft -= 1/45.0 * 50;
+                    }
+                    if (oneLegMoved >= maxOneLegMove
+                        && legs.hipAngleLeft >= 0
+                        && legs.kneeAngleLeft <= 0) {
+                        isLeftLeg = false;
+                        oneLegMoved = 0;
+                        movingFront = false;
+                        
+                        leftFirstUpWalked = false;
+                        leftSecondUpWalked = false;
+                        leftDownWalked = false;
+                        stepsWalked += 1;
+                    }
+                }
+            } else {
+                if (rightFirstUpWalked == false) {
+                    if (legs.hipAngleRight > -40) {
+                        legs.hipAngleRight -= 1/45.0 * 40;
+                    }
+                    if (legs.kneeAngleRight < legs.kneeAngleMax) {
+                        legs.kneeAngleRight += 1/45.0 * 50;
+                    }
+                    if (legs.hipAngleRight <= -40 && legs.kneeAngleRight >= legs.kneeAngleMax) {
+                        rightFirstUpWalked = true;
+                    }
+                }
+                if (rightFirstUpWalked == true && rightSecondUpWalked == false) {
+                    if (legs.kneeAngleRight > 35) {
+                        legs.kneeAngleRight -= 1;
+                    }
+                    if (legs.kneeAngleRight <= 35) {
+                        rightSecondUpWalked = true;
+                        movingFront = true;
+                    }
+                }
+                
+                if (!movingFront) {
+                    if (hands.wholeAngleRight > -30) {
+                        hands.wholeAngleRight -= 1;
+                    }
+                    if (hands.wholeAngleRight <= -20) {
+                        if (hands.LowerArmAngleRight < 20) {
+                            hands.LowerArmAngleRight += 1;
+                        }
+                    }
+                } else {
+                    if (hands.wholeAngleRight < 0) {
+                        hands.wholeAngleRight += 1;
+                    }
+                    if (hands.LowerArmAngleRight > 0) {
+                        hands.LowerArmAngleRight -= 1;
+                    }
+                }
+                
+                if (movingFront) {
+                    if (oneLegMoved < maxOneLegMove) {
+                        oneLegMoved += 0.005;
+                        if (moveToward) {
+                            wholeRobotTz += 0.005;
+                        } else {
+                            wholeRobotTz -= 0.005;
+                        }
+                    }
+                    if (legs.hipAngleRight < 0) {
+                        legs.hipAngleRight += 1/45.0 * 40;
+                    }
+                    if (legs.kneeAngleRight > 0) {
+                        legs.kneeAngleRight -= 1/45.0 * 50;
+                    }
+                    if (oneLegMoved >= maxOneLegMove
+                        && legs.hipAngleRight >= 0
+                        && legs.kneeAngleRight <= 0) {
+                        isLeftLeg = true;
+                        oneLegMoved = 0;
+                        movingFront = false;
+                        
+                        rightFirstUpWalked = false;
+                        rightSecondUpWalked = false;
+                        rightDownWalked = false;
+                        stepsWalked += 1;
+                    }
+                }
+            }
+        }
+        
+        glPushMatrix(); {
+            glPushMatrix();
+            glTranslatef(0, 6.5, 0);
+            glScalef(0.35, 0.35, 0.35);
+            head.drawHead();
+            glPopMatrix();
+            
+            glPushMatrix();
+            glTranslatef(0.9, -5, -0.3);
+            glScalef(6, 6, 6);
+            body.drawBody();
+            glPopMatrix();
+            
+            hands.drawHands();
+            
+            glPushMatrix();
+            glTranslatef(0, -4.3, 0);
+            glScalef(0.70, 0.70, 0.70);
+            legs.drawLegs();
+            glPopMatrix();
+        }
         glPopMatrix();
         
-        glPushMatrix();
-        glTranslatef(0.9, -5, -0.3);
-        glScalef(6, 6, 6);
-        body.drawBody();
-        glPopMatrix();
         
-        hands.drawHands();
+        sword.drawSword();
         
         glPushMatrix();
-        glTranslatef(0, -4.3, 0);
-        glScalef(0.70, 0.70, 0.70);
-        legs.drawLegs();
+        glTranslatef(3.5, 1, 0.6);
+        glRotatef(90, 1, 0, 0);
+        glRotatef(-90, 0, 0, 1);
+        glScalef(4, 4, 4);
+//        shield.drawShield();
         glPopMatrix();
     }
-    glPopMatrix();
-    
-    
-    sword.drawSword();
-    
-    glPushMatrix();
-    glTranslatef(3.5, 1, 0.6);
-    glRotatef(90, 1, 0, 0);
-    glRotatef(-90, 0, 0, 1);
-    glScalef(4, 4, 4);
-    shield.drawShield();
-    glPopMatrix();
     
     glPopMatrix();
 
@@ -322,16 +483,13 @@ void processNormalKeys(unsigned char key, int x, int y) {
         handKeyMode = !handKeyMode;
     }
     if (handKeyMode) {
-        if (key == 'Q' || key == 'q') {
-            std::cout << "Hand stuff" << std::endl;
-        }
+        hands.keyActions(key);
         return;
     }
     
     // Head (C/B/G/V)
     head.keyActions(key);
     
-    // View and Projection
     if (key == '0') { // Reset
         pTx = 0;
         pTy = 0;
@@ -340,6 +498,13 @@ void processNormalKeys(unsigned char key, int x, int y) {
         mTy = 0;
         mTz = isOrtho ? 0 : -13;
         mRx = 0;
+        isWalking = false;
+        stepsWalked = 0;
+        legs.hipAngleLeft = 0;
+        legs.hipAngleRight = 0;
+        legs.kneeAngleLeft = 0;
+        legs.kneeAngleRight = 0;
+        moveToward = true;
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
@@ -384,6 +549,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
     }
     // 3 (Show/Hide Sword), 4 (Sword Attack Mode)
     sword.keyActions(key);
+    // Walking
+    if (key == '5') {
+        isWalking = !isWalking;
+    }
 }
 
 void processSpecialKeys(int key, int x, int y) {

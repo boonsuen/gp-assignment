@@ -31,7 +31,7 @@ public:
     float hipAngleMax = 45;
     float kneeAngleLeft = 0;
     float kneeAngleRight = 0;
-    float kneeAngleMax = 45;
+    float kneeAngleMax = 50;
 
     void drawFoot();
     void drawCalf();
