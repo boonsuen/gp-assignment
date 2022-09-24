@@ -110,7 +110,7 @@ void Hands::drawShoulder() {
     glBindTexture(GL_TEXTURE_2D, 0);
     glPushMatrix();
     glRotatef(90,0,0,1);
-    u.drawCylinder(cBlack, 0.4, 0.4, 0.6, 30, 30, GLU_FILL, true, 5,2, 0);
+    u.drawCylinder(cBlack, 0.4, 0.4, 1.0, 30, 30, GLU_FILL, true, 5, 1.5, 0);
     glPopMatrix();
 }
 
@@ -397,6 +397,13 @@ void Hands::drawRightHand() {
 }
 
 void Hands::drawHands() {
+    glPushMatrix();
+    glTranslatef(0.14, 0, 0);
     drawLeftHand();
+    glPopMatrix();
+    
+    glPushMatrix();
+    glTranslatef(-0.14, 0, 0);
     drawRightHand();
+    glPopMatrix();
 }

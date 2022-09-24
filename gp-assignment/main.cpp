@@ -428,13 +428,13 @@ void display() {
         
         glPushMatrix(); {
             glPushMatrix();
-            glTranslatef(0, 6.5, 0);
+            glTranslatef(0, 6.7, 0);
             glScalef(0.35, 0.35, 0.35);
             head.drawHead();
             glPopMatrix();
             
             glPushMatrix();
-            glTranslatef(0.9, -5, -0.3);
+            glTranslatef(0.9, -4.8, 0);
             glScalef(6, 6, 6);
             body.drawBody();
             glPopMatrix();
