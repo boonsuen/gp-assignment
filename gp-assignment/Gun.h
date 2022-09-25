@@ -128,7 +128,9 @@ void sphereTexture(float radius, GLuint texture) {
 
 void Gun::drawGun() {
 	glPushMatrix();
-	glScalef(0.3, 0.3, 0.3);
+	glScalef(0.2,0.2,0.2);
+	glRotatef(-90, 0,1,0);
+	glTranslatef(3.3, 0, 0);
 
 	//////////////////////////////////////////////////front part
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cEyeYellow);
@@ -283,7 +285,9 @@ void Gun::drawGun() {
 	glTranslatef(-18, 2, 1);
 	glRotatef(90, 0, 0, -1);
 	glRotatef(270, 1, 0, 0);
-	cylinderTexture(4, 4, 8, 20);
+	//cylinderTexture(4, 4, 8, 20);
+	cylinderTexture(0.4, 0.4, 0.4, 20);
+
 	//u.drawCylinder(cWhite, 4, 4, 8, 30, 30, GLU_FILL, true, 0, 0, 0);
 	glPopMatrix();
 
