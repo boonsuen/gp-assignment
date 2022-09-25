@@ -151,6 +151,7 @@
     <Image Include="red-sword.bmp" />
     <Image Include="red.bmp" />
     <Image Include="rocketpower.bmp" />
+    <Image Include="scifi.bmp" />
     <Image Include="sky.bmp" />
     <Image Include="sun.bmp" />
     <Image Include="white.bmp" />

@@ -19,6 +19,7 @@ const char* LAND_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/g
 const char* MOON_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/moon.bmp";
 const char* SUN_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sun.bmp";
 const char* NIGHT_SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/night-sky.bmp";
+const char* SCIFI_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/scifi.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -41,6 +42,7 @@ const char* LAND_TEXTURE_PATH = "land.bmp";
 const char* MOON_TEXTURE_PATH = "moon.bmp";
 const char* SUN_TEXTURE_PATH = "sun.bmp";
 const char* NIGHT_SKY_TEXTURE_PATH = "night-sky.bmp";
+const char* SCIFI_TEXTURE_PATH = "scifi.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -91,22 +93,25 @@ const int WINDOW_HEIGHT = 800;
 const int FRAME_RATE = 15; // Refresh interval in milliseconds (1000/15 = 66 frames per second)
 const float PI = 3.1415926535;
 
-// View & Projection & Transformation
+// ============== View & Projection & Transformation ==============
 bool isOrtho = true; // Is ortho view
-const float O_NEAR = -20, O_FAR = 20; // Ortho near far
+const float O_NEAR = -20, O_FAR = 40; // Ortho near far
 const float P_NEAR = 0.1, P_FAR = 40; // Perspective near far
-float pTx = 0, pTy = 0, ptSpeed = 0.1; // Translate for projection
-float prSpeed = 2.0; // Rotate Y for projection
+// Projection Transformtion (TX, TY, RY)
+float pTx = 0, pTy = 0, ptSpeed = 1;  // Projection Translate X and Y
+float pRy = 0, prSpeed = 2.0;         // Projection Rotate Y
+const float MAX_ORTHO_PTX = 10; // 13
+const float MAX_ORTHO_PTY = 7; // 12
+const float MAX_PERSPECTIVE_PTX = 10;
+const float MAX_PERSPECTIVE_PTY = 12;
+// Model View Transformation (TZ, RX, RY, RZ)
+float mTz = 0, mtSpeed = 1;  // Model View Translate Z (zoom)
+float mRx = 0, mRy = 0, mRz = 0;
 
-float ry = 0; // Rotate Y for Ortho (NO ROTATE Y FOR PERSPECTIVE!!!) and Model View
-
-float mTx = 0, mTy = 0, mTz = 0, mtSpeed = 2; // Translate for modelview
-float mRx = 0;
-
-// Texture
+// =============== TEXTURE ================
 bool isTexture = false;
-const int TEXTURES_NO = 17;
-GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
+const int TEXTURES_NO = 18;
+GLuint textures[TEXTURES_NO]; /* storage for textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
     WHITE_TEXTURE_PATH,         // 1
@@ -125,6 +130,7 @@ const char* filenames[TEXTURES_NO] = {
     MOON_TEXTURE_PATH,          // 14
     SUN_TEXTURE_PATH,           // 15
     NIGHT_SKY_TEXTURE_PATH,     // 16
+    SCIFI_TEXTURE_PATH,         // 17
 };
 int activeTexture = 0;
 bool showSkybox = false;
@@ -176,16 +182,18 @@ float cLegBoost[] = { 1, 153.0/255, 0};
 
 void projection() {
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity(); // Reset projection matrix
+    glLoadIdentity();
 
-    glTranslatef(pTx, pTy, 0); // Translate X & Y for O and P projection
-        
     if (isOrtho) {
-        glOrtho(-20, 20, -20, 20, O_NEAR, O_FAR);
-        glRotatef(ry, 0, 1, 0); // Rotate Y for ortho only!!!
+        glOrtho(-15, 15, -15, 15, O_NEAR, O_FAR);
     } else {
         gluPerspective(70, 1, P_NEAR, P_FAR);
     }
+    // =============================================================
+    // <<< IMPORTANT: TRANSFORM ONLY AFTER SETTING UP PROjECTION >>>
+    // =============================================================
+    glTranslatef(pTx, pTy, 0); // Translate X & Y for O and P projection
+    glRotatef(pRy, 0, 1, 0);
 }
 
 void lighting() {
@@ -368,7 +376,7 @@ void display() {
     projection();
     lighting();
     
-    if (!isOrtho && showSkybox) {
+    if (showSkybox) {
         glEnable(GL_TEXTURE_2D);
         glPushMatrix();
         drawSkyBox(27, 27, 27);
@@ -385,18 +393,17 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glTranslatef(mTx, 0, mTz); // Translate for modelview
+    // Model View Transformation
+    glTranslatef(0, 0, mTz); // Translate for Model View
     glRotatef(mRx, 1, 0, 0);
-        
-    if (!isOrtho) {
-        glRotatef(ry, 0, 1, 0); // Rotate the object if perspective
-    }
+    glRotatef(mRy, 0, 1, 0);
+    glRotatef(mRz, 0, 0, 1);
     
     if (isOrtho) {
         glScalef(2, 2, 2);
     }
     
-    // Clear texture
+    // Bind texture
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     
     attackMode = headAttackMode && headAttackMode;
@@ -630,11 +637,11 @@ void processNormalKeys(unsigned char key, int x, int y) {
     if (key == '0') { // Reset
         pTx = 0;
         pTy = 0;
-        ry = 0;
-        mTx = 0;
-        mTy = 0;
+        pRy = 0;
         mTz = isOrtho ? 0 : -13;
         mRx = 0;
+        mRy = 0;
+        mRz = 0;
         isWalking = false;
         stepsWalked = 0;
         legs.hipAngleLeft = 0;
@@ -672,34 +679,76 @@ void processNormalKeys(unsigned char key, int x, int y) {
         } else {
             mTz = -13;
         }
-    } else if (key == 'A' || key == 'a') {
-        pTx -= ptSpeed;
     } else if (key == 'D' || key == 'd') {
-        pTx += ptSpeed;
-    } else if (key == 'W' || key == 'w') {
-        pTy += ptSpeed;
+        if (isOrtho) {
+            if (pTx > -MAX_ORTHO_PTX) {
+                pTx -= ptSpeed;
+            }
+        } else {
+            if (pTx > -MAX_PERSPECTIVE_PTX) {
+                pTx -= ptSpeed;
+            }
+        }
+    } else if (key == 'A' || key == 'a') {
+        if (isOrtho) {
+            if (pTx < MAX_ORTHO_PTX) {
+                pTx += ptSpeed;
+            }
+        } else {
+            if (pTx < MAX_PERSPECTIVE_PTX) {
+                pTx += ptSpeed;
+            }
+        }
     } else if (key == 'S' || key == 's') {
-        pTy -= ptSpeed;
-    } else if (key == 'L' || key == 'l') {
-        ry += prSpeed;
+        if (isOrtho) {
+            if (pTy < MAX_ORTHO_PTY - 0.01) {
+                pTy += ptSpeed;
+            }
+        } else {
+            if (pTy < MAX_PERSPECTIVE_PTY - 0.01) {
+                pTy += ptSpeed;
+            }
+        }
+    } else if (key == 'W' || key == 'w') {
+        if (isOrtho) {
+            if (pTy > -MAX_ORTHO_PTY + 0.11) {
+                pTy -= ptSpeed;
+            }
+        } else {
+            if (pTy > -MAX_PERSPECTIVE_PTY + 0.11) {
+                pTy -= ptSpeed;
+            }
+        }
     } else if (key == 'R' || key == 'r') {
-        ry -= prSpeed;
+        pRy += prSpeed;
+    } else if (key == 'L' || key == 'l') {
+        pRy -= prSpeed;
     } else if (key == 'K' || key == 'k') {
         mRx += prSpeed;
     } else if (key == 'M' || key == 'm') {
         mRx -= prSpeed;
+    } else if (key == 'Z' || key == 'z') {
+        mRz -= prSpeed;
+    } else if (key == 'X' || key == 'x') {
+        mRz += prSpeed;
     }
     
-    std::cout << "pTx: " << pTx << " - " << "pTy: " << pTy << std::endl;
+    std::cout << "pTx: " << pTx << ", "
+              << "pTy: " << pTy << ", "
+              << "pRy: " << pRy << std::endl;
     
     // Enter (Enable/disable texture)
     if (key == 13) {
         isTexture = !isTexture;
     } else if (key == '6') { // Change texture
-        if (activeTexture >= 2) {
+        if (activeTexture == 0) {
+            activeTexture = 1;
+        } else if (activeTexture == 1) {
+            activeTexture = 2;
+        } else if (activeTexture == 2) {
+            activeTexture = 17;
+        } else if (activeTexture == 17) {
             activeTexture = 0;
-        } else {
-            activeTexture++;
         }
     } else if (key == 'H' || key == 'h') { // Show/hide skybox
         showSkybox = !showSkybox;
@@ -722,33 +771,34 @@ void processNormalKeys(unsigned char key, int x, int y) {
 }
 
 void processSpecialKeys(int key, int x, int y) {
-    if (key == GLUT_KEY_UP) {
+    if (key == GLUT_KEY_DOWN) {
         if (isOrtho) {
-            if (mTz > O_NEAR) {
+            if (mTz > -6) {
                 mTz -= mtSpeed;
             }
         } else {
-            if (mTz > -P_FAR) {
+            if (mTz > -13) { // > -P_FAR
                 mTz -= mtSpeed;
             }
         }
-    } else if (key == GLUT_KEY_DOWN) {
+    } else if (key == GLUT_KEY_UP) {
         if (isOrtho) {
-            if (mTz < O_FAR) {
+            if (mTz < 18) { // O_FAR - 2
                 mTz += mtSpeed;
             }
         } else {
-            if (mTz < P_FAR) {
+            if (mTz < -2) { // < P_FAR
                 mTz += mtSpeed;
             }
         }
     } else if (key == GLUT_KEY_LEFT) {
-        mTx -= mtSpeed;
+        mRy += prSpeed;
     } else if (key == GLUT_KEY_RIGHT) {
-        mTx += mtSpeed;
+        mRy -= prSpeed;
     } else if (key == GLUT_KEY_F1) {
         defenseMode = !defenseMode;
     }
+    std::cout << "mTz: " << mTz << std::endl;
     
     // Lighting
     if (key == GLUT_KEY_F2) {
@@ -830,10 +880,8 @@ struct Image {
 typedef struct Image Image;
 
 /*
- * getint and getshort are help functions to load bitmap byte by byte on
- * SPARC platform.
- * I've got them from xv bitmap load routine because the original bmp loader didn't work
- * I've tried to change as less code as possible.
+ * getint and getshort are help functions
+ * to load bitmap byte by byte on SPARC platform.
  */
 
 static unsigned int getint(FILE* fp) {
@@ -989,7 +1037,6 @@ GLvoid initGL(GLsizei width, GLsizei height) {
     glClearDepth(1.0);    // Enables clearing of the depth buffer.
     glEnable(GL_DEPTH_TEST); // Enables depth testing.
     glShadeModel(GL_SMOOTH); // Enables smooth color shading.
-//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(0x809D);
     glEnable(GL_BLEND);
 

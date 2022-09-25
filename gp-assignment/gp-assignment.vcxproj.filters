@@ -68,6 +68,9 @@
     <Image Include="night-sky.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="scifi.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
