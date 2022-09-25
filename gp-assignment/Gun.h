@@ -127,11 +127,9 @@ void sphereTexture(float radius, GLuint texture) {
 
 
 void Gun::drawGun() {
-	glPushMatrix();
-	glScalef(0.3, 0.3, 0.3);
-
 	//////////////////////////////////////////////////front part
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cEyeYellow);
+	glColor3fv(cEyeYellow);
 	drawCubeTexture(7, 4, 2, 22);
 
 	//////////////////////////////////////////////////////hand to hold
@@ -141,6 +139,7 @@ void Gun::drawGun() {
 	glTranslatef(8, 0.2, 1);
 	glScalef(1.3, 0.5, 0.35);
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkGreen);
+	glColor3fv(cDarkGreen);
 	sphereTexture(3, 25);
 	//u.drawSphere(3,30,30,GLU_FILL,cDarkGreen,0,0,0);
 	glPopMatrix();
@@ -200,6 +199,7 @@ void Gun::drawGun() {
 
 	/////////////////////////////////////////place to aim
 	glPushMatrix();
+	glColor3fv(cDarkGreen1);
 	//glTranslatef(0.75, 0.15, 0.05);
 	glTranslatef(15,3,1);
 	glRotatef(90, 0, 0, -1);
@@ -242,6 +242,7 @@ void Gun::drawGun() {
 
 	////////////////////////////////body up
 	glPushMatrix();
+	glColor3fv(cDarkGreen);
 	//glTranslatef(-0.34, 0.23, 0.05);
 	glTranslatef(-6.8, 4.6, 1);
 	glRotatef(90, 0, 0, -1);
@@ -283,7 +284,9 @@ void Gun::drawGun() {
 	glTranslatef(-18, 2, 1);
 	glRotatef(90, 0, 0, -1);
 	glRotatef(270, 1, 0, 0);
-	cylinderTexture(4, 4, 8, 20);
+	//cylinderTexture(4, 4, 8, 20);
+	cylinderTexture(0.4, 0.4, 0.4, 20);
+
 	//u.drawCylinder(cWhite, 4, 4, 8, 30, 30, GLU_FILL, true, 0, 0, 0);
 	glPopMatrix();
 
@@ -319,8 +322,6 @@ void Gun::drawGun() {
 	glTranslatef(-18.6, -1.6, 0.4);
 	drawCubeTexture(1, 4, 0.1,21);
 	//u.drawCube(1, 4, 0.1, cWhite, 0, 0, 0);
-	glPopMatrix();
-
 	glPopMatrix();
 }
 

@@ -902,7 +902,16 @@ void Hands::drawRightHand() {
             drawRightFingers();
 
             if (showGun) {
+                /*if (LowerArmAngleRight < LowerArmAngleMax) {
+                    LowerArmAngleRight++;
+                }*/
+                glPushMatrix();
+                glScalef(0.2, 0.2, 0.2);
+                glRotatef(-90, 0, 1, 0);
+                glRotatef(-90, 0,0, 1);
+                glTranslatef(16, 4, 14);
                 gun.drawGun();
+                glPopMatrix();
             }
 
             
