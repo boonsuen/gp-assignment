@@ -127,11 +127,6 @@ void sphereTexture(float radius, GLuint texture) {
 
 
 void Gun::drawGun() {
-	glPushMatrix();
-	glScalef(0.2,0.2,0.2);
-	glRotatef(-90, 0,1,0);
-	glTranslatef(3.3, 0, 0);
-
 	//////////////////////////////////////////////////front part
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cEyeYellow);
 	drawCubeTexture(7, 4, 2, 22);
@@ -323,8 +318,6 @@ void Gun::drawGun() {
 	glTranslatef(-18.6, -1.6, 0.4);
 	drawCubeTexture(1, 4, 0.1,21);
 	//u.drawCube(1, 4, 0.1, cWhite, 0, 0, 0);
-	glPopMatrix();
-
 	glPopMatrix();
 }
 
