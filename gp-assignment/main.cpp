@@ -274,8 +274,6 @@ void lighting() {
         diff[1] = 0;
         diff[2] = 0;
     }
-    
-//    std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
 
     glEnable(GL_NORMALIZE);
     if (lightOn) {
@@ -946,7 +944,7 @@ void processSpecialKeys(int key, int x, int y) {
     // Lighting
     if (key == GLUT_KEY_F2) {
         if (isOrtho) {
-            if (lightRX > -9) {
+            if (lightRX > -7) {
                 lightRX -= 0.5; // Light left
             }
         } else {
@@ -956,7 +954,7 @@ void processSpecialKeys(int key, int x, int y) {
         }
     } else if (key == GLUT_KEY_F3) {
         if (isOrtho) {
-            if (lightRX < 9) {
+            if (lightRX < 7) {
                 lightRX += 0.5; // Light right
             }
         } else {
@@ -966,7 +964,7 @@ void processSpecialKeys(int key, int x, int y) {
         }
     } else if (key == GLUT_KEY_F4) {
         if (isOrtho) {
-            if (lightRY < 9) {
+            if (lightRY < 7) {
                 lightRY += 0.5; // Light up
             }
         } else {
@@ -976,7 +974,7 @@ void processSpecialKeys(int key, int x, int y) {
         }
     } else if (key == GLUT_KEY_F5) {
         if (isOrtho) {
-            if (lightRY > -9) {
+            if (lightRY > -7) {
                 lightRY -= 0.5; // Light down
             }
         } else {
@@ -1007,6 +1005,7 @@ void processSpecialKeys(int key, int x, int y) {
     } else if (key == GLUT_KEY_F8) {
         isNightTheme = !isNightTheme;
     }
+    std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
 }
 
 /*
