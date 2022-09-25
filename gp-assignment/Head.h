@@ -322,19 +322,19 @@ void Head::drawHead() {
 }
 
 void Head::keyActions(unsigned char key) {
-    if (key == 'C' || key == 'c') {
+    if (key == 'Y' || key == 'y') {
         if (this->headHorizontalAngle > -headHorizontalAngleMax) {
             this->headHorizontalAngle -= 1;
         }
-    } else if (key == 'B' || key == 'b') {
+    } else if (key == 'I' || key == 'i') {
         if (this->headHorizontalAngle < headHorizontalAngleMax) {
             this->headHorizontalAngle += 1;
         }
-    } else if (key == 'G' || key == 'g') {
+    } else if (key == 'U' || key == 'u') {
         if (this->headVerticalAngle > -headVerticalBackAngleMax) {
             this->headVerticalAngle -= 1;
         }
-    } else if (key == 'V' || key == 'v') {
+    } else if (key == 'J' || key == 'j') {
         if (this->headVerticalAngle < 8) {
             this->headVerticalAngle += 1;
         }
