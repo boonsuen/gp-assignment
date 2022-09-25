@@ -20,15 +20,24 @@
 #include <string>
 #include "common.h"
 #include "Utility.h"
+
 #include "Shield.h"
-
-
-float cYellow[] = { 1.0, 0.95, 0 };
-float cRed[] = { 1, 63.0 / 255, 57.0 / 255 };
+#include "Gun.h"
+#include "Sword.h"
 
 class Hands {
 public:
     Utility u;
+
+    Shield shield;
+    Gun gun;
+    Sword sword;
+
+    //in main.cpp
+    /*bool showGun = false;
+    bool showSword = false;
+    bool defenseMode = true; (Shield) */
+
     float wholeAngleRight = 0;
     float wholeAngleLeft = 0;
     float wholeAngleMax = 50;
@@ -38,12 +47,13 @@ public:
 
     float LowerArmTurnAngleRight = 0;
     float LowerArmTurnAngleLeft = 0;
-    float LowerArmTurnAngleMax = 90;
+    float LowerArmTurnAngleMax = 30;
 
     float wristAngleRight = 0;
     float wristAngleLeft = 0;
     float wristAngleMax = 25;
 
+    bool allFingerClose = false;
     bool thumbCloseRight = false;
     bool finger1CloseRight = false;
     bool finger2CloseRight = false;
@@ -85,9 +95,30 @@ public:
 
     void reset();
 
+    void allFingersCloseRight(bool close);
+    void allFingersCloseLeft(bool close);
     void keyActions(unsigned char key);
    
 };
+
+//Utility Variables
+GLfloat spv1 = -0.8, spv2 = -0.55;
+GLfloat SPV1[] = { -0.8, -1.4, 3.23 }; GLfloat SPV5[] = { -0.8, -1.4, 1 };
+GLfloat SPV2[] = { -0.55, -1.4, 3.23 }; GLfloat SPV6[] = { -0.55, -1.4, 1 };
+GLfloat SPV3[] = { -0.55, 0, 4 }; GLfloat SPV7[] = { -0.55, -0.4, 0.7 };
+GLfloat SPV4[] = { -0.8, 0, 4 }; GLfloat SPV8[] = { -0.8, -0.4, 0.7 };
+
+GLfloat spv3 = spv1 - 0.2, spv4 = spv1 + 1.8;
+GLfloat SPV1a[] = { spv3, -0.5, 3.53 }; GLfloat SPV5a[] = { spv3, -0.5, 0.7 };
+GLfloat SPV2a[] = { spv4, -0.5, 3.53 }; GLfloat SPV6a[] = { spv4, -0.5, 0.7 };
+GLfloat SPV3a[] = { spv4, 0.1, 4.3 }; GLfloat SPV7a[] = { spv4, 0.1, 0.4 };
+GLfloat SPV4a[] = { spv3, 0.1, 4.3 }; GLfloat SPV8a[] = { spv3, 0.1, 0.4 };
+
+GLfloat uav1 = 0, uav2 = 1.5;
+GLfloat UAV1[] = { static_cast<GLfloat>(uav1 + 0.2), 0, 0.6 }; GLfloat UAV5[] = { static_cast<GLfloat>(uav1 + 0.1), 0, -0.6 };
+GLfloat UAV2[] = { static_cast<GLfloat>(uav2 - 0.2), 0, 0.6 }; GLfloat UAV6[] = { static_cast<GLfloat>(uav2 - 0.1), 0, -0.6 };
+GLfloat UAV3[] = { uav2, 1, 0.75 }; GLfloat UAV7[] = { uav2, 1, -0.75 };
+GLfloat UAV4[] = { uav1, 1, 0.75 }; GLfloat UAV8[] = { uav1, 1, -0.75 };
 
 void Hands::keyActions(unsigned char key) {
     // Right Arm Movement
@@ -205,18 +236,10 @@ void Hands::keyActions(unsigned char key) {
         if (thumbCloseRight && finger1CloseRight
             && finger2CloseRight && finger3CloseRight
             && finger4CloseRight) {
-            thumbCloseRight = false;
-            finger1CloseRight = false;
-            finger2CloseRight = false;
-            finger3CloseRight = false;
-            finger4CloseRight = false;
+            allFingersCloseRight(false);
         }
         else {
-            thumbCloseRight = true;
-            finger1CloseRight = true;
-            finger2CloseRight = true;
-            finger3CloseRight = true;
-            finger4CloseRight = true;
+            allFingersCloseRight(true);
         }
     }
 
@@ -240,18 +263,10 @@ void Hands::keyActions(unsigned char key) {
         if (thumbCloseLeft && finger1CloseLeft 
             && finger2CloseLeft && finger3CloseLeft
             && finger4CloseLeft) {
-            thumbCloseLeft = false;
-            finger1CloseLeft = false;
-            finger2CloseLeft = false;
-            finger3CloseLeft = false;
-            finger4CloseLeft = false;
+            allFingersCloseLeft(false);
         }
         else {
-            thumbCloseLeft = true;
-            finger1CloseLeft = true;
-            finger2CloseLeft = true;
-            finger3CloseLeft = true;
-            finger4CloseLeft = true;
+            allFingersCloseLeft(true);
         }
     }
 
@@ -261,7 +276,27 @@ void Hands::keyActions(unsigned char key) {
     }
 }
 
+void Hands::allFingersCloseRight(bool close) {
+        thumbCloseRight = close;
+        finger1CloseRight = close;
+        finger2CloseRight = close;
+        finger3CloseRight = close;
+        finger4CloseRight = close;
+}
+
+void Hands::allFingersCloseLeft(bool close) {
+    thumbCloseLeft = close;
+    finger1CloseLeft = close;
+    finger2CloseLeft = close;
+    finger3CloseLeft = close;
+    finger4CloseLeft = close;
+}
+
 void Hands::reset() {
+
+    showGun = false;
+    showSword = false;
+
     this-> wholeAngleRight = 0;
     this-> wholeAngleLeft = 0;
     this-> LowerArmAngleRight = 0;
@@ -306,18 +341,6 @@ void Hands::drawShoulder() {
     glPopMatrix();
 }
 
-GLfloat spv1 = -0.8, spv2 = -0.55;
-GLfloat SPV1[] = { spv1, -1.4, 3.23 }; GLfloat SPV5[] = { spv1, -1.4, 1 };
-GLfloat SPV2[] = { spv2, -1.4, 3.23 }; GLfloat SPV6[] = { spv2, -1.4, 1 };
-GLfloat SPV3[] = { spv2, 0, 4 }; GLfloat SPV7[] = { spv2, -0.4, 0.7 };
-GLfloat SPV4[] = { spv1, 0, 4 }; GLfloat SPV8[] = { spv1, -0.4, 0.7 };
-
-GLfloat spv3 = spv1 - 0.2, spv4 = spv1 + 1.8;
-GLfloat SPV1a[] = { spv3, -0.5, 3.53 }; GLfloat SPV5a[] = { spv3, -0.5, 0.7 };
-GLfloat SPV2a[] = { spv4, -0.5, 3.53 }; GLfloat SPV6a[] = { spv4, -0.5, 0.7 };
-GLfloat SPV3a[] = { spv4, 0.1, 4.3 }; GLfloat SPV7a[] = { spv4, 0.1, 0.4 };
-GLfloat SPV4a[] = { spv3, 0.1, 4.3 }; GLfloat SPV8a[] = { spv3, 0.1, 0.4 };
-
 void Hands::drawShoulderPad() {
     // Front + Back
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); {
@@ -356,12 +379,6 @@ void Hands::drawShoulderPad() {
         glPopMatrix();
     }
 }
-
-GLfloat uav1 = 0, uav2 = 1.5;
-GLfloat UAV1[] = { static_cast<GLfloat>(uav1 + 0.2), 0, 0.6 }; GLfloat UAV5[] = { static_cast<GLfloat>(uav1 + 0.1), 0, -0.6 };
-GLfloat UAV2[] = { static_cast<GLfloat>(uav2-0.2), 0, 0.6 }; GLfloat UAV6[] = { static_cast<GLfloat>(uav2 - 0.1), 0, -0.6 };
-GLfloat UAV3[] = { uav2, 1, 0.75 }; GLfloat UAV7[] = { uav2, 1, -0.75 };
-GLfloat UAV4[] = { uav1, 1, 0.75 }; GLfloat UAV8[] = { uav1, 1, -0.75 };
 
 void Hands::drawUpperArm() {
     // 1st
@@ -758,7 +775,6 @@ void Hands::drawRightFingers() {
     }
 }
 
-
 void Hands::drawLeftHand() {
     glPushMatrix(); {
         /*glRotatef(180,0,1,0);*/
@@ -801,9 +817,23 @@ void Hands::drawLeftHand() {
                 glTranslatef(-3.31, -0.91, 0);
                 glRotatef(wristAngleLeft, 0,0,1);
                 glTranslatef(3.31, 0.91, 0);
+                glBindTexture(GL_TEXTURE_2D, 0);
                 drawPalm();
                 drawLeftThumb();
                 drawLeftFingers();
+
+                glPushMatrix();
+                glRotatef(90, 1, 0, 0);
+                glScalef(1, 0.7, 1);
+                glTranslatef(-3, 1, 1.6);
+                sword.drawSword();
+                glPopMatrix();
+                if (showSword) {
+
+                }
+
+                
+
             } glPopMatrix();
             glPopMatrix();
         } glPopMatrix();
@@ -815,7 +845,6 @@ void Hands::drawLeftHand() {
         glPopMatrix();
     }
 }
-
 
 void Hands::drawRightHand() {
     drawShoulder();
@@ -851,16 +880,32 @@ void Hands::drawRightHand() {
         glTranslatef(1,0.2,0);
         glScalef(1.3,1.4,1.7);
         drawWrist();
+
+        if (defenseMode) {
+            glPushMatrix();
+            glScalef(-1, 0.7, 1);
+            glTranslatef(3.85, 0.8, 0.6);
+            glRotatef(90, 1, 0, 0);
+            glRotatef(-90, 0, 0, 1);
+            glScalef(4, 4, 4);
+            shield.drawShield();
+            glPopMatrix();
+        }
+
         glPushMatrix(); {
             glTranslatef(-3.31, -0.91, 0);
             glRotatef(wristAngleRight, 0, 0, 1);
             glTranslatef(3.31, 0.91, 0);
+            glBindTexture(GL_TEXTURE_2D, 0);
             drawPalm();
             drawRightThumb();
             drawRightFingers();
 
-            //gun.drawGun();
+            if (showGun) {
+                gun.drawGun();
+            }
 
+            
         } glPopMatrix();
         glPopMatrix();
     } glPopMatrix();
@@ -869,6 +914,9 @@ void Hands::drawRightHand() {
 
     glPopMatrix();
 }
+
+bool openFingersLeft = true;
+bool openFingersRight = true;
 
 void Hands::drawHands() {
     glPushMatrix();
@@ -880,4 +928,23 @@ void Hands::drawHands() {
     glTranslatef(-0.14, 0, 0);
     drawRightHand();
     glPopMatrix();
+
+    if (showSword) {
+        allFingersCloseLeft(true);
+        openFingersLeft = false;
+    }
+    else if (!showSword && !openFingersLeft) {
+        allFingersCloseLeft(false);
+        openFingersLeft = true;
+    }
+
+    if (showGun) {
+        allFingersCloseRight(true);
+        openFingersRight = false;
+    }
+    else if (!showGun && !openFingersRight) {
+        allFingersCloseRight(false);
+        openFingersRight = true;
+    }
+
 }

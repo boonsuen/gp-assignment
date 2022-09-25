@@ -23,7 +23,11 @@ extern int activeTexture;
 
 extern bool defenseMode;
 extern bool attackMode;
+
+extern bool showGun;
+extern bool showSword;
 extern bool headAttackMode;
+extern bool gunAttackMode;
 extern bool swordAttackMode;
 
 extern float cWhite[];

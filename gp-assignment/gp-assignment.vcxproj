@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="Body.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="Hands.h" />
     <ClInclude Include="Head.h" />
     <ClInclude Include="Legs.h" />

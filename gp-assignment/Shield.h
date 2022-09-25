@@ -29,7 +29,6 @@ public:
     
 	void drawShield();
 	void drawHandle();
-	void callShield();
 };
 
 void Shield::drawHandle() {
@@ -44,7 +43,7 @@ void Shield::drawHandle() {
 
 float r = 0;
 void Shield::drawShield() {
-    r++;
+    r = 0;
     glPushMatrix();
     glTranslatef(0.146, 0.15, -0.145);
     glRotatef(r, 0, 1, 0);

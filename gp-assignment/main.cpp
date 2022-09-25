@@ -136,9 +136,13 @@ int activeTexture = 0;
 bool showSkybox = false;
 
 // Status
-bool defenseMode = true;
+bool defenseMode = false;
 bool attackMode = false;
-bool headAttackMode = false;
+
+bool showGun = false;
+bool showSword = false;
+bool headAttackMode = false; 
+bool gunAttackMode = false;
 bool swordAttackMode = false;
 
 // Body (together with Head and Hands) rotation
@@ -329,8 +333,6 @@ Head head;
 Body body;
 Hands hands;
 Legs legs;
-Sword sword;
-Shield shield;
 
 // Walking Animation
 bool isWalking = false;
@@ -406,7 +408,7 @@ void display() {
     // Bind texture
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
     
-    attackMode = headAttackMode && headAttackMode;
+    attackMode = headAttackMode && gunAttackMode && swordAttackMode;
     
     glPushMatrix(); {
         glTranslatef(0, 0, wholeRobotTz);
@@ -584,17 +586,6 @@ void display() {
             glPopMatrix();
         }
         glPopMatrix();
-        
-        
-        sword.drawSword();
-        
-        glPushMatrix();
-        glTranslatef(3.5, 1, 0.6);
-        glRotatef(90, 1, 0, 0);
-        glRotatef(-90, 0, 0, 1);
-        glScalef(4, 4, 4);
-//        shield.drawShield();
-        glPopMatrix();
     }
     
     glPopMatrix();
@@ -657,6 +648,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
         lightRX = 2.5;
         lightRY = 3.5;
         lightRZ = 3;
+        showGun = false;
+        showSword = false;
+        hands.sword.reset();
+
     } else if (key == '1') { // Change ortho/perspective
         isOrtho = !isOrtho;
         if (isOrtho) {
@@ -759,11 +754,19 @@ void processNormalKeys(unsigned char key, int x, int y) {
     }
     
     // Weapons
-    if (key == '2') {
+    else if (key == '2') { // Head Attack Mode
         headAttackMode = !headAttackMode;
     }
-    // 3 (Show/Hide Sword), 4 (Sword Attack Mode)
-    sword.keyActions(key);
+    hands.gun.keyActions(key);
+    hands.sword.keyActions(key);
+    /* 
+    Show/hide Gun (G)
+    Show/hide Sword (B)
+    Head Attack Mode (2)
+    Gun Attack Mode (3)
+    Sword Attack Mode(4) 
+    */
+
     // Walking
     if (key == '5') {
         isWalking = !isWalking;

@@ -24,7 +24,6 @@
 class Sword {
 public:
     Utility u;
-    bool showSword = false;
     
     bool handleAnimated = false;
     float handleRotateY = 0;
@@ -43,8 +42,23 @@ public:
     void drawSmallKnife();
     void drawKnife();
     void drawSword();
+    void reset();
     void keyActions(unsigned char key);
 };
+
+void Sword::reset() {
+
+    handleAnimated = false;
+    handleRotateY = 0;
+    handleScale = 0;
+    topAnimated = false;
+    topScale = 0;
+    topTranslateY = 0;
+
+    smallKnifeScale = 0;
+
+    swordAttackMode = false;
+}
 
 void Sword::drawHandle() {
     glPushMatrix();
@@ -199,24 +213,12 @@ void Sword::drawSword() {
 }
 
 void Sword::keyActions(unsigned char key) {
-    if (key == '3') {
+    if (key == 'B' || key == 'b') {
         showSword = !showSword;
-        
         if (showSword == false) {
-            handleAnimated = false;
-            handleRotateY = 0;
-            handleScale = 0;
-            topAnimated = false;
-            topScale = 0;
-            topTranslateY = 0;
-            
-            smallKnifeScale = 0;
-            
-            swordAttackMode = false;
+            reset();
         }
-    } else if (key == '4') {
-        if (showSword) {
-            swordAttackMode = !swordAttackMode;
-        }
+    } else if (key == '4' && showSword) {
+        swordAttackMode = !swordAttackMode;
     }
 }
