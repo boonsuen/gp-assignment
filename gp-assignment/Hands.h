@@ -301,6 +301,7 @@ void Hands::drawShoulder() {
     glBindTexture(GL_TEXTURE_2D, 0);
     glPushMatrix();
     glRotatef(90,0,0,1);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBlack);
     u.drawCylinder(cBlack, 0.4, 0.4, 1.0, 30, 30, GLU_FILL, true, 5, 1.5, 0);
     glPopMatrix();
 }
@@ -325,6 +326,7 @@ void Hands::drawShoulderPad() {
         
             glPushMatrix(); {
             glTranslatef(0, 6, 1.4);
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
             u.drawSixFacesPolygon(SPV1, SPV2, SPV3, SPV4,
             SPV5, SPV6, SPV7, SPV8, cWhite);
             glPopMatrix();
@@ -332,6 +334,7 @@ void Hands::drawShoulderPad() {
         
             glPushMatrix(); {
             glTranslatef(1.35, 6, 1.4);
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
             u.drawSixFacesPolygon(SPV1, SPV2, SPV3, SPV4,
             SPV5, SPV6, SPV7, SPV8, cWhite);
             glPopMatrix();
@@ -346,6 +349,8 @@ void Hands::drawShoulderPad() {
     glPushMatrix(); {
         glRotatef(-90, 0, 1, 0);
         glTranslatef(0, 6, 1.4);
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
         u.drawSixFacesPolygon(SPV1a, SPV2a, SPV3a, SPV4a,
             SPV5a, SPV6a, SPV7a, SPV8a, cGrey);
         glPopMatrix();
@@ -364,18 +369,21 @@ void Hands::drawUpperArm() {
 
     // 2nd
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); {
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCube(1.5, 1.4, 1.1, cWhite, -3.3, 3.6, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // 3rd
     glBindTexture(GL_TEXTURE_2D, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
     u.drawCube(1.4, 1.5, 1, cLightGrey, -3.3, 3.5, 0);
 
     //4th
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); 
     glPushMatrix(); {
         glTranslatef(-4.05,1.8,0);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cWhite);
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -386,14 +394,15 @@ void Hands::drawUpperArm() {
 void Hands::drawElbow() {
     //No Movement
     glBindTexture(GL_TEXTURE_2D, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBlack);
     u.drawCube(1, 0.5, 1, cBlack, -3.3, 1.6, 0);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glPushMatrix();
     glRotatef(90, 0, 0, 1);
-    /*u.drawCylinder(cWhite, 0.34, 0.34, 1.2, 30, 30, GLU_FILL, true, 1.6, 2.7, 0);*/
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawCylinder(cGrey, 0.35, 0.35, 1.4, 10, 10, GLU_FILL, true, 1.6, 2.6, 0);
-    //u.drawDisk(cBlack, 0.34, 0.37, 10, 10, GLU_FILL, 1.6, 2.6, 2.101, false);
     glPopMatrix();
 }
 
@@ -403,6 +412,7 @@ void Hands::drawLowerArm() {
         glTranslatef(-4, 1.4, 0);
         glScalef(1, -1, 1);
         glScalef(0.9, 0.9, 0.9);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cWhite);
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -415,6 +425,7 @@ void Hands::drawWrist() {
     glPushMatrix(); {
         glTranslatef(-3.83, -1, 0);
         glScalef(0.7, 0.3, 0.7);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBlack);
         u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cBlack);
         glPopMatrix();
     }
@@ -424,17 +435,20 @@ void Hands::drawPalm() {
     
 
     //Glove
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
     u.drawCube(0.4, 0.3, 0.7, cGrey, -3.3, -1.15, 0);
     glPushMatrix(); {
 
         glTranslatef(-3.5, -1.6, 0);
         glScalef(0.27, 0.3, 0.45);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cGrey);
         u.drawSixFacesPolygon(UAV1, UAV2, UAV3, UAV4, UAV5, UAV6, UAV7, UAV8, cGrey);
         glPopMatrix();
     }
 }
 
 void Hands::drawFingerUp() {
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
     u.drawCube(0.24, 0.15, 0.3, cLightGrey, -3.3, -1.15, 0.6);
 }
 
@@ -446,6 +460,7 @@ void Hands::drawRightThumb() {
         glTranslatef(-3.3, -1.69, 0.52);
         glRotatef(thumbCloseAngleRight, 0, 1, 0);
         glTranslatef(3.3, 1.69, -0.52);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
         u.drawCube(0.24, 0.149, 0.2, cLightGrey, -3.3, -1.15, 0.57);
 
         glPushMatrix();
@@ -453,7 +468,9 @@ void Hands::drawRightThumb() {
         glRotatef(thumbCloseAngleRight, 0, 1, 0);
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -476,6 +493,7 @@ void Hands::drawLeftThumb() {
         glTranslatef(-3.3, -1.69, 0.52);
         glRotatef(thumbCloseAngleLeft, 0, 1, 0);
         glTranslatef(3.3, 1.69, -0.52);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
         u.drawCube(0.24, 0.149, 0.2, cLightGrey, -3.3, -1.15, 0.57);
 
         glPushMatrix();
@@ -483,7 +501,9 @@ void Hands::drawLeftThumb() {
         glRotatef(thumbCloseAngleLeft, 0, 1, 0);
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -499,6 +519,7 @@ void Hands::drawLeftThumb() {
 }
 
 void Hands::drawLeftFingers() {
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey2);
     u.drawCube(0.3, 0.3, 0.42, cLightGrey2, -3.3, -1.6, 0);
 
     glPushMatrix(); {
@@ -517,7 +538,9 @@ void Hands::drawLeftFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -537,7 +560,9 @@ void Hands::drawLeftFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -556,7 +581,9 @@ void Hands::drawLeftFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -575,7 +602,9 @@ void Hands::drawLeftFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -610,6 +639,7 @@ void Hands::drawLeftFingers() {
 }
 
 void Hands::drawRightFingers() {
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey2);
     u.drawCube(0.3, 0.3, 0.42, cLightGrey2, -3.3, -1.6, 0);
 
     glPushMatrix(); {
@@ -628,7 +658,9 @@ void Hands::drawRightFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -648,7 +680,9 @@ void Hands::drawRightFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -667,7 +701,9 @@ void Hands::drawRightFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -686,7 +722,9 @@ void Hands::drawRightFingers() {
         glTranslatef(3.2, 1.69, -0.65);
         glRotatef(-90, 1, 0, 0);
         glScalef(1, 1.2, 1);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.07, 0.05, 0.25, 30, 30, GLU_FILL, false, -3.3, -0.8, -1.15);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
         u.drawCylinder(cWhite, 0.049, 0.049, 0.25, 30, 30, GLU_FILL, true, -3.3, -0.8, -1.15);
         glPopMatrix();
     } glPopMatrix();
@@ -746,9 +784,11 @@ void Hands::drawLeftHand() {
             glRotatef(LowerArmTurnAngleLeft, 0, 1, 0);
             glTranslatef(3.3, -1.63, 0);
             glBindTexture(GL_TEXTURE_2D, 0);
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
             u.drawCube(1, 1, 1, cLightGrey, -3.3, 0, 0);
 
             glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); {
+                glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
                 u.drawCube(1.1, 0.6, 1.1, cWhite, -3.3, -0.5, 0);
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
@@ -798,9 +838,11 @@ void Hands::drawRightHand() {
         glRotatef(LowerArmTurnAngleRight, 0, 1, 0);
         glTranslatef(3.3, -1.63, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cLightGrey);
         u.drawCube(1, 1, 1, cLightGrey, -3.3, 0, 0);
 
         glBindTexture(GL_TEXTURE_2D, textures[activeTexture]); {
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
             u.drawCube(1.1, 0.6, 1.1, cWhite, -3.3, -0.5, 0);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
@@ -816,6 +858,9 @@ void Hands::drawRightHand() {
             drawPalm();
             drawRightThumb();
             drawRightFingers();
+
+            //gun.drawGun();
+
         } glPopMatrix();
         glPopMatrix();
     } glPopMatrix();
