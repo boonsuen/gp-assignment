@@ -18,6 +18,7 @@ const char* SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp
 const char* LAND_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/land.bmp";
 const char* MOON_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/moon.bmp";
 const char* SUN_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sun.bmp";
+const char* NIGHT_SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/night-sky.bmp";
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -39,6 +40,7 @@ const char* SKY_TEXTURE_PATH = "sky.bmp";
 const char* LAND_TEXTURE_PATH = "land.bmp";
 const char* MOON_TEXTURE_PATH = "moon.bmp";
 const char* SUN_TEXTURE_PATH = "sun.bmp";
+const char* NIGHT_SKY_TEXTURE_PATH = "night-sky.bmp";
 #endif
 #include <iostream>
 #include <math.h>
@@ -103,7 +105,7 @@ float mRx = 0;
 
 // Texture
 bool isTexture = false;
-const int TEXTURES_NO = 16;
+const int TEXTURES_NO = 17;
 GLuint textures[TEXTURES_NO]; /* storage for 2 textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
@@ -122,6 +124,7 @@ const char* filenames[TEXTURES_NO] = {
     LAND_TEXTURE_PATH,          // 13
     MOON_TEXTURE_PATH,          // 14
     SUN_TEXTURE_PATH,           // 15
+    NIGHT_SKY_TEXTURE_PATH,     // 16
 };
 int activeTexture = 0;
 bool showSkybox = false;
@@ -214,7 +217,7 @@ void lighting() {
         diff[2] = 0;
     }
     
-    std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
+//    std::cout << lightRX << ":" << lightRY << ":" << lightRZ << std::endl;
 
     glEnable(GL_NORMALIZE);
     if (lightOn) {
@@ -273,14 +276,14 @@ void drawSkyBox(float width, float height, float depth) {
     glTexCoord2f(0.0, 0.0);  glVertex3f(-(width / 2), -(height / 2), depth / 2);
     glEnd();
     
-    glBindTexture(GL_TEXTURE_2D, textures[12]);
+    glBindTexture(GL_TEXTURE_2D, textures[isNightTheme ? 16 : 12]);
     glBegin(GL_QUADS);
     // Face 2, front
     glNormal3f(0, 0, -1);
-    glTexCoord2f(0, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
-    glTexCoord2f(0, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
-    glTexCoord2f(1, 1); glVertex3f(width / 2, height / 2, depth / 2);
-    glTexCoord2f(1, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
+    glTexCoord2f(1, 0); glVertex3f(-(width / 2), -(height / 2), depth / 2);
+    glTexCoord2f(1, 1); glVertex3f(-(width / 2), height / 2, depth / 2);
+    glTexCoord2f(0, 1); glVertex3f(width / 2, height / 2, depth / 2);
+    glTexCoord2f(0, 0); glVertex3f(width / 2, -(height / 2), depth / 2);
 
     // Face 3, right
     glNormal3f(-1, 0, 0);
@@ -638,10 +641,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
         legs.hipAngleRight = 0;
         legs.kneeAngleLeft = 0;
         legs.kneeAngleRight = 0;
-        hands.wholeAngleRight = 0;
-        hands.wholeAngleLeft = 0;
-        hands.LowerArmAngleRight = 0;
-        hands.LowerArmAngleLeft = 0;
+        hands.reset();
         moveToward = true;
         head.headHorizontalAngle = 0;
         head.headVerticalAngle = 0;
@@ -654,6 +654,21 @@ void processNormalKeys(unsigned char key, int x, int y) {
         isOrtho = !isOrtho;
         if (isOrtho) {
             mTz = 0;
+            if (lightRX <= -9) {
+                lightRX = -9;
+            } else if (lightRX >= 9) {
+                lightRX = 9;
+            }
+            if (lightRY >= 9) {
+                lightRY = 9;
+            } else if (lightRY <= -9) {
+                lightRY = -9;
+            }
+            if (lightRZ >= 9) {
+                lightRZ = 9;
+            } else if (lightRZ <= -9) {
+                lightRZ = -9;
+            }
         } else {
             mTz = -13;
         }
@@ -674,6 +689,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
     } else if (key == 'M' || key == 'm') {
         mRx -= prSpeed;
     }
+    
+    std::cout << "pTx: " << pTx << " - " << "pTy: " << pTy << std::endl;
     
     // Enter (Enable/disable texture)
     if (key == 13) {
@@ -735,17 +752,65 @@ void processSpecialKeys(int key, int x, int y) {
     
     // Lighting
     if (key == GLUT_KEY_F2) {
-        lightRX -= 0.5; // Light left
+        if (isOrtho) {
+            if (lightRX > -9) {
+                lightRX -= 0.5; // Light left
+            }
+        } else {
+            if (lightRX > -13) {
+                lightRX -= 0.5; // Light left
+            }
+        }
     } else if (key == GLUT_KEY_F3) {
-        lightRX += 0.5; // Light right
+        if (isOrtho) {
+            if (lightRX < 9) {
+                lightRX += 0.5; // Light right
+            }
+        } else {
+            if (lightRX < 13) {
+                lightRX += 0.5; // Light right
+            }
+        }
     } else if (key == GLUT_KEY_F4) {
-        lightRY += 0.5; // Light up
+        if (isOrtho) {
+            if (lightRY < 9) {
+                lightRY += 0.5; // Light up
+            }
+        } else {
+            if (lightRY < 13) {
+                lightRY += 0.5; // Light up
+            }
+        }
     } else if (key == GLUT_KEY_F5) {
-        lightRY -= 0.5; // Light down
+        if (isOrtho) {
+            if (lightRY > -9) {
+                lightRY -= 0.5; // Light down
+            }
+        } else {
+            if (lightRY > -13) {
+                lightRY -= 0.5; // Light down
+            }
+        }
     } else if (key == GLUT_KEY_F6) {
-        lightRZ += 0.5; // Light front
+        if (isOrtho) {
+            if (lightRZ < 9) {
+                lightRZ += 0.5; // Light front
+            }
+        } else {
+            if (lightRZ < 13) {
+                lightRZ += 0.5; // Light front
+            }
+        }
     } else if (key == GLUT_KEY_F7) {
-        lightRZ -= 0.5; // Light back
+        if (isOrtho) {
+            if (lightRZ > -9) {
+                lightRZ -= 0.5; // Light back
+            }
+        } else {
+            if (lightRZ > -13) {
+                lightRZ -= 0.5; // Light back
+            }
+        }
     } else if (key == GLUT_KEY_F8) {
         isNightTheme = !isNightTheme;
     }

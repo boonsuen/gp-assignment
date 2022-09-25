@@ -44,19 +44,19 @@ public:
     float wristAngleLeft = 0;
     float wristAngleMax = 25;
 
-    boolean thumbCloseRight = false;
-    boolean finger1CloseRight = false;
-    boolean finger2CloseRight = false;
-    boolean finger3CloseRight = false;
-    boolean finger4CloseRight = false;
+    bool thumbCloseRight = false;
+    bool finger1CloseRight = false;
+    bool finger2CloseRight = false;
+    bool finger3CloseRight = false;
+    bool finger4CloseRight = false;
 
-    boolean thumbCloseLeft = false;
-    boolean finger1CloseLeft = false;
-    boolean finger2CloseLeft = false;
-    boolean finger3CloseLeft = false;
-    boolean finger4CloseLeft = false;
+    bool thumbCloseLeft = false;
+    bool finger1CloseLeft = false;
+    bool finger2CloseLeft = false;
+    bool finger3CloseLeft = false;
+    bool finger4CloseLeft = false;
 
-    boolean allFingersClose = false;
+    bool allFingersClose = false;
 
     float thumbCloseAngleRight = 0;
     float thumbCloseAngleLeft = 0;
