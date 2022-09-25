@@ -137,7 +137,7 @@ void Hands::keyActions(unsigned char key) {
             this->LowerArmAngleRight += 1;
         }
     }
-    else if (key == 's' || key == 's') {
+    else if (key == 'S' || key == 's') {
 
         if (this->LowerArmAngleRight > 0) {
             this->LowerArmAngleRight -= 1;
@@ -294,6 +294,8 @@ void Hands::allFingersCloseLeft(bool close) {
 
 void Hands::reset() {
 
+    gunAttackMode = false;
+    swordAttackMode = false;
     showGun = false;
     showSword = false;
 
@@ -329,6 +331,8 @@ void Hands::reset() {
     this-> finger2CloseLeft = false;
     this-> finger3CloseLeft = false;
     this-> finger4CloseLeft = false;
+
+
 }
 
 void Hands::drawShoulder() {
