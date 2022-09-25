@@ -56,8 +56,6 @@ public:
     bool finger3CloseLeft = false;
     bool finger4CloseLeft = false;
 
-    bool allFingersClose = false;
-
     float thumbCloseAngleRight = 0;
     float thumbCloseAngleLeft = 0;
     float finger1CloseAngleRight = 0;

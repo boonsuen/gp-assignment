@@ -147,6 +147,7 @@
     <Image Include="ice.bmp" />
     <Image Include="land.bmp" />
     <Image Include="moon.bmp" />
+    <Image Include="night-sky.bmp" />
     <Image Include="red-sword.bmp" />
     <Image Include="red.bmp" />
     <Image Include="rocketpower.bmp" />
