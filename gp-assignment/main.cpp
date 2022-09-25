@@ -82,6 +82,7 @@ const char* SCIFI_TEXTURE_PATH = "scifi.bmp";
 void projection();
 void lighting();
 void display();
+void robotTransformationKeyActions(unsigned char key);
 
 /*
  * -----------------------------------------------
@@ -107,6 +108,10 @@ const float MAX_PERSPECTIVE_PTY = 12;
 // Model View Transformation (TZ, RX, RY, RZ)
 float mTz = 0, mtSpeed = 1;  // Model View Translate Z (zoom)
 float mRx = 0, mRy = 0, mRz = 0;
+float robotTx = 0, robotTy = 0, robotTz = 0;
+float rtSpeed = 0.5;
+float robotRx = 0, robotRy = 0, robotRz = 0;
+float rrSpeed = 1;
 
 // =============== TEXTURE ================
 bool isTexture = false;
@@ -251,26 +256,6 @@ void lighting() {
 
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
-    glDisable(GL_LIGHT2);
-//    glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
-
-//    if (lightType == GL_AMBIENT) {
-//        glEnable(GL_LIGHT0);
-////        glDisable(GL_LIGHT1);
-////        glDisable(GL_LIGHT2);
-//        glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
-//    } else if (lightType == GL_DIFFUSE) {
-//        glEnable(GL_LIGHT1);
-////        glDisable(GL_LIGHT0);
-////        glDisable(GL_LIGHT2);
-//        glMaterialfv(GL_FRONT, GL_DIFFUSE, diff);
-//    } else {
-//        glColor3f(0, 1, 0);
-//        glEnable(GL_LIGHT2);
-//        glDisable(GL_LIGHT0);
-//        glDisable(GL_LIGHT1);
-//        glMaterialfv(GL_FRONT, GL_SPECULAR, specM);
-//    }
 }
 
 void drawSkyBox(float width, float height, float depth) {
@@ -336,7 +321,6 @@ Legs legs;
 
 // Walking Animation
 bool isWalking = false;
-float wholeRobotTz = 0;
 const int maxSteps = 10;
 int stepsWalked = 0;
 bool moveToward = true;
@@ -411,8 +395,12 @@ void display() {
     attackMode = headAttackMode && gunAttackMode && swordAttackMode;
     
     glPushMatrix(); {
-        glTranslatef(0, 0, wholeRobotTz);
+        // Robot transformation
+        glTranslatef(robotTx, robotTy, robotTz);
         glRotatef(!moveToward ? 180 : 0, 0, 1, 0);
+        glRotatef(robotRx, 1, 0, 0);
+        glRotatef(robotRy, 0, 1, 0);
+        glRotatef(robotRz, 0, 0, 1);
         glScalef(0.4, 0.4, 0.4);
         if (isWalking) {
             bool skip = false;
@@ -464,9 +452,9 @@ void display() {
                     if (oneLegMoved < maxOneLegMove) {
                         oneLegMoved += 0.005;
                         if (moveToward) {
-                            wholeRobotTz += 0.005;
+                            robotTz += 0.005;
                         } else {
-                            wholeRobotTz -= 0.005;
+                            robotTz -= 0.005;
                         }
                     }
                     if (legs.hipAngleLeft < 0) {
@@ -532,9 +520,9 @@ void display() {
                     if (oneLegMoved < maxOneLegMove) {
                         oneLegMoved += 0.005;
                         if (moveToward) {
-                            wholeRobotTz += 0.005;
+                            robotTz += 0.005;
                         } else {
-                            wholeRobotTz -= 0.005;
+                            robotTz -= 0.005;
                         }
                     }
                     if (legs.hipAngleRight < 0) {
@@ -595,6 +583,102 @@ void display() {
 
 bool legKeyMode = false;
 bool handKeyMode = false;
+bool robotTransformationKeyMode = false;
+
+void robotTransformationKeyActions(unsigned char key) {
+    if (key == 'Q' || key == 'q') { // Up
+        if (isOrtho) {
+            if (robotTy < 9) {
+                robotTy += rtSpeed;
+            }
+        } else {
+            if (robotTy < 9) {
+                robotTy += rtSpeed;
+            }
+        }
+    } else if (key == 'A' || key == 'a') {
+        if (isOrtho) {
+            if (robotTy > -9) {
+                robotTy -= rtSpeed;
+            }
+        } else {
+            if (robotTy > -9) {
+                robotTy -= rtSpeed;
+            }
+        }
+    } else if (key == 'W' || key == 'w') {
+        if (isOrtho) {
+            if (robotTx > -5) {
+                robotTx -= rtSpeed;
+            }
+        } else {
+            if (robotTx > -11) {
+                robotTx -= rtSpeed;
+            }
+        }
+    } else if (key == 'S' || key == 's') {
+        if (isOrtho) {
+            if (robotTx < 5) {
+                robotTx += rtSpeed;
+            }
+        } else {
+            if (robotTx < 11) {
+                robotTx += rtSpeed;
+            }
+        }
+    } else if (key == 'E' || key == 'e') {
+        if (isOrtho) {
+            if (robotTz < 9) {
+                robotTz += rtSpeed;
+            }
+        } else {
+            if (robotTz < 8) {
+                robotTz += rtSpeed;
+            }
+        }
+    } else if (key == 'D' || key == 'd') {
+        if (isOrtho) {
+            if (robotTz > -12) {
+                robotTz -= rtSpeed;
+            }
+        } else {
+            if (robotTz > -8) {
+                robotTz -= rtSpeed;
+            }
+        }
+    }
+    std::cout << "TX: " << robotTx
+              << ", TY: " << robotTy
+              << ", TZ: " << robotTz << std::endl;
+    
+    if (key == 'K' || key == 'k') {
+        robotRx += rrSpeed;
+    } else if (key == 'M' || key == 'm') {
+        robotRx -= rrSpeed;
+    } else if (key == 'L' || key == 'l') {
+        robotRy -= rrSpeed;
+    } else if (key == 'R' || key == 'r') {
+        robotRy += rrSpeed;
+    } else if (key == 'Z' || key == 'z') {
+        robotRz += rrSpeed;
+    } else if (key == 'X' || key == 'x') {
+        robotRz -= rrSpeed;
+    }
+    std::cout << "RX: " << robotRx
+              << ", RY: " << robotRy
+              << ", RZ: " << robotRz << std::endl;
+    
+    
+    if (key == '0') {
+        robotTx = 0;
+        robotTy = 0;
+        robotTz = 0;
+        robotRx = 0;
+        robotRy = 0;
+        robotRz = 0;
+    }
+}
+
 void processNormalKeys(unsigned char key, int x, int y) {
     // Legs
     if (key == '7') {
@@ -612,6 +696,15 @@ void processNormalKeys(unsigned char key, int x, int y) {
         hands.keyActions(key);
         return;
     }
+    // Robot transformations
+    if (key == '9') {
+        robotTransformationKeyMode = !robotTransformationKeyMode;
+    }
+    if (robotTransformationKeyMode) {
+        robotTransformationKeyActions(key);
+        return;
+    }
+    
     // Head (C/B/G/V)
     head.keyActions(key);
     // Body (O/P), rotation including body, hands, head
@@ -741,6 +834,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
         } else if (activeTexture == 1) {
             activeTexture = 2;
         } else if (activeTexture == 2) {
+            activeTexture = 3;
+        } else if (activeTexture == 3) {
             activeTexture = 17;
         } else if (activeTexture == 17) {
             activeTexture = 0;
@@ -770,6 +865,10 @@ void processNormalKeys(unsigned char key, int x, int y) {
     // Walking
     if (key == '5') {
         isWalking = !isWalking;
+        if (isWalking) {
+            robotRx = 0;
+            robotRz = 0;
+        }
     }
 }
 
@@ -995,40 +1094,6 @@ GLvoid loadGLTextures(GLvoid) {
             GL_BGR_EXT, GL_UNSIGNED_BYTE, image->data);
         gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image->sizeX, image->sizeY, GL_BGR_EXT, GL_UNSIGNED_BYTE, image->data);
     }
-
-//    // texture 1 (poor quality scaling)
-//    glBindTexture(GL_TEXTURE_2D, textures[0]);  // 2d texture (x and y size)
-//    // cheap scaling when image bigger than texture.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//    // cheap scaling when image samlled than texture
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//    // 2d texture level of detail 0 (normal), 3 components (red, green, blue), x size from
-//    // image, y size from image, border 0 (normal) rgb color data, unsigned byte data,
-//    // and finally the data itself.
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
-//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
-//
-//    // texture 2 (linear scaling)
-//    glBindTexture(GL_TEXTURE_2D, textures[1]); // 2d texture (x and y size)
-//    // scale linearly when image bigger than texture.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//    // scale linearly when image smaller than texture.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image2->sizeX, image2->sizeY, 0,
-//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image2->data);
-//
-//    // texture 3 (mipmapped scaling)
-//    glBindTexture(GL_TEXTURE_2D, textures[2]); // 2d textuer (x and y size)
-//    // scale linearly when image bigger than texture.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//    // scale linearly + mipmap when image smalled than texture.
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-//    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0,
-//        GL_BGR_EXT, GL_UNSIGNED_BYTE, image1->data);
-//
-//    // 2d texture 3 colors, width, height, RGB in that order, byte data, and the data.
-//    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image1->sizeX, image1->sizeY, GL_BGR_EXT,
-//        GL_UNSIGNED_BYTE, image1->data);
 }
 
 /* A general OpenGL initialization function. Sets all of the initial parameters. */
