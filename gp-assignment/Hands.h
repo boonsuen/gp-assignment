@@ -902,9 +902,6 @@ void Hands::drawRightHand() {
             drawRightFingers();
 
             if (showGun) {
-                /*if (LowerArmAngleRight < LowerArmAngleMax) {
-                    LowerArmAngleRight++;
-                }*/
                 glPushMatrix();
                 glScalef(0.2, 0.2, 0.2);
                 glRotatef(-90, 0, 1, 0);
@@ -926,6 +923,7 @@ void Hands::drawRightHand() {
 
 bool openFingersLeft = true;
 bool openFingersRight = true;
+bool swordStabbed = false;
 
 void Hands::drawHands() {
     glPushMatrix();
@@ -947,13 +945,52 @@ void Hands::drawHands() {
         openFingersLeft = true;
     }
 
-    if (showGun) {
+    if (showGun && openFingersRight) {
         allFingersCloseRight(true);
-        openFingersRight = false;
+        if (LowerArmAngleRight < LowerArmAngleMax) {
+            LowerArmAngleRight++;
+        }
+        else {
+            openFingersRight = false;
+        }
     }
     else if (!showGun && !openFingersRight) {
-        allFingersCloseRight(false);
+        allFingersCloseRight(false); 
+        if (LowerArmAngleRight > 0) {
+            LowerArmAngleRight--;
+        }
+        else {
         openFingersRight = true;
+        }
     }
 
+    if (gunAttackMode) {
+        if (wristAngleRight > -wristAngleMax) {
+            wristAngleRight -= 1;
+        } else if (wristAngleRight < wristAngleMax) {
+            wristAngleRight += 1;
+        }
+    }
+
+    if (swordAttackMode) {
+        if (wholeAngleLeft > -25 && !swordStabbed) {
+            wholeAngleLeft -= 1;
+        } 
+        if (LowerArmAngleLeft < LowerArmAngleMax && !swordStabbed) {
+            LowerArmAngleLeft += 1;
+        }
+        if (wholeAngleLeft <= -25  && LowerArmAngleLeft >= LowerArmAngleMax && !swordStabbed) {
+            swordStabbed = true;
+            
+        }
+        if (swordStabbed && wholeAngleLeft < 0) {
+            wholeAngleLeft += 1;
+        } 
+        if (swordStabbed && LowerArmAngleLeft > 0) {
+            LowerArmAngleLeft -= 1;
+        }
+        if (wholeAngleLeft >= 0 && LowerArmAngleLeft <= 0 && swordStabbed) {
+            swordStabbed = false;
+        }
+    }
 }

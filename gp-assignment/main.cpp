@@ -782,6 +782,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
         lightRZ = 3;
         showGun = false;
         showSword = false;
+        hands.gun.reset();
         hands.sword.reset();
 
     } else if (key == '1') { // Change ortho/perspective

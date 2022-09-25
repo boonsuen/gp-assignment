@@ -20,6 +20,7 @@
 #include <string>
 #include "Common.h"
 #include "Utility.h"
+#include "Hands.h"
 
 class Sword {
 public:
@@ -230,5 +231,9 @@ void Sword::keyActions(unsigned char key) {
         }
     } else if (key == '4' && showSword) {
         swordAttackMode = !swordAttackMode;
+        /*if (swordAttackMode) {
+            hand.wholeAngleLeft = 0;
+            hand.LowerArmAngleLeft = 0;
+        }*/
     }
 }

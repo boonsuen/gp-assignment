@@ -24,10 +24,24 @@
 class Gun {
 public:
 	Utility u;
+
+	float bulletScalex = 1;
+	float bulletScaley = 1;
+	float bulletScalez = 1;
+	float bulletScalexyMax = 3.5;
 	void drawGun();
 
     void keyActions(unsigned char key);
+	void reset();
 };
+
+void Gun::reset() {
+	float bulletScalex = 1;
+	float bulletScaley = 1;
+	float bulletScalez = 1;
+
+	gunAttackMode = false;
+}
 
 void drawCubeTexture(float length, float width, float height, GLuint texture) {
 	glBindTexture(GL_TEXTURE_2D, textures[texture]);
@@ -101,7 +115,7 @@ void cylinderTexture(float baseRadius, float topRadius, float height, GLuint tex
 	GLUquadric* cylinder = NULL;
 	cylinder = gluNewQuadric();
 
-	gluQuadricTexture(cylinder, TRUE);
+	gluQuadricTexture(cylinder, true);
 	gluQuadricNormals(cylinder, GLU_SMOOTH);
 
 	gluQuadricDrawStyle(cylinder, GLU_FILL);
@@ -116,7 +130,7 @@ void sphereTexture(float radius, GLuint texture) {
 	GLUquadricObj* sphere = NULL;
 	sphere = gluNewQuadric();
 
-	gluQuadricTexture(sphere, TRUE);
+	gluQuadricTexture(sphere, true);
 	gluQuadricNormals(sphere, GLU_SMOOTH);
 
 	gluQuadricDrawStyle(sphere, GLU_FILL);
@@ -184,6 +198,8 @@ void Gun::drawGun() {
 	glTranslatef(13, 0.7, 1);
 	glRotatef(90, 0, 0, -1);
 	glRotatef(270, 1, 0, 0);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gunAttackMode ? cHeadRed : cDarkGreen);
+	glColor3fv(gunAttackMode ? cHeadRed : cDarkGreen);
 	cylinderTexture(0.5, 0.5, 5, 26);
 	//u.drawCylinder(cDarkGreen1, 0.5, 0.5, 5, 30, 30, GLU_FILL, true, 0, 0, 0);
 	glPopMatrix();
@@ -194,12 +210,39 @@ void Gun::drawGun() {
 	glRotatef(90, 0, 0, -1);
 	glRotatef(270, 1, 0, 0);
 	//u.drawCylinder(cDarkGreen1, 0.7, 0.7, 5, 30, 30, GLU_FILL, true, 0, 0, 0);
+
+	glColor3fv(gunAttackMode?cHeadRed:cDarkGreen);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gunAttackMode ? cHeadRed : cDarkGreen);
+	glPushMatrix();
+	
 	cylinderTexture(0.7, 0.7, 5, 28);
+
+	if (gunAttackMode) {
+		glPushMatrix();
+		glScalef(bulletScalex, bulletScaley, bulletScalez);
+		cylinderTexture(0.7, 0.7, 5, 28);
+		glPopMatrix();
+
+		if (bulletScalex < bulletScalexyMax || bulletScaley < bulletScalexyMax) {
+			bulletScalex += 0.05;
+			bulletScaley += 0.05;
+		}
+		else {
+			bulletScalex = 1;
+			bulletScaley = 1;
+		} 
+		bulletScalez += 0.5;
+		if (bulletScalez < 50) {
+			bulletScalez += 0.1;
+		}
+	}
+	glPopMatrix();
 	glPopMatrix();
 
 	/////////////////////////////////////////place to aim
 	glPushMatrix();
 	glColor3fv(cDarkGreen1);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkGreen1);
 	//glTranslatef(0.75, 0.15, 0.05);
 	glTranslatef(15,3,1);
 	glRotatef(90, 0, 0, -1);
@@ -330,7 +373,7 @@ void Gun::keyActions(unsigned char key) {
         showGun = !showGun;
 
         if (showGun == false) {
-            gunAttackMode = false;
+			reset();
         }
     }
     else if (key == '3' && showGun) {
