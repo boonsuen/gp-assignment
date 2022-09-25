@@ -143,6 +143,17 @@
     <Image Include="black.bmp" />
     <Image Include="blue-sword.bmp" />
     <Image Include="blue.bmp" />
+    <Image Include="gunAim.bmp" />
+    <Image Include="gunBody.bmp" />
+    <Image Include="gunBodyBack.bmp" />
+    <Image Include="gunBodyBackBk.bmp" />
+    <Image Include="gunBodyUp.bmp" />
+    <Image Include="gunFrFrHandle.bmp" />
+    <Image Include="gunFrHandle.bmp" />
+    <Image Include="gunFront.bmp" />
+    <Image Include="gunFrontUp.bmp" />
+    <Image Include="gunHandle.bmp" />
+    <Image Include="gunShoot.bmp" />
     <Image Include="HandleBlack.bmp" />
     <Image Include="ice.bmp" />
     <Image Include="land.bmp" />

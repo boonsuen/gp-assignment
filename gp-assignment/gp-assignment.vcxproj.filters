@@ -71,6 +71,39 @@
     <Image Include="scifi.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="gunAim.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunBody.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunBodyBack.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunBodyBackBk.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunBodyUp.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunFrFrHandle.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunFrHandle.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunFront.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunFrontUp.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunHandle.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="gunShoot.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
