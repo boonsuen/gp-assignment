@@ -20,7 +20,6 @@ const char* MOON_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/g
 const char* SUN_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sun.bmp";
 const char* NIGHT_SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/night-sky.bmp";
 const char* SCIFI_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/scifi.bmp";
-const char* SCIFI_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/scifi.bmp";
 
 const char* gunBody_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBody.bmp";
 const char* gunBodyUp_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBodyUp.bmp";
@@ -142,7 +141,7 @@ float rrSpeed = 1;
 
 // =============== TEXTURE ================
 bool isTexture = false;
-const int TEXTURES_NO = 18;
+const int TEXTURES_NO = 29;
 GLuint textures[TEXTURES_NO]; /* storage for textures. */
 const char* filenames[TEXTURES_NO] = {
     ICE_TEXTURE_PATH,           // 0
@@ -163,6 +162,18 @@ const char* filenames[TEXTURES_NO] = {
     SUN_TEXTURE_PATH,           // 15
     NIGHT_SKY_TEXTURE_PATH,     // 16
     SCIFI_TEXTURE_PATH,         // 17
+
+    gunBody_TEXTURE_PATH,       //18
+    gunBodyUp_TEXTURE_PATH, //19
+    gunBodyBack_TEXTURE_PATH, //20
+    gunBodyBackBk_TEXTURE_PATH, //21
+    gunFront_TEXTURE_PATH,//22
+    gunFrontUp_TEXTURE_PATH,//23
+    gunFrHandle_TEXTURE_PATH,//24
+    gunFrFrHandle_TEXTURE_PATH,//25
+    gunAim_TEXTURE_PATH,//26
+    gunHandle_TEXTURE_PATH,//27
+    gunShoot_TEXTURE_PATH//28
 };
 int activeTexture = 0;
 bool showSkybox = false;
@@ -216,8 +227,8 @@ float cPrimaryBlue[] = { 0, 23.0/255, 163.0/255 };
 float cPrimaryLightBlue[] = { 0, 118.0/255, 237.0/255 };
 float cLegBoost[] = { 1, 153.0/255, 0};
 
-float cDarkGreen[] = { 0 / 0.6 / 0 };
-float cDarkGreen1[] = { 0 / 0.5 / 0 };
+float cDarkGreen[] = { 0 ,0.6 , 0 };
+float cDarkGreen1[] = { 0 , 0.5 , 0 };
 
 void projection() {
     glMatrixMode(GL_PROJECTION);
