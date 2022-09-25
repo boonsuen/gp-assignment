@@ -20,6 +20,20 @@ const char* MOON_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/g
 const char* SUN_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/sun.bmp";
 const char* NIGHT_SKY_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/night-sky.bmp";
 const char* SCIFI_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/scifi.bmp";
+const char* SCIFI_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/scifi.bmp";
+
+const char* gunBody_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBody.bmp";
+const char* gunBodyUp_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBodyUp.bmp";
+const char* gunBodyBack_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBodyBack.bmp";
+const char* gunBodyBackBk_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunBodyBackBk.bmp";
+const char* gunFront_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunFront.bmp";
+const char* gunFrontUp_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunFrontUp.bmp";
+const char* gunFrHandle_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunFrHandle.bmp";
+const char* gunFrFrHandle_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunFrFrHandle.bmp";
+const char* gunAim_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunAim.bmp";
+const char* gunHandle_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunHandle.bmp";
+const char* gunShoot_TEXTURE_PATH = "/Users/boonsuenoh/Documents/Dev/gp-assignment/gp-assignment/gunShoot.bmp";
+
 #else
 #include <windows.h>
 #include <GL/gl.h>
@@ -43,7 +57,20 @@ const char* MOON_TEXTURE_PATH = "moon.bmp";
 const char* SUN_TEXTURE_PATH = "sun.bmp";
 const char* NIGHT_SKY_TEXTURE_PATH = "night-sky.bmp";
 const char* SCIFI_TEXTURE_PATH = "scifi.bmp";
+
+const char* gunBody_TEXTURE_PATH = "gunBody.bmp";
+const char* gunBodyUp_TEXTURE_PATH = "gunBodyUp.bmp";
+const char* gunBodyBack_TEXTURE_PATH = "gunBodyBack.bmp";
+const char* gunBodyBackBk_TEXTURE_PATH = "gunBodyBackBk.bmp";
+const char* gunFront_TEXTURE_PATH = "gunFront.bmp";
+const char* gunFrontUp_TEXTURE_PATH = "gunFrontUp.bmp";
+const char* gunFrHandle_TEXTURE_PATH = "gunFrHandle.bmp";
+const char* gunFrFrHandle_TEXTURE_PATH = "gunFrFrHandle.bmp";
+const char* gunAim_TEXTURE_PATH = "gunAim.bmp";
+const char* gunHandle_TEXTURE_PATH = "gunHandle.bmp";
+const char* gunShoot_TEXTURE_PATH = "gunShoot.bmp";
 #endif
+
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
@@ -188,6 +215,9 @@ float cLightSkinGrey2[] = { 213.0/255, 214.0/255, 219.0/255 };
 float cPrimaryBlue[] = { 0, 23.0/255, 163.0/255 };
 float cPrimaryLightBlue[] = { 0, 118.0/255, 237.0/255 };
 float cLegBoost[] = { 1, 153.0/255, 0};
+
+float cDarkGreen[] = { 0 / 0.6 / 0 };
+float cDarkGreen1[] = { 0 / 0.5 / 0 };
 
 void projection() {
     glMatrixMode(GL_PROJECTION);

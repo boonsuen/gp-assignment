@@ -34,7 +34,7 @@ public:
 void Shield::drawHandle() {
     glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, textures[11]);
-    
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cDarkBlue);
     u.drawCylinder(cDarkBlue, 0.05, 0.05, 0.2, 30, 30, GLU_FILL, true, 0.15, 0, -0.15);
 
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture]);
@@ -85,6 +85,7 @@ void Shield::drawShield() {
 	glScalef(1.0f, 2.0f, 1.0f);
     glColor3fv(isTexture ? cWhite : cLightGrey);
     glBindTexture(GL_TEXTURE_2D, textures[activeTexture == 2 ? 1 : 9]);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, isTexture ? cWhite : cLightGrey);
 	u.shieldPentagon(0.0f, 0.03f);
 	glPopMatrix();
 
@@ -93,6 +94,7 @@ void Shield::drawShield() {
 	glTranslatef(0, -0.005, 0.005);
     glColor3fv(cHeadRed);
     glBindTexture(GL_TEXTURE_2D, textures[6]);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cHeadRed);
 	u.shieldPentagon(0.0f, 0.04f);
 	glPopMatrix();
 
@@ -101,7 +103,9 @@ void Shield::drawShield() {
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glColor3fv(cEyeYellow);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cEyeYellow);
 	u.starVertical(0.0f, 0.025f, 0.125f, 0.15f, 0.0f, 0.01f);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cEyeYellow);
 	u.starHorizontal(0.075f, 0.1f, 0.0f, 0.025f, 0.0f, 0.01f);
     
 	glPopMatrix();

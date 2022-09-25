@@ -46,3 +46,6 @@ extern float cLightSkinGrey2[];
 extern float cPrimaryBlue[];
 extern float cPrimaryLightBlue[];
 extern float cLegBoost[];
+
+extern float cDarkGreen[];
+extern float cDarkGreen1[];

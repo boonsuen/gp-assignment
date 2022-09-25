@@ -78,16 +78,21 @@ void Sword::drawHandle() {
     GLfloat swordCenterLV2[] = { 0, 0, 0.3 }; GLfloat swordCenterLV6[] = { 0, 0, -0.3 };
     GLfloat swordCenterLV3[] = { 0, 0.7, 0.3 }; GLfloat swordCenterLV7[] = { 0, 0.7, -0.3 };
     GLfloat swordCenterLV4[] = { -1, 0.4, 0.3 }; GLfloat swordCenterLV8[] = { -1, 0.4, -0.3 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     u.drawSixFacesPolygon(swordCenterLV1, swordCenterLV2, swordCenterLV3, swordCenterLV4,
                           swordCenterLV5, swordCenterLV6, swordCenterLV7, swordCenterLV8, cWhite);
     GLfloat swordCenterRV1[] = { 0, 0, 0.3 }; GLfloat swordCenterRV5[] = { 0, 0, -0.3 };
     GLfloat swordCenterRV2[] = { 1, 0, 0.3 }; GLfloat swordCenterRV6[] = { 1, 0, -0.3 };
     GLfloat swordCenterRV3[] = { 1, 0.4, 0.3 }; GLfloat swordCenterRV7[] = { 1, 0.4, -0.3 };
     GLfloat swordCenterRV4[] = { 0, 0.7, 0.3 }; GLfloat swordCenterRV8[] = { 0, 0.7, -0.3 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cWhite);
     u.drawSixFacesPolygon(swordCenterRV1, swordCenterRV2, swordCenterRV3, swordCenterRV4,
                           swordCenterRV5, swordCenterRV6, swordCenterRV7, swordCenterRV8, cWhite);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? cHeadRed : cPrimaryLightBlue);
     u.drawCube(2.01, 0.05, 0.61, (swordAttackMode ? cHeadRed : cPrimaryLightBlue), 0, 0.1, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? cHeadRed : cPrimaryLightBlue);
     u.drawCube(2.01, 0.05, 0.61, (swordAttackMode ? cHeadRed : cPrimaryLightBlue), 0, 0.2, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, cBlack);
     u.drawCylinder(cBlack, 0.2, 0.2, 1.8, 30, 30, GLU_FILL, true, 0, -1.8, 0);
     
     glPopMatrix();
@@ -108,8 +113,10 @@ void Sword::drawSmallKnife() {
         }
     }
     glBegin(GL_TRIANGLE_FAN);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? cSmallKnifeRed2 : cSmallKnifeBlue2);
     glColor3fv(swordAttackMode ? cSmallKnifeRed2 : cSmallKnifeBlue2);
     glTexCoord2f(0.0, 1.0); glVertex3f(-0.9, 0.2875, 0);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? cSmallKnifeRed : cSmallKnifeBlue);
     glColor3fv(swordAttackMode ? cSmallKnifeRed : cSmallKnifeBlue);
     glTexCoord2f(1.0, 1.0); glVertex3f(0, 0, 0.08);
     glTexCoord2f(0.0, 0.0); glVertex3f(0, 0.575, 0.08);
@@ -143,17 +150,20 @@ void Sword::drawKnife() {
         GLfloat swordTop1V2[] = { 0, 0.4, 0.3 }; GLfloat swordTop1V6[] = { 0, 0.4, -0.3 };
         GLfloat swordTop1V3[] = { 0, 1.4, 0 }; GLfloat swordTop1V7[] = { 0, 1.4, 0 };
         GLfloat swordTop1V4[] = { -1, 0.4, 0.3 }; GLfloat swordTop1V8[] = { -1, 0.4, -0.3 };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? swordTopColorRed : swordTopColorBlue);
         u.drawSixFacesPolygon(swordTop1V1, swordTop1V2, swordTop1V3, swordTop1V4,
                               swordTop1V5, swordTop1V6, swordTop1V7, swordTop1V8, swordAttackMode ? swordTopColorRed : swordTopColorBlue);
         GLfloat swordTop2V1[] = { 0, 0.4, 0.3 }; GLfloat swordTop2V5[] = { 0, 0.4, -0.3 };
         GLfloat swordTop2V2[] = { 1, 0.4, 0.3 }; GLfloat swordTop2V6[] = { 1, 0.4, -0.3 };
         GLfloat swordTop2V3[] = { 1, 0.4, 0.3 }; GLfloat swordTop2V7[] = { 1, 0.4, -0.3 };
         GLfloat swordTop2V4[] = { 0, 1.4, 0 }; GLfloat swordTop2V8[] = { 0, 1.4, 0 };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? swordTopColorRed : swordTopColorBlue);
         u.drawSixFacesPolygon(swordTop2V1, swordTop2V2, swordTop2V3, swordTop2V4,
                               swordTop2V5, swordTop2V6, swordTop2V7, swordTop2V8, swordAttackMode ? swordTopColorRed : swordTopColorBlue);
         
         glTranslatef(0, -4.5, 0);
         GLfloat mainKnifeRed[] = { 216.0/255, 6.0/255, 48.0/255 };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, swordAttackMode ? mainKnifeRed : cPrimaryBlue);
         u.drawCylinder(swordAttackMode ? mainKnifeRed : cPrimaryBlue, 0.2, 0.2, 5, 10, 10, GLU_FILL, true, 0, 0, 0);
         glPopMatrix();
         
