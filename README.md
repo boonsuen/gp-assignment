@@ -1,4 +1,9 @@
 # Gundam Robot for Graphics Programming Assignment
+An interactive Gundam robot written in OpenGL with C++.
+
+## Quick Start
+1. Download project
+2. Run Debug/gp-assignment.exe
 
 ## User Manual
 ### Default key mode (Table A)
