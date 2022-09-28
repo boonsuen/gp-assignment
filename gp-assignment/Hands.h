@@ -927,7 +927,7 @@ void Hands::drawRightHand() {
 
 bool openFingersLeft = true;
 bool openFingersRight = true;
-bool swordStabbed = false;
+bool swordStabbed = true;
 
 void Hands::drawHands() {
     glPushMatrix();

@@ -37,6 +37,7 @@
 		F063208528D3553D00FA9C4E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F063208D28D3569800FA9C4E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		F063208F28D3569D00FA9C4E /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		F0B55CDF28E0F3E2009E159F /* Gun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gun.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +73,7 @@
 		F063208428D3553D00FA9C4E /* gp-assignment */ = {
 			isa = PBXGroup;
 			children = (
+				F0B55CDF28E0F3E2009E159F /* Gun.h */,
 				F0074D2928DD7C26001FFAD2 /* Shield.h */,
 				F0074D2828DCCBED001FFAD2 /* Sword.h */,
 				F0074D2728DCCB9E001FFAD2 /* Common.h */,
