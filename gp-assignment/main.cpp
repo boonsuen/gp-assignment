@@ -1181,9 +1181,3 @@ int main(int argc, char** argv) {
     glutMainLoop();
     return 0;
 }
-
-
-// --------------------- Notes ---------------------
-// Projection transformation:
-// Tx, Ty
-// Ry (ortho only)
