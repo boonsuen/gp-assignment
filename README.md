@@ -1,4 +1,4 @@
-# Gundam Robot for Graphics Programming Assignment
+# Gundam Robot (Graphics Programming)
 An interactive Gundam robot written in OpenGL with C++.
 
 ![image](https://github.com/boonsuen/gp-assignment/blob/main/Screenshot.png)
